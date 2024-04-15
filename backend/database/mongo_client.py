@@ -1,6 +1,7 @@
 from bson import ObjectId
 from dotenv import dotenv_values
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
+from pymongo.collection import Collection
 from pymongo.cursor import Cursor
 
 config = dotenv_values()
@@ -13,40 +14,110 @@ db_test = db_client["test-database"]
 db_prod = db_client["quantum-proxy-db"]
 
 # Collections
-users_coll = db_test.users
 varios_coll = db_test.varios
 
 providers_coll = db_prod.providers
 backends_coll = db_prod.backends
 characts_coll = db_prod.characts
+users_coll = db_prod.users
 
-# Providers ----------------------------
+# region Generic ----------------------------
 
 
-def db_find_provider(
-    *, obj_id: ObjectId = None, filter: dict = None, projection: dict = {}
+def db_find_one(
+    collection: Collection, *, filter: ObjectId | dict = None, projection: dict = {}
 ) -> dict:
     """
     Get the provider matching the id or query a document.
-    :param obj_id: ObjectId of the document
-    :param filter: query document
+    :param ``collection``: collection from which to query
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
     """
-    # Se da prioridad al obj_id
-    if obj_id:
-        return providers_coll.find_one(obj_id, projection)
-    # Si no se proporciona obj_id, se busca por el filtro
-    elif filter:
-        return providers_coll.find_one(filter, projection)
+    if isinstance(filter, ObjectId):
+        return collection.find_one(filter, projection)
+    elif isinstance(filter, dict):
+        return collection.find_one(filter, projection)
     else:
         return None
 
 
-def db_find_providers(*, filter={}, projection={}) -> Cursor:
+def db_find_many(
+    collection: Collection, *, filter: dict = {}, projection: dict = {}
+) -> Cursor:
+    """
+    Get the provider matching the id or query a document.
+    :param ``collection``: collection from which to query
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
+    """
+    return collection.find(filter, projection)
+
+
+def db_insert_one(collection: Collection, document: dict) -> str:
+    """
+    Insert a new document into the database.
+    :param ``collection``: collection in which to insert
+    :param ``document``: dict
+    :return: Inserted ID (str)
+    """
+    return collection.insert_one(document).inserted_id
+
+
+def db_update_one(collection: Collection, *, filter: dict, cambios: dict):
+    """
+    Updates a single document matching the filter.
+    :param ``collection``: collection in which to update
+    :param filter: query document
+    :param cambios: dict with the changes to apply
+    """
+    return collection.find_one_and_update(
+        filter, cambios, return_document=ReturnDocument.AFTER
+    )
+
+
+def db_replace_one(collection: Collection, *, filter: dict, replacement: dict) -> dict:
+    """
+    Replaces a single document matching the filter.
+    :param ``collection``: collection in which to replace
+    :param filter: query document
+    :param replacement: document to replace
+    """
+    return collection.find_one_and_replace(
+        filter, replacement, return_document=ReturnDocument.AFTER
+    )
+
+
+def db_delete_one(collection: Collection, *, filter: dict) -> bool:
+    """
+    Deletes a single document matching the filter.
+    :param ``collection``: collection in which to delete
+    :param filter: query document
+    """
+    # return collection.find_one_and_delete(filter)
+    return collection.delete_one(filter).deleted_count == 1
+
+
+# region Providers ----------------------------
+
+
+def db_find_provider(*, filter: ObjectId | dict = None, projection: dict = {}) -> dict:
+    """
+    Get the provider matching the id or query a document.
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
+    """
+    return db_find_one(providers_coll, filter=filter, projection=projection)
+
+
+def db_find_providers(*, filter: dict = {}, projection: dict = {}) -> Cursor:
     """
     Get all providers that match the filter.
     :param filter: query document
     """
-    return providers_coll.find(filter, projection)
+    return db_find_many(providers_coll, filter=filter, projection=projection)
 
 
 def db_insert_provider(provider) -> str:
@@ -55,33 +126,77 @@ def db_insert_provider(provider) -> str:
     :param provider: dict
     :return: Inserted ID (str)
     """
-    return str(providers_coll.insert_one(provider).inserted_id)
+    return db_insert_one(providers_coll, provider)
 
 
-def db_find_and_update_provider(*, filter, cambios: dict):
+def db_update_provider(*, filter: dict, cambios: dict):
     """
-    Updates a single document matching the filter.
-    :param filter: query document
+    Updates a single provider matching the filter.
+    :param filter: provider query
     :param cambios: dict with the changes to apply
     """
-    return providers_coll.find_one_and_update(filter, update=cambios)
+    return db_update_one(providers_coll, filter=filter, cambios=cambios)
 
 
-def db_find_and_replace_provider(*, filter, replacement: dict) -> dict:
+def db_replace_provider(*, filter: dict, replacement: dict) -> dict:
     """
-    Replaces a single document matching the filter.
-    :param filter: query document
+    Replaces a single provider matching the filter.
+    :param filter: provider query
     :param replacement: provider to replace
     """
-    return providers_coll.find_one_and_replace(filter, replacement=replacement)
+    return db_replace_one(providers_coll, filter=filter, replacement=replacement)
 
 
-def db_find_and_delete_provider(*, filter: dict) -> dict:
+def db_delete_provider(*, filter: dict) -> bool:
     """
-    Deletes a single document matching the filter.
+    Deletes a single provider matching the filter.
+    :param filter: provider query
+    """
+    return db_delete_one(providers_coll, filter=filter)
+
+
+# region Users ----------------------------
+
+
+def db_find_user(*, filter: ObjectId | dict = None, projection: dict = {}) -> dict:
+    """
+    Get the user matching the id or query a document.
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
+    """
+    return db_find_one(users_coll, filter=filter, projection=projection)
+
+
+def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
+    """
+    Get all users that match the filter.
     :param filter: query document
     """
-    return providers_coll.find_one_and_delete(filter)
+    return db_find_many(users_coll, filter=filter, projection=projection)
 
 
-# ---------------------------- Providers
+def db_insert_user(user) -> str:
+    """
+    Insert a new user into the database.
+    :param user: dict
+    :return: Inserted ID (str)
+    """
+    return db_insert_one(users_coll, user)
+
+
+def db_update_user(*, filter: dict, cambios: dict):
+    """
+    Updates a single user matching the filter.
+    :param filter: user query
+    :param cambios: dict with the changes to apply
+    """
+    return db_update_one(users_coll, filter=filter, cambios=cambios)
+
+
+def db_delete_user(*, filter: dict) -> bool:
+    """
+    Deletes a single user matching the filter.
+    :param filter: user query
+    """
+    return db_delete_one(users_coll, filter=filter)
