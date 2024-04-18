@@ -159,7 +159,7 @@ def update_user(
                 )
 
     if len(user) >= 1:
-        api_keys: dict = user.pop("api_keys")
+        api_keys: dict = user.pop("api_keys", None)
 
         if api_keys is not None:
             user.update({f"api_keys.{k}": v for k, v in api_keys.items()})
