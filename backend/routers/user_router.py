@@ -27,7 +27,6 @@ class HTTPCodeModel(BaseModel):
     "/users/",
     description="List all users",
     response_model=list[UserDTO],
-    response_model_by_alias=False,
     # Para en caso de usar projection, no devolver campos nulos
     response_model_exclude_none=True,
 )
@@ -47,7 +46,6 @@ def get_users(
     "/users/{id}",
     description="Get a single user",
     response_model=UserDTO,
-    response_model_by_alias=False,
     responses={
         status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
@@ -83,7 +81,6 @@ def get_user(
     description="Add new user",
     response_model=UserModel,
     status_code=status.HTTP_201_CREATED,
-    response_model_by_alias=False,
     responses={
         status.HTTP_201_CREATED: {"model": BaseProviderModel},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
@@ -117,7 +114,6 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
     "/users/{id}",
     description="Update a user",
     response_model=UserModel,
-    response_model_by_alias=False,
     responses={
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
         status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
