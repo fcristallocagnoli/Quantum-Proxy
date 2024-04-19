@@ -8,19 +8,19 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 Date = Annotated[datetime.datetime, BeforeValidator(str)]
 
-
 class UserModel(BaseModel):
-    # Asi, el campo id se valida y se serializa como "_id"
-    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     # Así, el campo id se valida como "_id" y se selializa como "id"
-    # id: Optional[PyObjectId] = Field(
-    #     validation_alias="_id", serialization_alias="id", default=None
-    # )
+    id: Optional[PyObjectId] = Field(
+        validation_alias="_id", serialization_alias="id", default=None
+    )
     username: Optional[str] = Field(default=None)
+    full_name: Optional[str] = Field(default=None)
     email: str = Field(...)
-    password_hash: str = Field(...)
+    hashed_password: str = Field(...)
+    roles: Optional[list[str]] = Field(default=[])
     api_keys: Optional[dict[str, str]] = Field(default=None)
     created_at: Optional[Date] = Field(default=None)
+    disabled: Optional[bool] = Field(default=False)
     model_config = ConfigDict(
         # Para permitir "User(id=...)", en vez de "User(_id=...)"
         populate_by_name=True,
@@ -31,17 +31,18 @@ class UserModel(BaseModel):
 
 
 class UpdateUserModel(BaseModel):
-    # Asi, el campo id se valida y se serializa como "_id"
-    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     # Así, el campo id se valida como "_id" y se selializa como "id"
-    # id: Optional[PyObjectId] = Field(
-    #     validation_alias="_id", serialization_alias="id", default=None
-    # )
+    id: Optional[PyObjectId] = Field(
+        validation_alias="_id", serialization_alias="id", default=None
+    )
     username: Optional[str] = None
+    full_name: Optional[str] = Field(default=None)
     email: Optional[str] = None
-    password_hash: Optional[str] = None
+    hashed_password: Optional[str] = None
+    roles: Optional[list[str]] = Field(default=[])
     api_keys: Optional[dict[str, str]] = None
     created_at: Optional[Date] = None
+    disabled: Optional[bool] = Field(default=False)
     model_config = ConfigDict(
         # Para poder incluir clases que no hereden de BaseModel como campos
         # es decir, que no se validen, solo chequea que sea del tipo correcto
