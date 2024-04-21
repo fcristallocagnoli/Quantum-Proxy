@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Annotated
 
 from bson import ObjectId
-from utils.utils import norm_id
+from utils.utils import hash_password, norm_id
 from database.models.providers_models import BaseProviderModel
-from database.models.user_models import UserDTO, UserModel, UpdateUserModel
+from database.models.user_models import UserModel
 from fastapi import Body, APIRouter, HTTPException, Path, Response, status
 from pydantic import BaseModel
 
@@ -26,7 +26,7 @@ class HTTPCodeModel(BaseModel):
 @router.get(
     "/users/",
     description="List all users",
-    response_model=list[UserDTO],
+    response_model=list[UserModel],
     # Para en caso de usar projection, no devolver campos nulos
     response_model_exclude_none=True,
 )
@@ -35,7 +35,7 @@ def get_users(
     projection: Annotated[
         dict, Body(title="Projection", description="Project the users")
     ] = {},
-) -> list[UserDTO]:
+) -> list[UserModel]:
     """
     List all of the user data in the database.
     """
@@ -45,7 +45,7 @@ def get_users(
 @router.get(
     "/users/{id}",
     description="Get a single user",
-    response_model=UserDTO,
+    response_model=UserModel,
     responses={
         status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
@@ -66,7 +66,7 @@ def get_user(
     projection: Annotated[
         dict, Body(title="Projection", description="Project the users", embed=True)
     ] = {},
-) -> UserDTO:
+) -> UserModel:
 
     object_id = sf_parse_object_id(id)
 
@@ -93,6 +93,11 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
 
     A unique `id` will be created and provided in the response.
     """
+    if not (user.email and user.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email and password fields are required",
+        )
     if (db_find_user(filter={"email": user.email})) is not None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -101,6 +106,8 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
                 "Email field must be unique",
             ],
         )
+
+    user.password = hash_password(user.password)
 
     user.created_at = datetime.now()
 
@@ -130,7 +137,7 @@ def update_user(
             example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
-    user: UpdateUserModel = Body(...),
+    user: UserModel = Body(...),
 ) -> UserModel:
     """
     Update individual fields of an existing user record.
@@ -143,6 +150,10 @@ def update_user(
     }
 
     user.pop("_id", None)
+    # Si se quiere cambiar la contraseña, se debe encriptar
+    if "password" in user:
+        user["password"] = hash_password(user["password"])
+    # Si se quiere cambiar el email, se debe verificar que no exista conflicto
     if "email" in user:
         if (existing_user := db_find_user(filter={"email": user["email"]})) is not None:
             if existing_user.get("_id") != sf_parse_object_id(id):
