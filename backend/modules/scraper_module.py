@@ -3,8 +3,13 @@ import importlib.util
 import os
 from contextlib import contextmanager
 
-from database.models.providers_models import ScraperRequest
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+
+from database.models.providers_models import BaseProviderModel
+from database.mongo_client import db_find_provider
+from utils.utils import norm_id
+from utils.email_utils import error_mail
 
 SCRAPER_FILE = "code_to_compile.py"
 SCRAPER_MODULE = SCRAPER_FILE.split(".")[0]
@@ -60,23 +65,33 @@ def parse_code(code: str):
                 )
 
 
-def fetch_from_ws(request: ScraperRequest) -> list[dict]:
+def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
+    """
+    Fetch data from a website using web scraping.
+
+    Returns:
+    - list[dict]: A list of backends
+    """
     print("Fetching from web scraping...")
-    func = request.scraper.func_to_eval
-    code = request.scraper.code_to_compile
+    func = provider.backend_request.scraper.func_to_eval
+    code = provider.backend_request.scraper.code_to_compile
     try:
         parse_code(code)
     except Exception as e:
-        error = {
-            SyntaxError.__name__: "Error de sintaxis en el código",
-            ValueError.__name__: "Error al validar el código",
-        }.get(type(e).__name__, "Error al ejecutar el código")
+        match type(e).__name__:
+            case ValueError.__name__:
+                error = f"{error}: Error de sintaxis en el código"
+            case SyntaxError.__name__:
+                error = f"{error}: Error al validar el código"
+            case _:
+                error = f"{error}: Error al ejecutar el código"
         print(error)
-        raise
+        # raise type("ParseException", (Exception,), {"msg": error})
+        return []
 
     with temp_file_manager(code):
         # Ejecutar el código en un contexto que proporciona un webdriver
-        with innit_driver(request.base_url) as driver:
+        with innit_driver(provider.backend_request.base_url) as driver:
             # Cargar el módulo desde el archivo externo
             especificacion = importlib.util.spec_from_file_location(
                 SCRAPER_MODULE, SCRAPER_FILE
@@ -85,5 +100,27 @@ def fetch_from_ws(request: ScraperRequest) -> list[dict]:
             especificacion.loader.exec_module(modulo)
 
             # Llamar a la función del fragmento de código externo
-            raw_output: list[dict] = getattr(modulo, func)(driver)
+            raw_output: list[dict] = []
+            try:
+                raw_output = getattr(modulo, func)(driver)
+            except NoSuchElementException as error:
+                print(f"Error al obtener los datos: {error.msg}")
+                error_mail(error, "Error al obtener los datos via webscraping.")
+            except Exception as error:
+                print(f"Error inesperado: {error}")
+                error_mail(
+                    error, "Error inesperado al obtener los datos via webscraping."
+                )
+            provider_data = {
+                "provider_id": norm_id(
+                    db_find_provider(filter={"name": provider.name})
+                ),
+                "provider_name": provider.name,
+            }
+            raw_output = list(
+                map(
+                    lambda back: back.update({"provider": provider_data}) or back,
+                    raw_output,
+                )
+            )
     return raw_output
