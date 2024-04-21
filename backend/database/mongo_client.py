@@ -65,6 +65,16 @@ def db_insert_one(collection: Collection, document: dict) -> str:
     return collection.insert_one(document).inserted_id
 
 
+def db_insert_many(collection: Collection, documents: list[dict]) -> list[str]:
+    """
+    Insert a list of documents into the database.
+    :param ``collection``: collection in which to insert
+    :param ``documents``: list of dicts
+    :return: List of inserted IDs (list[str])
+    """
+    return collection.insert_many(documents).inserted_ids
+
+
 def db_update_one(collection: Collection, *, filter: dict, cambios: dict):
     """
     Updates a single document matching the filter.
@@ -97,6 +107,53 @@ def db_delete_one(collection: Collection, *, filter: dict) -> bool:
     """
     # return collection.find_one_and_delete(filter)
     return collection.delete_one(filter).deleted_count == 1
+
+
+# region Users ----------------------------
+
+
+def db_find_user(*, filter: ObjectId | dict = None, projection: dict = {}) -> dict:
+    """
+    Get the user matching the id or query a document.
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
+    """
+    return db_find_one(users_coll, filter=filter, projection=projection)
+
+
+def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
+    """
+    Get all users that match the filter.
+    :param filter: query document
+    """
+    return db_find_many(users_coll, filter=filter, projection=projection)
+
+
+def db_insert_user(user) -> str:
+    """
+    Insert a new user into the database.
+    :param user: dict
+    :return: Inserted ID (str)
+    """
+    return db_insert_one(users_coll, user)
+
+
+def db_update_user(*, filter: dict, cambios: dict):
+    """
+    Updates a single user matching the filter.
+    :param filter: user query
+    :param cambios: dict with the changes to apply
+    """
+    return db_update_one(users_coll, filter=filter, cambios=cambios)
+
+
+def db_delete_user(*, filter: dict) -> bool:
+    """
+    Deletes a single user matching the filter.
+    :param filter: user query
+    """
+    return db_delete_one(users_coll, filter=filter)
 
 
 # region Providers ----------------------------
@@ -155,48 +212,22 @@ def db_delete_provider(*, filter: dict) -> bool:
     return db_delete_one(providers_coll, filter=filter)
 
 
-# region Users ----------------------------
+# region Backends ----------------------------
 
 
-def db_find_user(*, filter: ObjectId | dict = None, projection: dict = {}) -> dict:
+def db_insert_backend(backend: dict) -> str:
     """
-    Get the user matching the id or query a document.
-    :param ``filter`` (optional): a dictionary specifying the query to be performed
-    OR any other type to be used as the value for a query for ``"_id"``
-    :param ``projection`` (optional): fields to include or exclude in the result
-    """
-    return db_find_one(users_coll, filter=filter, projection=projection)
-
-
-def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
-    """
-    Get all users that match the filter.
-    :param filter: query document
-    """
-    return db_find_many(users_coll, filter=filter, projection=projection)
-
-
-def db_insert_user(user) -> str:
-    """
-    Insert a new user into the database.
-    :param user: dict
+    Insert a new backend into the database.
+    :param backend: dict
     :return: Inserted ID (str)
     """
-    return db_insert_one(users_coll, user)
+    return db_insert_one(backends_coll, backend)
 
 
-def db_update_user(*, filter: dict, cambios: dict):
+def db_insert_backends(backends: list[dict]) -> list[str]:
     """
-    Updates a single user matching the filter.
-    :param filter: user query
-    :param cambios: dict with the changes to apply
+    Insert a list of backends into the database.
+    :param backends: list of dicts
+    :return: List of inserted IDs (list[str])
     """
-    return db_update_one(users_coll, filter=filter, cambios=cambios)
-
-
-def db_delete_user(*, filter: dict) -> bool:
-    """
-    Deletes a single user matching the filter.
-    :param filter: user query
-    """
-    return db_delete_one(users_coll, filter=filter)
+    return db_insert_many(backends_coll, backends)
