@@ -1,19 +1,20 @@
 from database.models.providers_models import ProviderName
-from utils.utils import convert_from_ms, from_seconds_to_date, fromisoformat
+from utils.utils import convert_from_ms, from_seconds_to_date, fromisoformat, get_current_time
 
 
 def normalize_backend(backend: dict):
     """Normalize backend data depending on the provider"""
-    print(backend)
     match name := backend["provider"]["provider_name"]:
         case ProviderName.IONQ:
-            return ionq_normalizer(backend)
+            norm_back = ionq_normalizer(backend)
         case ProviderName.IBM:
-            return ibm_normalizer(backend)
+            norm_back = ibm_normalizer(backend)
         case ProviderName.RIGETTI:
-            return rigetti_normalizer(backend)
+            norm_back = rigetti_normalizer(backend)
         case _:
             return norm_error(name)
+    norm_back.update({"last_checked": get_current_time()})
+    return norm_back
 
 
 def ionq_normalizer(backend: dict) -> dict:
