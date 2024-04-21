@@ -1,8 +1,17 @@
 from fastapi import FastAPI
-from routers import provider_router
+from routers import provider_router, user_router, auth_router
+
 
 app = FastAPI(
     title="Quantum Proxy API",
+)
+
+app.include_router(
+    auth_router.router,
+)
+
+app.include_router(
+    user_router.router,
 )
 
 app.include_router(
