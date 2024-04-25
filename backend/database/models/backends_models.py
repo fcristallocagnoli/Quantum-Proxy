@@ -1,14 +1,19 @@
-from typing import Any, Optional
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated, Any, Optional
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 
 
 class ProviderFK(BaseModel):
-    id: str
-    name: str
+    provider_id: str
+    provider_name: str
+
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class BaseBackendModel(BaseModel):
-    id: str = None
+    id: Optional[PyObjectId] = Field(
+        validation_alias="_id", serialization_alias="id", default=None
+    )
     provider: ProviderFK
     backend_name: str
     extra: Optional[list[str]] = None
