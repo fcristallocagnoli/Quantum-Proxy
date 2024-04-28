@@ -1,15 +1,13 @@
-import ast
 import importlib.util
 from contextlib import contextmanager
 from pathlib import Path
 
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-
 from database.models.providers_models import BaseProviderModel
 from database.mongo_client import db_find_provider
-from utils.utils import norm_id
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from utils.email_utils import error_mail
+from utils.utils import check_code, norm_id
 
 
 @contextmanager
@@ -32,48 +30,6 @@ def innit_driver(url: str):
         print("Webdriver cerrado.")
 
 
-def parse_code(code: str):
-    """
-    Validar el código antes de ejecutarlo.
-    - Evitar llamadas a funciones peligrosas como eval() o exec().
-    """
-    arbol = ast.parse(code)
-
-    # Recorrer el árbol y realizar operaciones de validación
-    for nodo in ast.walk(arbol):
-        if isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name):
-            # Verificar si hay llamadas a funciones peligrosas
-            if nodo.func.id in ["eval", "exec"]:
-                raise ValueError(
-                    "El código no puede contener llamadas a funciones peligrosas como eval() o exec()"
-                )
-
-
-def check_code(file_path: Path):
-    """
-    Parse and check the code before executing it.
-    - Avoid calls to dangerous functions like eval() or exec().
-    """
-    if not file_path.exists():
-        print(f"File {file_path.name} not found.")
-        return False
-    with open(file_path, encoding="utf-8") as f:
-        code = f.read()
-    try:
-        parse_code(code)
-    except Exception as e:
-        match error := type(e).__name__:
-            case ValueError.__name__:
-                print(f"{error}: Error de sintaxis en el código\n", e)
-            case SyntaxError.__name__:
-                print(f"{error}: Error al validar el código\n", e)
-            case _:
-                print(f"{error}: Error al ejecutar el código\n", e)
-                # raise type("ParseException", (Exception,), {"msg": error})
-        return False
-    return True
-
-
 def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
     """
     Fetch data from a website using web scraping.
@@ -82,8 +38,8 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
     - list[dict]: A list of backends
     """
     print("Fetching from web scraping...")
-    func = provider.backend_request.scraper.func_to_eval
-    file_name = provider.backend_request.scraper.scraper_file_name
+    func = provider.backend_request.module.func_to_eval
+    file_name = provider.backend_request.module.module_file
     file_path = (
         Path(__file__).parent.joinpath("source_files").joinpath(f"{file_name}.py")
     )
