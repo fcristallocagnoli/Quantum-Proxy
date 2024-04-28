@@ -1,4 +1,7 @@
+import ast
 from datetime import datetime
+from pathlib import Path
+
 from passlib.context import CryptContext
 
 # region Miscelaneous
@@ -78,3 +81,48 @@ def verify_password(plain_password, hashed_password):
 
 def hash_password(password):
     return pwd_context.hash(password)
+
+
+# region Code validation
+
+
+def parse_code(code: str):
+    """
+    Validar el código antes de ejecutarlo.
+    - Evitar llamadas a funciones peligrosas como eval() o exec().
+    """
+    arbol = ast.parse(code)
+
+    # Recorrer el árbol y realizar operaciones de validación
+    for nodo in ast.walk(arbol):
+        if isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name):
+            # Verificar si hay llamadas a funciones peligrosas
+            if nodo.func.id in ["eval", "exec"]:
+                raise ValueError(
+                    "El código no puede contener llamadas a funciones peligrosas como eval() o exec()"
+                )
+
+
+def check_code(file_path: Path):
+    """
+    Parse and check the code before executing it.
+    - Avoid calls to dangerous functions like eval() or exec().
+    """
+    if not file_path.exists():
+        print(f"File {file_path.name} not found.")
+        return False
+    with open(file_path, encoding="utf-8") as f:
+        code = f.read()
+    try:
+        parse_code(code)
+    except Exception as e:
+        match error := type(e).__name__:
+            case ValueError.__name__:
+                print(f"{error}: Error de sintaxis en el código\n", e)
+            case SyntaxError.__name__:
+                print(f"{error}: Error al validar el código\n", e)
+            case _:
+                print(f"{error}: Error al ejecutar el código\n", e)
+                # raise type("ParseException", (Exception,), {"msg": error})
+        return False
+    return True
