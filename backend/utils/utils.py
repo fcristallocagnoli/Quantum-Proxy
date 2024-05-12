@@ -12,6 +12,11 @@ def norm_id(db_document: dict) -> str:
     return str(db_document["_id"])
 
 
+def norm_str(value: str) -> str:
+    """Normalize a string value."""
+    return value.lower().replace(" ", "_")
+
+
 # region Date related
 
 
