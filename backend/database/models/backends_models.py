@@ -1,13 +1,13 @@
 from typing import Annotated, Any, Optional
+
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class ProviderFK(BaseModel):
-    provider_id: str
+    provider_id: PyObjectId
     provider_name: str
-
-
-PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class BaseBackendModel(BaseModel):
