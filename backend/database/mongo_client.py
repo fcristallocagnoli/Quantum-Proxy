@@ -21,6 +21,21 @@ backends_coll = db_prod.backends
 characts_coll = db_prod.characts
 users_coll = db_prod.users
 
+# region Misc ----------------------------
+
+
+# check if a collection is empty
+def is_empty(collection: str) -> bool:
+    coll = {
+        "providers": providers_coll,
+        "backends": backends_coll,
+        "users": users_coll,
+    }.get(collection, None)
+    if coll is None:
+        raise ValueError(f"Collection '{collection}' not found")
+    return coll.count_documents({}) == 0
+
+
 # region Generic ----------------------------
 
 
@@ -87,7 +102,19 @@ def db_update_one(collection: Collection, *, filter: dict, cambios: dict):
     )
 
 
-def db_replace_one(collection: Collection, *, filter: dict, replacement: dict) -> dict:
+def db_update_many(collection: Collection, *, filter: dict, cambios: dict):
+    """
+    Updates a single document matching the filter.
+    :param ``collection``: collection in which to update
+    :param filter: query document
+    :param cambios: dict with the changes to apply
+    """
+    return collection.update_many(filter, cambios)
+
+
+def db_replace_one(
+    collection: Collection, *, filter: dict, replacement: dict, **kwargs
+) -> dict:
     """
     Replaces a single document matching the filter.
     :param ``collection``: collection in which to replace
@@ -95,7 +122,7 @@ def db_replace_one(collection: Collection, *, filter: dict, replacement: dict) -
     :param replacement: document to replace
     """
     return collection.find_one_and_replace(
-        filter, replacement, return_document=ReturnDocument.AFTER
+        filter, replacement, kwargs, return_document=ReturnDocument.AFTER
     )
 
 
@@ -104,9 +131,20 @@ def db_delete_one(collection: Collection, *, filter: dict) -> bool:
     Deletes a single document matching the filter.
     :param ``collection``: collection in which to delete
     :param filter: query document
+    :return: True if the document was deleted, False otherwise
     """
     # return collection.find_one_and_delete(filter)
     return collection.delete_one(filter).deleted_count == 1
+
+
+def db_delete_many(collection: Collection, *, filter: dict) -> bool:
+    """
+    Deletes all documents matching the filter.
+    :param ``collection``: collection in which to delete
+    :param filter: query document
+    :return: True if at least one document was deleted, False otherwise
+    """
+    return collection.delete_many(filter).deleted_count > 0
 
 
 # region Users ----------------------------
@@ -186,6 +224,15 @@ def db_insert_provider(provider) -> str:
     return db_insert_one(providers_coll, provider)
 
 
+def db_insert_providers(providers: list[dict]) -> str:
+    """
+    Insert a list of providers into the database.
+    :param providers: list of dicts
+    :return: List of inserted IDs (list[str])
+    """
+    return db_insert_many(providers_coll, providers)
+
+
 def db_update_provider(*, filter: dict, cambios: dict):
     """
     Updates a single provider matching the filter.
@@ -193,6 +240,15 @@ def db_update_provider(*, filter: dict, cambios: dict):
     :param cambios: dict with the changes to apply
     """
     return db_update_one(providers_coll, filter=filter, cambios=cambios)
+
+
+def db_update_providers(*, filter: dict, cambios: dict):
+    """
+    Updates all providers matching the filter.
+    :param filter: provider query
+    :param cambios: dict with the changes to apply
+    """
+    return db_update_many(providers_coll, filter=filter, cambios=cambios)
 
 
 def db_replace_provider(*, filter: dict, replacement: dict) -> dict:
@@ -231,3 +287,19 @@ def db_insert_backends(backends: list[dict]) -> list[str]:
     :return: List of inserted IDs (list[str])
     """
     return db_insert_many(backends_coll, backends)
+
+
+def db_delete_backend(*, filter: dict) -> bool:
+    """
+    Deletes a single backend matching the filter.
+    :param filter: backend query
+    """
+    return db_delete_one(backends_coll, filter=filter)
+
+
+def db_delete_backends(*, filter: dict) -> bool:
+    """
+    Deletes all backends matching the filter.
+    :param filter: backend query
+    """
+    return db_delete_many(backends_coll, filter=filter)
