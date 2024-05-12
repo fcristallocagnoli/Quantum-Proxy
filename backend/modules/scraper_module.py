@@ -2,12 +2,12 @@ import importlib.util
 from contextlib import contextmanager
 from pathlib import Path
 
+from bson import ObjectId
 from database.models.providers_models import BaseProviderModel
-from database.mongo_client import db_find_provider
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from utils.email_utils import error_mail
-from utils.utils import check_code, norm_id
+from utils.utils import check_code
 
 
 @contextmanager
@@ -15,11 +15,10 @@ def innit_driver(url: str):
     """Context manager para inicializar y cerrar el webdriver de Chrome."""
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Para ejecutar en modo sin ventana
+        options.add_argument("--headless=new")  # Para ejecutar en modo sin ventana
         print("Iniciando webdriver...")
         driver = webdriver.Chrome(options=options)
 
-        print("Cargando página...")
         driver.get(url)
         driver.implicitly_wait(10)
 
@@ -27,7 +26,6 @@ def innit_driver(url: str):
     finally:
         print("Cerrando webdriver...")
         driver.quit()
-        print("Webdriver cerrado.")
 
 
 def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
@@ -38,8 +36,9 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
     - list[dict]: A list of backends
     """
     print("Fetching from web scraping...")
-    func = provider.backend_request.module.func_to_eval
-    file_name = provider.backend_request.module.module_file
+    module = provider.backend_request.module
+    func = module.func_to_eval
+    file_name = module.module_file
     file_path = (
         Path(__file__).parent.joinpath("source_files").joinpath(f"{file_name}.py")
     )
@@ -49,14 +48,14 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
 
     # Ejecutar el código en un contexto que proporciona un webdriver
     with innit_driver(provider.backend_request.base_url) as driver:
-        # Cargar el módulo desde el archivo externo
+        # Importamos el módulo dinámicamente desde el archivo externo
         especificacion = importlib.util.spec_from_file_location(file_name, file_path)
         modulo = importlib.util.module_from_spec(especificacion)
         especificacion.loader.exec_module(modulo)
 
-        # Llamar a la función del fragmento de código externo
         raw_output: list[dict] = []
         try:
+            # Ejecutamos la función designada y obtenemos los datos
             raw_output = getattr(modulo, func)(driver)
         except NoSuchElementException as error:
             print(f"Error al obtener los datos: {error.msg}")
@@ -65,7 +64,7 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
             print(f"Error inesperado: {error}")
             error_mail(error, "Error inesperado al obtener los datos via webscraping.")
         provider_data = {
-            "provider_id": norm_id(db_find_provider(filter={"name": provider.name})),
+            "provider_id": ObjectId(provider.id),
             "provider_name": provider.name,
         }
         raw_output = list(
