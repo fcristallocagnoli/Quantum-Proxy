@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 
+from bson import ObjectId
 from database.models.providers_models import APIRequest, BaseProviderModel
 from database.models.user_models import UserModel
 from database.mongo_client import db_find_user
@@ -12,12 +13,13 @@ env = dotenv_values()
 DUMMY_ACCOUNT = env["DUMMY_ACCOUNT"]
 
 
-def get_auth_if_needed(request: APIRequest, *, provider_code: str):
-    if auth_format := request.headers.get("Authorization", None):
+def get_auth_if_needed(request: APIRequest, *, provider_key: str):
+    if auth_format := request.auth.get("Authorization", None):
         user = db_find_user(filter={"email": DUMMY_ACCOUNT})
         assert user, "User not found"
         user = UserModel(**user)
-        auth = auth_format.replace("TOKEN", user.api_keys.get(provider_code))
+        db_api_keys = user.api_keys.get(provider_key)
+        auth = auth_format.replace("TOKEN", db_api_keys.get("TOKEN"))
         return auth
 
 
@@ -29,8 +31,9 @@ def fetch_from_api(provider: BaseProviderModel) -> list[dict]:
     - list[dict]: A list of backends
     """
     print("Fetching from API...")
-    func = provider.backend_request.module.func_to_eval
-    file_name = provider.backend_request.module.module_file
+    module = provider.backend_request.module
+    func = module.func_to_eval
+    file_name = module.module_file
     file_path = (
         Path(__file__).parent.joinpath("source_files").joinpath(f"{file_name}.py")
     )
@@ -44,6 +47,17 @@ def fetch_from_api(provider: BaseProviderModel) -> list[dict]:
     especificacion.loader.exec_module(modulo)
 
     # Ejecutamos la función designada y obtenemos los datos
-    raw_output = getattr(modulo, func)(provider.backend_request)
+    raw_output: list[dict] = getattr(modulo, func)(provider.backend_request)
+
+    provider_data = {
+        "provider_id": ObjectId(provider.id),
+        "provider_name": provider.name,
+    }
+    raw_output = list(
+        map(
+            lambda back: back.update({"provider": provider_data}) or back,
+            raw_output,
+        )
+    )
 
     return raw_output
