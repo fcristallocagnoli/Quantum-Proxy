@@ -1,18 +1,30 @@
-from database.models.providers_models import ProviderName
+from database.mongo_client import db_find_provider
+from database.models.providers_models import ProviderName, ThirdPartyEnum
 from utils.utils import convert_from_ms, from_seconds_to_date, fromisoformat, get_current_time
 
 
 def normalize_backend(backend: dict):
     """Normalize backend data depending on the provider"""
-    match name := backend["provider"]["provider_name"]:
-        case ProviderName.IONQ:
-            norm_back = ionq_normalizer(backend)
-        case ProviderName.IBM:
-            norm_back = ibm_normalizer(backend)
-        case ProviderName.RIGETTI:
-            norm_back = rigetti_normalizer(backend)
-        case _:
-            return norm_error(name)
+    provider = db_find_provider(
+        filter={"_id": backend["provider"]["provider_id"]},
+        projection={"from_third_party": 1, "third_party": 1}
+    )
+    if provider["from_third_party"]:
+        match party_name := provider["third_party"]["third_party_name"]:
+            case ThirdPartyEnum.AWS:
+                norm_back = braket_normalizer(backend)
+            case _:
+                return norm_error(party_name)
+    else:
+        match name := backend["provider"]["provider_name"]:
+            case ProviderName.IONQ:
+                norm_back = ionq_normalizer(backend)
+            case ProviderName.IBM:
+                norm_back = ibm_normalizer(backend)
+            case ProviderName.RIGETTI:
+                norm_back = rigetti_normalizer(backend)
+            case _:
+                return norm_error(name)
     norm_back.update({"last_checked": get_current_time()})
     return norm_back
 
@@ -22,7 +34,7 @@ def ionq_normalizer(backend: dict) -> dict:
     is_simulator: bool = backend["backend"] == "simulator"
     norm_back = {
         "provider": backend["provider"],
-        "backend_name": backend["backend"],
+        "backend_name": str(backend["backend"]).removeprefix("qpu.").capitalize(),
         # --------------------------------------
         "status": backend["status"],
         "qubits": backend["qubits"],
@@ -54,7 +66,7 @@ def ibm_normalizer(backend: dict):
     extra: dict = backend["extra"]
     norm_back = {
         "provider": backend["provider"],
-        "backend_name": backend["backend"],
+        "backend_name": str(backend["backend"]).removeprefix("ibm_").capitalize(),
         # --------------------------------------
         "status": backend["status"],
         "qubits": backend["qubits"],
@@ -100,6 +112,26 @@ def rigetti_normalizer(backend: dict):
             "median_ro_fidelity", "median_active_reset_fidelity"
         ]
     }
+
+def braket_normalizer(backend: dict):
+    """Normalize Braket backend data"""
+    return {
+        "provider": backend["provider"],
+        "backend_name": backend["device_name"],
+        # --------------------------------------
+        "status": backend["status"],
+        "qubits": backend["qubit_count"],
+        "queue": {
+            "type": "jobs_remaining",
+            "value": backend["queue_depth"],
+        },
+        "shots_range": backend["shots_range"],
+        "device_cost": backend["device_cost"],
+        "extra": [
+            "status", "qubits", "queue", "shots_range", "device_cost"
+        ]
+    }
+
 
 def norm_error(name: str):
     """Raise an error if the provider is not supported"""
