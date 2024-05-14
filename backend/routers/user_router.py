@@ -1,8 +1,7 @@
-from datetime import datetime
 from typing import Annotated
 
 from bson import ObjectId
-from utils.utils import hash_password, norm_id
+from utils.utils import get_current_time, hash_password, norm_id
 from database.models.providers_models import BaseProviderModel
 from database.models.user_models import UserModel
 from fastapi import Body, APIRouter, HTTPException, Path, Response, status
@@ -109,7 +108,7 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
 
     user.password = hash_password(user.password)
 
-    user.created_at = datetime.now()
+    user.created_at = get_current_time()
 
     new_user_id = db_insert_user(user.model_dump(by_alias=True, exclude=["id"]))
     created_user = db_find_user(filter=sf_parse_object_id(new_user_id))
