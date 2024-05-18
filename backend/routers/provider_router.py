@@ -1,21 +1,20 @@
-import json
 from typing import Annotated
 
-import requests
 from bson import ObjectId
-from pydantic import BaseModel, SkipValidation
+from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Path, Body, Response, status
-from utils.utils import get_current_time, norm_id
-from database.schemas.provider_schema import provider_schema, providers_schema
+from utils.utils import get_current_time, norm_str
 
-from database.models.providers_models import BaseProvider
+from database.models.providers_models import (
+    BaseProviderModel,
+)
 from database.mongo_client import (
     db_find_provider,
     db_find_providers,
     db_insert_provider,
-    db_find_and_replace_provider,
-    db_find_and_update_provider,
-    db_find_and_delete_provider,
+    db_replace_provider,
+    db_update_provider,
+    db_delete_provider,
 )
 
 
@@ -24,158 +23,123 @@ class HTTPCodeModel(BaseModel):
     detail: str = None
 
 
-router = APIRouter(prefix="/providers", tags=["Providers"])
+router = APIRouter(tags=["Providers"])
 
 
 @router.get(
-    "",
-    response_model=list[BaseProvider],
+    "/providers/",
+    description="List all providers",
+    response_model=list[BaseProviderModel],
+    response_model_by_alias=False,
+    # Para en caso de usar projection, no devolver campos nulo
     response_model_exclude_none=True,
 )
-async def get_all_providers(
+async def get_providers(
     filter: Annotated[
         dict, Body(title="Filter", description="Filter the providers")
     ] = {},
     projection: Annotated[
-        dict, Body(title="Projection", description="Projection of the providers")
+        dict, Body(title="Projection", description="Project the providers")
     ] = {},
-) -> list[BaseProvider]:
+) -> list[BaseProviderModel]:
     """
     Get all providers.
     - **filter**: Filter to query the providers.
     - **projection**: Filter to select which fields to return.
     - **returns**: All providers.
     """
-    return providers_schema(db_find_providers(filter=filter, projection=projection))
+    return db_find_providers(filter=filter, projection=projection)
 
 
 @router.get(
-    "/{id}",
-    response_model=BaseProvider,
-    response_model_exclude_none=True,
+    "/providers/{pid}",
+    description="Get a single provider",
+    response_model=BaseProviderModel,
+    response_model_by_alias=False,
     responses={
         code: {"model": HTTPCodeModel}
         for code in [status.HTTP_400_BAD_REQUEST, status.HTTP_404_NOT_FOUND]
     },
+    # Para en caso de usar projection, no devolver campos nulos
+    response_model_exclude_none=True,
 )
-async def get_specific_provider(
-    id: Annotated[
+async def get_provider(
+    pid: Annotated[
         str,
         Path(
-            title="The ID of the provider",
-            # get the id of a provider to use as an example
-            description="A 24-character alphanumeric string representing the provider's ID.",
-            example=f"{norm_id(db_find_providers()[0])}",
+            title="The PID (Provider Identifier)",
         ),
     ],
     projection: Annotated[
         dict,
         Body(title="Projection", description="Projection of the provider", embed=True),
     ] = {},
-) -> BaseProvider:
+) -> BaseProviderModel:
     """
-    Get a especific provider.
+    Get a single provider.
 
-    - **id**: The ID of the provider.
+    - **pid**: The PID (Provider Identifier).
     - **returns**: The provider.
-    - **raises**: HTTPException 400: If the ID format is incorrect.
+    - **raises**: HTTPException 400: If the PID does not exist.
     - **raises**: HTTPException 404: If the provider is not found.
     """
-    try:
-        object_id = ObjectId(id)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"El id {e}"
-        )
 
-    provider = db_find_provider(obj_id=ObjectId(object_id), projection=projection)
+    if (
+        provider := db_find_provider(filter={"pid": pid}, projection=projection)
+    ) is not None:
+        return provider
 
-    if not provider:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Proveedor no encontrado"
-        )
-
-    return provider_schema(provider)
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Provider with {pid} not found"
+    )
 
 
 @router.post(
-    "",
-    response_model=None,
+    "/providers/",
+    description="Add new provider",
+    response_model=BaseProviderModel,
     status_code=status.HTTP_201_CREATED,
+    response_model_by_alias=False,
     responses={
-        status.HTTP_201_CREATED: {"model": BaseProvider},
+        status.HTTP_201_CREATED: {"model": BaseProviderModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
         status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
     },
 )
-async def post_provider(provider: BaseProvider) -> Response:
+async def post_provider(provider: BaseProviderModel = Body(...)) -> BaseProviderModel:
     """
-    Create a new provider.
+    Insert a new provider record.
 
     - **provider**: The provider to create.
     - **returns**: HTTP 201 Created: The provider created.
     - **raises**: HTTPException 409: If the provider already exists.
     """
-    if db_find_provider(filter={"name": provider.name}):
+    # Generamos el pid del proveedor
+    if not provider.pid:
+        provider_name = norm_str(provider.name)
+        if provider.third_party:
+            provider.pid = ".".join([norm_str(provider.third_party), provider_name])
+        else:
+            provider.pid = ".".join(["native", provider_name])
+    if db_find_provider(filter={"pid": provider.pid}):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="El proveedor ya existe"
         )
 
-    provider_dict = provider.model_dump(exclude="_id")
+    provider_dict = provider.model_dump(by_alias=True, exclude="_id")
 
-    provider_dict["last_checked"] = get_current_time()
-    provider_dict["created_at"] = get_current_time()
+    provider_dict["last_updated_at"] = get_current_time()
 
     provider_db_id = db_insert_provider(provider_dict)
-    provider_db = db_find_provider(filter=ObjectId(provider_db_id))
+    provider_db = db_find_provider(filter=sf_parse_object_id(provider_db_id))
 
-    return Response(
-        status_code=status.HTTP_201_CREATED,
-        media_type="application/json",
-        content=json.dumps(provider_schema(provider_db)),
-        headers={"Location": f"/providers/{provider_db_id}"},
-    )
-
-
-@router.delete(
-    "/{id}",
-    response_model=None,
-    status_code=status.HTTP_204_NO_CONTENT,
-    responses={
-        status.HTTP_204_NO_CONTENT: {"description": "No Content"},
-        status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
-    },
-)
-async def delete_provider(
-    id: Annotated[
-        str,
-        Path(
-            title="The ID of the provider",
-            # get the id of a provider to use as an example
-            description="A 24-character alphanumeric string representing the provider's ID.",
-            example=f"{norm_id(db_find_providers()[0])}",
-        ),
-    ],
-):
-    """
-    Delete a specific provider.
-
-    - **id**: The ID of the provider.
-    - **returns**: HTTP 204 No Content
-    - **raises**: HTTPException 404: If the provider is not found.
-    """
-    provider = db_find_and_delete_provider(filter={"_id": ObjectId(id)})
-    if not provider:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="El proveedor no existe"
-        )
-
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return provider_db
 
 
 # Mejor usar PATCH para actualizar solo los campos que se necesiten
 @router.put(
-    "/{id}",
-    response_model=BaseProvider,
+    "/providers/{pid}",
+    response_model=BaseProviderModel,
     status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
@@ -185,90 +149,129 @@ async def delete_provider(
     deprecated=True,
 )
 async def update_provider(
-    id: Annotated[
+    pid: Annotated[
         str,
         Path(
-            title="The ID of the provider",
-            # get the id of a provider to use as an example
-            description="A 24-character alphanumeric string representing the provider's ID.",
-            example=f"{norm_id(db_find_providers()[0])}",
+            title="The PID (Provider Identifier)",
         ),
     ],
-    provider: BaseProvider,
-) -> BaseProvider:
+    provider: BaseProviderModel,
+) -> BaseProviderModel:
     """
     Replace a specific provider.
 
-    - **id**: The ID of the provider.
+    - **pid**: The PID (Provider Identifier).
     - **provider**: The provider's replacement.
     - **returns**: The previous provider.
-    - **raises**: HTTPException 400: If the ID format is incorrect.
+    - **raises**: HTTPException 400: If the PID does not exist.
     - **raises**: HTTPException 404: If the provider is not found.
     """
 
-    provider_dict = provider.model_dump(exclude="id")
+    provider_dict = provider.model_dump(exclude=["id"])
 
-    provider_dict["updated_at"] = get_current_time()
-    doc_prev = db_find_and_replace_provider(
-        filter={"_id": ObjectId(id)}, replacement=provider_dict
-    )
+    provider_dict["last_updated_at"] = get_current_time()
+    doc_after = db_replace_provider(filter={"pid": pid}, replacement=provider_dict)
 
-    if not doc_prev:
+    if not doc_after:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Proveedor no encontrado"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Provider with {pid} not found",
         )
 
-    return BaseProvider(id=id, **doc_prev)
+    return doc_after
 
 
 @router.patch(
-    "/{id}",
-    response_model=BaseProvider,
-    status_code=status.HTTP_200_OK,
+    "/providers/{pid}",
+    description="Modify a provider",
+    response_model=BaseProviderModel,
+    response_model_by_alias=False,
     responses={
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
+        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
+    },
+)
+async def modify_provider(
+    pid: Annotated[
+        str,
+        Path(
+            title="The PID (Provider Identifier)",
+        ),
+    ],
+    provider: BaseProviderModel,
+) -> BaseProviderModel:
+    """
+    Modify a specific provider.
+
+    - **pid**: The PID (Provider Identifier).
+    - **provider**: The provider's modification.
+    - **returns**: The previous provider.
+    - **raises**: HTTPException 400: If the PID does not exist.
+    - **raises**: HTTPException 404: If the provider is not found.
+    """
+    provider: dict = {
+        k: v for k, v in provider.model_dump(by_alias=True).items() if v is not None
+    }
+
+    provider.pop("_id", None)
+
+    if len(provider) >= 1:
+        update_result = db_update_provider(
+            filter={"pid": pid},
+            cambios={"$set": provider},
+        )
+        if update_result is not None:
+            return update_result
+        else:
+            raise HTTPException(
+                status_code=404, detail=f"Provider with {pid} not found"
+            )
+
+
+@router.delete(
+    "/providers/{pid}",
+    description="Delete a provider",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "No Content"},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
         status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
     },
 )
-async def modify_provider(
-    id: Annotated[
+async def delete_provider(
+    pid: Annotated[
         str,
         Path(
-            title="The ID of the provider",
-            # get the id of a provider to use as an example
-            description="A 24-character alphanumeric string representing the provider's ID.",
-            example=f"{norm_id(db_find_providers()[0])}",
+            title="The PID (Provider Identifier)",
         ),
     ],
-    provider: Annotated[BaseProvider, SkipValidation],
-) -> BaseProvider:
+):
     """
-    Modify a specific provider.
+    Delete a single provider record from the database.
 
-    - **id**: The ID of the provider.
-    - **provider**: The provider's modification.
-    - **returns**: The previous provider.
-    - **raises**: HTTPException 400: If the ID format is incorrect.
+    - **pid**: The PID (Provider Identifier)
+    - **returns**: HTTP 204 No Content
     - **raises**: HTTPException 404: If the provider is not found.
+    """
+    if db_delete_provider(filter={"pid": pid}):
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    raise HTTPException(status_code=404, detail=f"Provider with {pid} not found")
+
+
+# region Utils ----------------------------
+
+
+def sf_parse_object_id(id: str) -> ObjectId:
+    """
+    Safe parse from str to ObjectId.
+    :raises HTTPException 400: if the id is not valid
     """
     try:
         object_id = ObjectId(id)
+        return object_id
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"El id {e}"
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"The id {e}"
         )
-    prev = db_find_and_update_provider(
-        filter={"_id": object_id},
-        cambios={
-            "$set": {
-                **provider,
-                # **user.model_dump(exclude_unset=True),
-                "updated_at": get_current_time(),
-            }
-        },
-    )
-    if not prev:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Proveedor no encontrado"
-        )
-    return BaseProvider(id=id, **prev)
