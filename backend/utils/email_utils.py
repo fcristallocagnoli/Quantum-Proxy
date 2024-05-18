@@ -104,3 +104,23 @@ def error_mail(error: Exception, context: str = None):
         body=f"An error occurred in the QuantumProxy App:\n\n{error}",
     )
     send_email(msg)
+
+
+# [ ]: Limpiar el código, eliminar pruebas # [ ]
+# Pruebas varias
+def main():
+    # Crear un mensaje de correo electrónico personalizado
+    msg = create_email(
+        receivers=PROFESSIONAL_EMAIL,
+        subject="Test Email",
+        body="This is a test email from QuantumProxy App.",
+    )
+
+    # Enviar el correo electrónico
+    send_email(msg)
+    # Mostrar el mensaje de correo electrónico
+    print(msg)
+
+
+if __name__ == "__main__":
+    main()
