@@ -3,6 +3,7 @@ from typing import Any
 
 from braket.aws import AwsDevice
 from braket.aws.queue_information import QueueType
+from braket.device_schema import DeviceActionType
 from bson import ObjectId
 from database.models.providers_models import SDKRequest, ThirdPartyEnum
 from database.mongo_client import db_find_provider
@@ -27,6 +28,7 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
         "status": device.status.lower(),
         "qubit_count": device.properties.paradigm.qubitCount,
         "queue_depth": device.queue_depth().quantum_tasks.get(QueueType.NORMAL, -1),
+        "gates_supported": device.properties.action[DeviceActionType.OPENQASM].supportedOperations,
         "shots_range": {
             "min": device.properties.service.shotsRange[0],
             "max": device.properties.service.shotsRange[1],

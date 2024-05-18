@@ -125,10 +125,11 @@ def braket_normalizer(backend: dict):
             "type": "jobs_remaining",
             "value": backend["queue_depth"],
         },
+        "gates_supported": backend["gates_supported"],
         "shots_range": backend["shots_range"],
         "device_cost": backend["device_cost"],
         "extra": [
-            "status", "qubits", "queue", "shots_range", "device_cost"
+            "status", "qubits", "queue", "gates_supported", "shots_range", "device_cost"
         ]
     }
 
