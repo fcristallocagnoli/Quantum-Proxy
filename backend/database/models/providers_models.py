@@ -31,7 +31,6 @@ class Module(BaseModel):
 class ScraperRequest(BaseModel):
     fetch_method: Literal["WEB-SCRAPING"] = "WEB-SCRAPING"
     base_url: str
-    # auth: Optional[dict[str, Any]] = None
     module: Module
 
 
@@ -45,7 +44,6 @@ class APIRequest(BaseModel):
 class SDKRequest(BaseModel):
     fetch_method: Literal["SDK"] = "SDK"
     auth: Optional[dict[str, list]] = None
-    third_party: Optional[ThirdPartyEnum] = None
     module: Module
 
 
@@ -66,9 +64,10 @@ class BaseProviderModel(BaseModel):
     )
     name: Optional[str] = Field(default=None)
     pid: Optional[str] = Field(default=None)
-    description: Optional[Any] = Field(default=None)
+    description: Optional[Any] = Field(default="")
     url: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
+    # --------------------------------------------------------------
     third_party: Optional[ThirdPartyKey] = Field(default=None)
 
     backend_request: Optional[RequestTypes] = Field(
@@ -77,7 +76,7 @@ class BaseProviderModel(BaseModel):
     )
 
     backends_ids: Optional[list[PyObjectId]] = Field(default=None)
-
+    # --------------------------------------------------------------
     last_updated_at: Optional[str] = None
     model_config = ConfigDict(
         # Para permitir "Class(id=...)", en vez de "Class(_id=...)"
@@ -86,3 +85,95 @@ class BaseProviderModel(BaseModel):
         # es decir, que no se validen, solo chequea que sea del tipo correcto
         arbitrary_types_allowed=True,
     )
+
+
+# XXX: Concepto de pruebas TODO - Implementar si es conveniente
+# XXX: Borar si no se llega a implementar o usar
+class NativeProviderModel(BaseProviderModel):
+    """
+    Modelo para los proveedores de servicios cuánticos nativos.
+    """
+
+    class_type: Literal["NativeProvider"] = "NativeProvider"
+    backend_request: Optional[RequestTypes] = Field(
+        default=None,
+        discriminator="fetch_method",
+    )
+    backends_ids: Optional[list[PyObjectId]] = Field(default=None)
+
+
+class ThirdPartyModel(BaseProviderModel):
+    """
+    Modelo para los servicios cuánticos de terceros.
+    """
+
+    class_type: Literal["ThirdParty"] = "ThirdParty"
+    provided_providers: Optional[list[PyObjectId]] = Field(default=None)
+    backends_ids: Optional[list[PyObjectId]] = Field(default=None)
+
+
+class ThirdPartyProviderModel(BaseProviderModel):
+    """
+    Modelo para los proveedores ofrecidos por servicios cuánticos de terceros.
+    """
+
+    class_type: Literal["ThirdPartyProvider"] = "ThirdPartyProvider"
+    third_party: ThirdPartyKey
+    backends_ids: Optional[list[PyObjectId]] = Field(default=None)
+
+
+ProviderType = NativeProviderModel | ThirdPartyModel | ThirdPartyProviderModel
+
+
+class Provider(BaseModel):
+    provider: ProviderType = Field(discriminator="class_type")
+
+
+def crear_proveedor(provider: Provider):
+    return provider.provider
+
+
+# XXX: Concept
+class IonQProvider(BaseProviderModel):
+
+    def build_backends(self) -> dict[str, Any]: ...
+
+
+class IBMProvider(BaseProviderModel):
+
+    def build_backends(self) -> dict[str, Any]: ...
+
+
+class RigettiProvider(BaseProviderModel):
+
+    def build_backends(self) -> dict[str, Any]: ...
+
+
+# Pruebas varias
+def main():
+    ...
+    provider = Provider(
+        provider=NativeProviderModel(
+            name="IonQ",
+            pid="ionq",
+            description="IonQ is a quantum computing company that builds quantum computers for commercial applications.",
+            url="https://ionq.com/",
+            backend_request=APIRequest(
+                base_url="https://ionq.com/",
+                auth={"Authorization": "apiKey TOKEN"},
+                module=Module(
+                    description="Module to fetch the backends from IonQ",
+                    module_file="ionq_api_code",
+                    func_to_eval="get_backends",
+                ),
+            ),
+            backends_ids=[],
+        )
+    )
+    print("Provider tal cual:", provider)
+    print("Provider creado:", crear_proveedor(provider))
+    print("Provider creado:", type("ProviderReal", (), provider.provider.model_dump()))
+
+
+if __name__ == "__main__":
+    main()
