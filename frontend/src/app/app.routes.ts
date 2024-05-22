@@ -1,3 +1,15 @@
-import { Routes } from '@angular/router';
+// Not used in this project.
 
-export const routes: Routes = [];
+import { Routes } from '@angular/router';
+import { AlertComponent } from './_components/alert.component';
+import { AuthGuard } from './_helpers/auth.guard';
+import { Role } from './_models';
+
+export const routes: Routes = [
+  { path: '', component: AlertComponent, canActivate: [AuthGuard] },
+  { path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+
+  // otherwise redirect to home
+  { path: '**', redirectTo: '' }
+];

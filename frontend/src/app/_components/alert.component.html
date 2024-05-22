@@ -1,0 +1,10 @@
+<div *ngIf="alerts.length" class="container">
+    <div class="m-3">
+        @for (alert of alerts; track alert.id) {
+            <div class="{{cssClasses(alert)}}">
+                <span [innerHTML]="alert.message"></span>
+                <button class="btn-close" (click)="removeAlert(alert)"></button>
+            </div>
+        }
+    </div>
+</div>
