@@ -36,6 +36,18 @@ def is_empty(collection: str) -> bool:
     return coll.count_documents({}) == 0
 
 
+# count the number of documents in a collection
+def count_documents(collection: str) -> int:
+    coll = {
+        "providers": providers_coll,
+        "backends": backends_coll,
+        "users": users_coll,
+    }.get(collection, None)
+    if coll is None:
+        raise ValueError(f"Collection '{collection}' not found")
+    return coll.count_documents({})
+
+
 # region Generic ----------------------------
 
 
