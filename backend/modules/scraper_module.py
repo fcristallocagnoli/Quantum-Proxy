@@ -6,7 +6,7 @@ from bson import ObjectId
 from database.models.providers_models import BaseProviderModel
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from utils.email_utils import error_mail
+from utils.email_utils import send_error_mail
 from utils.utils import check_code
 
 
@@ -59,10 +59,10 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
             raw_output = getattr(modulo, func)(driver)
         except NoSuchElementException as error:
             print(f"Error al obtener los datos: {error.msg}")
-            error_mail(error, "Error al obtener los datos via webscraping.")
+            send_error_mail(error, "Error al obtener los datos via webscraping.")
         except Exception as error:
             print(f"Error inesperado: {error}")
-            error_mail(error, "Error inesperado al obtener los datos via webscraping.")
+            send_error_mail(error, "Error inesperado al obtener los datos via webscraping.")
         provider_data = {
             "provider_id": ObjectId(provider.id),
             "provider_name": provider.name,

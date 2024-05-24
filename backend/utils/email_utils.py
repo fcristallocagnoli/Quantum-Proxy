@@ -87,8 +87,7 @@ def send_email(
         smtp.send_message(msg)
 
 
-# TODO: rename to 'send_error_email'
-def error_mail(error: Exception, context: str = None):
+def send_error_mail(error: Exception, context: str = None):
     """
     Enviar un correo electrónico de error.
 
