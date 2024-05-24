@@ -1,6 +1,7 @@
 import ast
 from datetime import datetime
 from pathlib import Path
+import time
 
 from passlib.context import CryptContext
 
@@ -54,7 +55,15 @@ def from_seconds_to_date(seconds) -> str:
     return format_date(date)
 
 
-def get_current_time() -> str:
+def get_timestamp():
+    return time.time()
+
+
+def get_current_datetime() -> datetime:
+    return datetime.now()
+
+
+def get_current_time_iso() -> str:
     """
     Devuelve la fecha actual con formato ISO-8601
     """
@@ -72,7 +81,8 @@ def format_date(date: datetime) -> str:
     """
     Formatea una fecha a un string con el formato ISO-8601
     """
-    return date.strftime("%Y-%m-%d %H:%M:%S GMT%z")
+    # return date.strftime("%Y-%m-%d %H:%M:%S GMT%z")
+    return date.isoformat()
 
 
 # region Password hashing
