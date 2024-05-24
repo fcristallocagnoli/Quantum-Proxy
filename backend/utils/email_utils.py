@@ -37,8 +37,6 @@ def create_email(
     """
     if receivers is None:
         receivers = CONTACT_EMAILS
-    else:
-        receivers.union(CONTACT_EMAILS)
     # Crear un nuevo mensaje de correo electrónico
     msg = EmailMessage()
 
@@ -89,6 +87,7 @@ def send_email(
         smtp.send_message(msg)
 
 
+# TODO: rename to 'send_error_email'
 def error_mail(error: Exception, context: str = None):
     """
     Enviar un correo electrónico de error.
@@ -106,20 +105,87 @@ def error_mail(error: Exception, context: str = None):
     send_email(msg)
 
 
+def send_verification_email(receiver: str, verifyUrl: str):
+    email_msg = create_email(
+        receivers=set([receiver]),
+        subject="Verification Email",
+        body="This is a test email from QuantumProxy App.",
+        html=textwrap.dedent(
+            f"""
+        <title>Verification Email</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                background-color: #007bff;
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+                border-radius: 5px 5px 0 0;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .footer {{
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 10px;
+                text-align: center;
+                border-radius: 0 0 5px 5px;
+            }}
+        </style>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Verification Email</h1>
+                </div>
+                <div class="content">
+                    <p>Thanks for registering!</p>
+                    <p>Please click the below link to verify your email address:</p>
+                    <p><a href="{verifyUrl}">{verifyUrl}</a></p>
+                </div>
+                <div class="footer">
+                    <p>&mdash; QuantumProxy App &mdash;</p>
+                </div>
+            </div>
+        </body>
+        """
+        ),
+    )
+    send_email(email_msg)
+
+
 # [ ]: Limpiar el código, eliminar pruebas # [ ]
 # Pruebas varias
 def main():
     # Crear un mensaje de correo electrónico personalizado
-    msg = create_email(
-        receivers=PROFESSIONAL_EMAIL,
-        subject="Test Email",
-        body="This is a test email from QuantumProxy App.",
-    )
+    # msg = create_email(
+    #     receivers=PROFESSIONAL_EMAIL,
+    #     subject="Test Email",
+    #     body="This is a test email from QuantumProxy App.",
+    # )
 
-    # Enviar el correo electrónico
-    send_email(msg)
-    # Mostrar el mensaje de correo electrónico
-    print(msg)
+    # # Enviar el correo electrónico
+    # send_email(msg)
+    # # Mostrar el mensaje de correo electrónico
+    # print(msg)
+    send_verification_email(
+        receiver="fcristallocagnoli@uma.es",
+        verifyUrl="https://quantumproxy.com/verify",
+    )
 
 
 if __name__ == "__main__":
