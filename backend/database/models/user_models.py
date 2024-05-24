@@ -14,7 +14,8 @@ class UserModel(BaseModel):
         validation_alias="_id", serialization_alias="id", default=None
     )
     username: Optional[str] = Field(default=None)
-    full_name: Optional[str] = Field(default=None)
+    first_name: Optional[str] = Field(default=None)
+    last_name: Optional[str] = Field(default=None)
     email: str = Field(default=None)
     password: str = Field(default=None)
     roles: Optional[list[str]] = Field(default=[])
@@ -28,3 +29,9 @@ class UserModel(BaseModel):
         # es decir, que no se validen, solo chequea que sea del tipo correcto
         arbitrary_types_allowed=True,
     )
+
+
+class UserInDBModel(UserModel):
+    verification_token: Optional[str] = Field(default=None)
+    is_verified: Optional[bool] = Field(default=False)
+    refreshTokens: Optional[list[str]] = Field(default=[])
