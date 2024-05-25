@@ -6,6 +6,7 @@ from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
 from apscheduler.schedulers.background import BackgroundScheduler
 from database.mongo_client import is_empty
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.logger import logger
 from routers import provider_router, user_router
 from utils.scheduler_functions import init_backends, init_providers, job_manager
@@ -72,6 +73,18 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+origins = [
+    "http://localhost:4200",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 app.include_router(
