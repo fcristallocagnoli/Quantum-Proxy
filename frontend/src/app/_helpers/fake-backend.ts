@@ -28,10 +28,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return refreshToken();
                 case url.endsWith('/accounts/revoke-token') && method === 'POST':
                     return revokeToken();
-                case url.endsWith('/accounts/register') && method === 'POST':
-                    return register();
-                case url.endsWith('/accounts/verify-email') && method === 'POST':
-                    return verifyEmail();
+                // case url.endsWith('/accounts/register') && method === 'POST':
+                //     return register();
+                // case url.endsWith('/accounts/verify-email') && method === 'POST':
+                //     return verifyEmail();
                 case url.endsWith('/accounts/forgot-password') && method === 'POST':
                     return forgotPassword();
                 case url.endsWith('/accounts/validate-reset-token') && method === 'POST':
