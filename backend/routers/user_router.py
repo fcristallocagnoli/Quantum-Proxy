@@ -1,13 +1,15 @@
 from typing import Annotated
 
 from bson import ObjectId
-from utils.utils import get_current_time, hash_password, norm_id
+from utils.email_utils import send_verification_email
+from utils.utils import get_current_datetime, get_timestamp, hash_password, norm_id
 from database.models.providers_models import BaseProviderModel
-from database.models.user_models import UserModel
-from fastapi import Body, APIRouter, HTTPException, Path, Response, status
+from database.models.user_models import UserInDBModel, UserModel
+from fastapi import Body, APIRouter, HTTPException, Path, Query, Request, Response, status
 from pydantic import BaseModel
 
 from database.mongo_client import (
+    count_documents,
     db_delete_user,
     db_find_user,
     db_find_users,
@@ -15,7 +17,7 @@ from database.mongo_client import (
     db_update_user,
 )
 
-router = APIRouter(tags=["Users"])
+router = APIRouter(tags=["Accounts"])
 
 
 class HTTPCodeModel(BaseModel):
@@ -97,7 +99,7 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email and password fields are required",
         )
-    if (db_find_user(filter={"email": user.email})) is not None:
+    if (db_find_user(filter={"email": user.email})):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=[
@@ -108,7 +110,7 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
 
     user.password = hash_password(user.password)
 
-    user.created_at = get_current_time()
+    user.created_at = get_current_datetime()
 
     new_user_id = db_insert_user(user.model_dump(by_alias=True, exclude=["id"]))
     created_user = db_find_user(filter=sf_parse_object_id(new_user_id))
@@ -229,3 +231,93 @@ def sf_parse_object_id(id: str) -> ObjectId:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"The id {e}"
         )
+
+
+# --------------------------------------------------------------------------------------------
+# New methods:
+
+@router.post(
+    "/accounts/register",
+    description="Register new account",
+    status_code=status.HTTP_201_CREATED,
+    response_model=UserInDBModel,
+    responses={
+        status.HTTP_201_CREATED: {"model": BaseProviderModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
+    },
+)
+def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBModel:
+    """
+    Register new account (from the frontend).
+    """
+    if not (user.email and user.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email and password fields are required",
+        )
+    if (db_find_user(filter={"email": user.email})):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=
+                f"""
+                <h4>Email Already Registered</h4>
+                <p>The email {user.email} is already registered.</p>
+                """
+            ,
+        )
+    
+    # user.username = user.first_name[0].lower() + user.last_name.split(" ")[0].lower()
+    user.roles = ["Admin"] if is_first_account() else ["User"]
+    user.password = hash_password(user.password)
+    user.created_at = get_current_datetime()
+
+    user = UserInDBModel(
+        **user.model_dump(),
+        verification_token = str(get_timestamp()),
+        is_verified = False,
+        refreshTokens = []
+    )
+
+    new_user_id = db_insert_user(user.model_dump(by_alias=True, exclude=["id"]))
+    created_user = db_find_user(filter=sf_parse_object_id(new_user_id))
+
+    # Send verification email
+    send_verification_email(
+        user.email,
+        f"http://localhost:4200/account/verify-email?token={user.verification_token}"
+    )
+
+    return created_user
+
+
+@router.get(
+    "/accounts/verify-email",
+    description="Verify email",
+    status_code=status.HTTP_201_CREATED,
+    response_model=UserInDBModel,
+    responses={
+        status.HTTP_201_CREATED: {"model": BaseProviderModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
+    },
+)
+def verify_email(token: Annotated[str, Query(...)]) -> UserInDBModel:
+    """
+    Verify email (from the frontend).
+    """
+    user = db_update_user(
+        filter={"verification_token": token},
+        cambios={"$set": {"is_verified": True}}
+    )
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Verification failed",
+        )
+
+    return user
+
+
+def is_first_account():
+    return count_documents("users") == 0
