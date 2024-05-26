@@ -1,10 +1,13 @@
 from typing import Annotated
 
 from auth.utils import (
+    basic_details,
+    current_account,
     generate_jwt_token,
     generate_refresh_token,
     get_refresh_token,
     is_authenticated,
+    is_authorized,
 )
 from utils.email_utils import send_verification_email
 from utils.utils import (
@@ -244,6 +247,231 @@ def delete_user(
 # New methods:
 
 
+@router.get(
+    "/accounts",
+    description="List all accounts",
+    responses={status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel}},
+)
+def get_accounts(request: Request) -> list[dict]:
+    """
+    List all of the account data in the database (from the frontend).
+    """
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    users = list(map(lambda udb: UserInDBModel(**udb), db_find_users()))
+
+    accounts = list(map(lambda u: basic_details(u), users))
+
+    return accounts
+
+
+@router.get(
+    "/accounts/{id}",
+    description="Get a single account (from the frontend).",
+    response_model=dict,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
+    },
+)
+def get_account(
+    request: Request,
+    id: Annotated[
+        str,
+        Path(
+            title="The ID of the account",
+            # get the id of a account to use as an example
+            description="A 24-character alphanumeric string representing the account's ID.",
+            example=f"{norm_id(db_find_users()[0])}",
+        ),
+    ],
+) -> dict:
+
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_query = UserInDBModel(**db_find_user(filter=sf_parse_object_id(id)))
+
+    if not user_to_query:
+        raise HTTPException(status_code=404, detail=f"Account with {id} not found")
+
+    account = current_account(request)
+
+    # user accounts can get OWN profile
+    # admin accounts can get ALL profiles
+    if not account or (
+        user_to_query.id != account.id and not is_authorized(account, "Admin")
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    return basic_details(user_to_query)
+
+
+@router.post(
+    "/accounts",
+    description="Add new account",
+    response_model=UserInDBModel,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_201_CREATED: {"model": BaseProviderModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
+    },
+)
+def create_account(request: Request, user: dict = Body(...)) -> UserInDBModel:
+    """
+    Insert a new account (from the frontend).
+    """
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    if db_find_user(filter={"email": user["email"]}):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"User with email {user["email"]} is already registered",
+        )
+
+    user_to_store = {
+        "first_name": user["firstName"],
+        "last_name": user["lastName"],
+        "email": user["email"],
+        "password": hash_password(user["password"]),
+        "roles": [user["role"]],
+        "is_verified": True,
+        "created_at": get_current_datetime(),
+    }
+
+    new_user_id = db_insert_user(user_to_store)
+    created_user = db_find_user(filter=sf_parse_object_id(new_user_id))
+
+    return created_user
+
+
+@router.put(
+    "/accounts/{id}",
+    description="Update an account (from the frontend).",
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
+    },
+)
+def update_account(
+    request: Request,
+    id: Annotated[
+        str,
+        Path(
+            title="The ID of the account",
+        ),
+    ],
+    new_user: dict = Body(...),
+):
+
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_update = UserInDBModel(**db_find_user(filter=sf_parse_object_id(id)))
+
+    account = current_account(request)
+
+    # user accounts can update OWN profile
+    # admin accounts can update ALL profiles
+    if not account or (
+        user_to_update.id != account.id and not is_authorized(account, "Admin")
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_store = {
+        "first_name": new_user["firstName"],
+        "last_name": new_user["lastName"],
+        "email": new_user["email"],
+        "password": hash_password(new_user["password"]),
+        "roles": [new_user["role"]],
+    }
+
+    user_in_db = db_update_user(
+        filter={"_id": sf_parse_object_id(id)}, cambios={"$set": user_to_store}
+    )
+
+    return {
+        "id": str(user_in_db["_id"]),
+        "firstName": user_in_db["first_name"],
+        "lastName": user_in_db["last_name"],
+        "email": user_in_db["email"],
+        "role": user_in_db["roles"][0],
+    }
+
+
+@router.delete(
+    "/accounts/{id}",
+    description="Delete an aacount",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "No content"},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
+    },
+)
+def delete_account(
+    request: Request,
+    id: Annotated[
+        str,
+        Path(
+            title="The ID of the account",
+            # get the id of a account to use as an example
+            description="A 24-character alphanumeric string representing the account's ID.",
+            example=f"{norm_id(db_find_users()[0])}",
+        ),
+    ],
+):
+    """
+    Remove a single account (from the frontend).
+    """
+
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_delete = UserInDBModel(**db_find_user(filter=sf_parse_object_id(id)))
+
+    account = current_account(request)
+
+    # user accounts can delete OWN account
+    # admin accounts can delete ANY account
+    if not account or (
+        user_to_delete.id != account.id and not is_authorized(account, "Admin")
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    if db_delete_user(filter={"_id": sf_parse_object_id(id)}):
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    raise HTTPException(status_code=404, detail=f"Account with {id} not found")
+
+
 @router.post(
     "/accounts/register",
     description="Register new account",
@@ -327,7 +555,6 @@ def verify_email(token: Annotated[str, Query(...)]):
     responses={
         status.HTTP_201_CREATED: {"model": BaseProviderModel},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
-        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
     },
 )
 def authenticate_account(
@@ -361,16 +588,10 @@ def authenticate_account(
 
     user = UserInDBModel(**user)
 
-    return {
-        "id": user.id,
-        "firstName": user.first_name,
-        "lastName": user.last_name,
-        "email": user.email,
-        "role": user.roles[0],
-        "dateCreated": user.created_at,
-        "isVerified": user.is_verified,
-        "jwtToken": generate_jwt_token(user),
-    }
+    account = basic_details(user)
+    account.update({"jwtToken": generate_jwt_token(user)})
+
+    return account
 
 
 @router.post(
@@ -388,7 +609,7 @@ def revoke_token(
     Revoke token (from the frontend).
     """
     if not is_authenticated(request):
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Unauthorized",
         )

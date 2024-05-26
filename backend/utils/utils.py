@@ -11,11 +11,12 @@ from passlib.context import CryptContext
 # region Miscelaneous
 
 
-def sf_parse_object_id(id: str) -> ObjectId:
+def sf_parse_object_id(id: str | int) -> ObjectId:
     """
     Safe parse from str to ObjectId.
     :raises HTTPException 400: if the id is not valid
     """
+    id = str(id) if isinstance(id, int) else id
     try:
         object_id = ObjectId(id)
         return object_id

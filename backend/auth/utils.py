@@ -7,6 +7,18 @@ from fastapi import Request, Response
 from utils.utils import get_timestamp, sf_parse_object_id
 
 
+def basic_details(user: UserInDBModel):
+    return {
+        "id": user.id,
+        "firstName": user.first_name,
+        "lastName": user.last_name,
+        "email": user.email,
+        "role": user.roles[0],
+        "dateCreated": user.created_at,
+        "isVerified": user.is_verified,
+    }
+
+
 def generate_refresh_token(response: Response):
     token = get_timestamp()
 
@@ -25,7 +37,7 @@ def generate_refresh_token(response: Response):
 
     return token
 
-
+# FIXME: Parece que no está funcionando correctamente
 def generate_jwt_token(account: UserInDBModel):
     from datetime import datetime, timedelta, timezone
 
@@ -56,12 +68,16 @@ def current_account(request: Request):
     if is_expired:
         return None
 
-    user = db_find_user(filter={"_id": sf_parse_object_id(jwt_token["id"])})
+    user = db_find_user(filter=sf_parse_object_id(jwt_token["id"]))
 
-    return user
+    return UserInDBModel(**user) if user else None
 
 
 def get_refresh_token(request: Request):
     # get refresh token from cookie
     cookies = request.cookies
     return float(cookies.get("refreshToken"))
+
+
+def is_authorized(account: UserInDBModel, role: str):
+    return account.roles[0] == role
