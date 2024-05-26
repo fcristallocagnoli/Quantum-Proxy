@@ -1,15 +1,36 @@
 from typing import Annotated
 
-from bson import ObjectId
+from auth.utils import (
+    generate_jwt_token,
+    generate_refresh_token,
+    get_refresh_token,
+    is_authenticated,
+)
 from utils.email_utils import send_verification_email
-from utils.utils import get_current_datetime, get_timestamp, hash_password, norm_id
+from utils.utils import (
+    get_current_datetime,
+    get_timestamp,
+    hash_password,
+    is_first_account,
+    norm_id,
+    sf_parse_object_id,
+    verify_password,
+)
 from database.models.providers_models import BaseProviderModel
 from database.models.user_models import UserInDBModel, UserModel
-from fastapi import Body, APIRouter, HTTPException, Path, Query, Request, Response, status
+from fastapi import (
+    Body,
+    APIRouter,
+    HTTPException,
+    Path,
+    Query,
+    Request,
+    Response,
+    status,
+)
 from pydantic import BaseModel
 
 from database.mongo_client import (
-    count_documents,
     db_delete_user,
     db_find_user,
     db_find_users,
@@ -99,7 +120,7 @@ def post_user(user: UserModel = Body(...)) -> UserModel:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email and password fields are required",
         )
-    if (db_find_user(filter={"email": user.email})):
+    if db_find_user(filter={"email": user.email}):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=[
@@ -219,22 +240,9 @@ def delete_user(
     raise HTTPException(status_code=404, detail=f"User {id} not found")
 
 
-def sf_parse_object_id(id: str) -> ObjectId:
-    """
-    Safe parse from str to ObjectId.
-    :raises HTTPException 400: if the id is not valid
-    """
-    try:
-        object_id = ObjectId(id)
-        return object_id
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"The id {e}"
-        )
-
-
 # --------------------------------------------------------------------------------------------
 # New methods:
+
 
 @router.post(
     "/accounts/register",
@@ -247,7 +255,7 @@ def sf_parse_object_id(id: str) -> ObjectId:
         status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
     },
 )
-def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBModel:
+def register_account(user: UserModel = Body(...)) -> UserInDBModel:
     """
     Register new account (from the frontend).
     """
@@ -256,17 +264,15 @@ def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBM
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email and password fields are required",
         )
-    if (db_find_user(filter={"email": user.email})):
+    if db_find_user(filter={"email": user.email}):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=
-                f"""
+            detail=f"""
                 <h4>Email Already Registered</h4>
                 <p>The email {user.email} is already registered.</p>
-                """
-            ,
+                """,
         )
-    
+
     # user.username = user.first_name[0].lower() + user.last_name.split(" ")[0].lower()
     user.roles = ["Admin"] if is_first_account() else ["User"]
     user.password = hash_password(user.password)
@@ -274,9 +280,9 @@ def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBM
 
     user = UserInDBModel(
         **user.model_dump(),
-        verification_token = str(get_timestamp()),
-        is_verified = False,
-        refreshTokens = []
+        verification_token=str(get_timestamp()),
+        is_verified=True if is_first_account() else False,
+        refresh_tokens=[],
     )
 
     new_user_id = db_insert_user(user.model_dump(by_alias=True, exclude=["id"]))
@@ -285,7 +291,7 @@ def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBM
     # Send verification email
     send_verification_email(
         user.email,
-        f"http://localhost:4200/account/verify-email?token={user.verification_token}"
+        f"http://localhost:4200/account/verify-email?token={user.verification_token}",
     )
 
     return created_user
@@ -294,21 +300,17 @@ def register_account(request: Request, user: UserModel = Body(...)) -> UserInDBM
 @router.get(
     "/accounts/verify-email",
     description="Verify email",
-    status_code=status.HTTP_201_CREATED,
-    response_model=UserInDBModel,
+    status_code=status.HTTP_204_NO_CONTENT,
     responses={
-        status.HTTP_201_CREATED: {"model": BaseProviderModel},
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
-        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
     },
 )
-def verify_email(token: Annotated[str, Query(...)]) -> UserInDBModel:
+def verify_email(token: Annotated[str, Query(...)]):
     """
     Verify email (from the frontend).
     """
     user = db_update_user(
-        filter={"verification_token": token},
-        cambios={"$set": {"is_verified": True}}
+        filter={"verification_token": token}, cambios={"$set": {"is_verified": True}}
     )
     if not user:
         raise HTTPException(
@@ -316,8 +318,83 @@ def verify_email(token: Annotated[str, Query(...)]) -> UserInDBModel:
             detail="Verification failed",
         )
 
-    return user
+
+@router.post(
+    "/accounts/authenticate",
+    description="Authenticate account",
+    status_code=status.HTTP_201_CREATED,
+    response_model=dict,
+    responses={
+        status.HTTP_201_CREATED: {"model": BaseProviderModel},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
+    },
+)
+def authenticate_account(
+    response: Response, email: str = Body(...), password: str = Body(...)
+) -> dict:
+    """
+    Authenticate account (from the frontend).
+    """
+    # Account must match email and password, and be verified
+    filter = {"email": email, "is_verified": True}
+
+    if not (user := db_find_user(filter=filter)):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or password is incorrect",
+        )
+
+    if not verify_password(password, user["password"]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or password is incorrect",
+        )
+
+    cambios = {"$push": {"refresh_tokens": generate_refresh_token(response)}}
+
+    if not (user := db_update_user(filter=filter, cambios=cambios)):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or password is incorrect",
+        )
+
+    user = UserInDBModel(**user)
+
+    return {
+        "id": user.id,
+        "firstName": user.first_name,
+        "lastName": user.last_name,
+        "email": user.email,
+        "role": user.roles[0],
+        "dateCreated": user.created_at,
+        "isVerified": user.is_verified,
+        "jwtToken": generate_jwt_token(user),
+    }
 
 
-def is_first_account():
-    return count_documents("users") == 0
+@router.post(
+    "/accounts/revoke-token",
+    description="Revoke token",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
+    },
+)
+def revoke_token(
+    request: Request,
+):
+    """
+    Revoke token (from the frontend).
+    """
+    if not is_authenticated(request):
+        return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+    refresh_token = get_refresh_token(request)
+
+    filter = {"refresh_tokens": refresh_token}
+    cambios = {"$pull": {"refresh_tokens": refresh_token}}
+
+    db_update_user(filter=filter, cambios=cambios)

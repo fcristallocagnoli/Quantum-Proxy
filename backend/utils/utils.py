@@ -1,11 +1,28 @@
 import ast
+import time
 from datetime import datetime
 from pathlib import Path
-import time
 
+from bson import ObjectId
+from database.mongo_client import count_documents
+from fastapi import HTTPException, status
 from passlib.context import CryptContext
 
 # region Miscelaneous
+
+
+def sf_parse_object_id(id: str) -> ObjectId:
+    """
+    Safe parse from str to ObjectId.
+    :raises HTTPException 400: if the id is not valid
+    """
+    try:
+        object_id = ObjectId(id)
+        return object_id
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"The id {e}"
+        )
 
 
 def norm_id(db_document: dict) -> str:
@@ -16,6 +33,11 @@ def norm_id(db_document: dict) -> str:
 def norm_str(value: str) -> str:
     """Normalize a string value."""
     return value.lower().replace(" ", "_")
+
+
+def is_first_account():
+    # must be == 0
+    return count_documents("users") == 1
 
 
 # region Date related
