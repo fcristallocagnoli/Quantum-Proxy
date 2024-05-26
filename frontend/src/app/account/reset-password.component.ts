@@ -34,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
             password: ['', [Validators.required, Validators.minLength(6)]],
             confirmPassword: ['', Validators.required],
         }, {
-            validator: MustMatch('password', 'confirmPassword')
+            validators: [MustMatch('password', 'confirmPassword')]
         });
 
         const token = this.route.snapshot.queryParams['token'];

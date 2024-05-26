@@ -35,7 +35,7 @@ export class AddEditComponent implements OnInit {
             password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]],
             confirmPassword: ['']
         }, {
-            validator: MustMatch('password', 'confirmPassword')
+            validators: [MustMatch('password', 'confirmPassword')]
         });
 
         this.title = 'Create Account';
