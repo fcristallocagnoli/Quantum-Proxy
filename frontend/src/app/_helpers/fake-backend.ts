@@ -38,16 +38,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return validateResetToken();
                 case url.endsWith('/accounts/reset-password') && method === 'POST':
                     return resetPassword();
-                case url.endsWith('/accounts') && method === 'GET':
-                    return getAccounts();
-                case url.match(/\/accounts\/\d+$/) && method === 'GET':
-                    return getAccountById();
-                case url.endsWith('/accounts') && method === 'POST':
-                    return createAccount();
-                case url.match(/\/accounts\/\d+$/) && method === 'PUT':
-                    return updateAccount();
-                case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
-                    return deleteAccount();
+                // case url.endsWith('/accounts') && method === 'GET':
+                //     return getAccounts();
+                // case url.match(/\/accounts\/\d+$/) && method === 'GET':
+                //     return getAccountById();
+                // case url.endsWith('/accounts') && method === 'POST':
+                //     return createAccount();
+                // case url.match(/\/accounts\/\d+$/) && method === 'PUT':
+                //     return updateAccount();
+                // case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
+                //     return deleteAccount();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);

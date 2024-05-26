@@ -27,7 +27,6 @@ export class AddEditComponent implements OnInit {
         this.id = this.route.snapshot.params['id'];
 
         this.form = this.formBuilder.group({
-            title: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
