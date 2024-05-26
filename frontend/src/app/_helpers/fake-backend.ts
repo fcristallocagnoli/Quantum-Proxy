@@ -22,12 +22,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function handleRoute() {
             switch (true) {
-                case url.endsWith('/accounts/authenticate') && method === 'POST':
-                    return authenticate();
+                // case url.endsWith('/accounts/authenticate') && method === 'POST':
+                //     return authenticate();
                 case url.endsWith('/accounts/refresh-token') && method === 'POST':
                     return refreshToken();
-                case url.endsWith('/accounts/revoke-token') && method === 'POST':
-                    return revokeToken();
+                // case url.endsWith('/accounts/revoke-token') && method === 'POST':
+                //     return revokeToken();
                 // case url.endsWith('/accounts/register') && method === 'POST':
                 //     return register();
                 // case url.endsWith('/accounts/verify-email') && method === 'POST':
