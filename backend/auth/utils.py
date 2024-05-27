@@ -76,7 +76,8 @@ def current_account(request: Request):
 def get_refresh_token(request: Request):
     # get refresh token from cookie
     cookies = request.cookies
-    return float(cookies.get("refreshToken"))
+    refresh_token = cookies.get("refreshToken")
+    return float(refresh_token) if refresh_token else None
 
 
 def is_authorized(account: UserInDBModel, role: str):

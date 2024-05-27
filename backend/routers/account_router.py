@@ -47,6 +47,7 @@ router = APIRouter(tags=["Accounts"])
 class HTTPCodeModel(BaseModel):
     detail: str = None
 
+
 @router.get(
     "/accounts",
     description="List all accounts",
@@ -419,3 +420,46 @@ def revoke_token(
     cambios = {"$pull": {"refresh_tokens": refresh_token}}
 
     db_update_user(filter=filter, cambios=cambios)
+
+
+@router.post(
+    "/accounts/refresh-token",
+    description="Refresh token",
+    response_model=dict,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
+    },
+)
+def refresh_token(
+    request: Request,
+    response: Response,
+) -> dict:
+    """
+    Refresh token (from the frontend).
+    """
+    if not (refresh_token := get_refresh_token(request)):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    filter = {"refresh_tokens": refresh_token}
+
+    if not (account := db_find_user(filter=filter)):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    refresh_token_list = list(account["refresh_tokens"])
+    refresh_token_list.remove(refresh_token)
+    refresh_token_list.append(generate_refresh_token(response))
+
+    cambios = {"$set": {"refresh_tokens": refresh_token_list}}
+
+    user = UserInDBModel(**db_update_user(filter=filter, cambios=cambios))
+
+    account = basic_details(user)
+    account.update({"jwtToken": generate_jwt_token(user)})
+
+    return account
