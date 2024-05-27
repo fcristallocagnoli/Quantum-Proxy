@@ -24,8 +24,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             switch (true) {
                 // case url.endsWith('/accounts/authenticate') && method === 'POST':
                 //     return authenticate();
-                case url.endsWith('/accounts/refresh-token') && method === 'POST':
-                    return refreshToken();
+                // case url.endsWith('/accounts/refresh-token') && method === 'POST':
+                //     return refreshToken();
                 // case url.endsWith('/accounts/revoke-token') && method === 'POST':
                 //     return revokeToken();
                 // case url.endsWith('/accounts/register') && method === 'POST':
