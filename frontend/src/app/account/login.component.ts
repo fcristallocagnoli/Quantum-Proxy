@@ -50,7 +50,14 @@ export class LoginComponent implements OnInit {
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {
-                    this.alertService.error(error.detail || error.statusText);
+                    let back_err: boolean = false;
+                    if (back_err = (error.status === 0)) {
+                        error.detail = `
+                        <h4>Unable to Connect to the Server</h4>
+                        <p>Check if backend API server is up</p>
+                        `;
+                    }
+                    this.alertService.error(error.detail || error.statusText, { autoClose: !back_err });
                     this.submitting = false;
                 }
             });
