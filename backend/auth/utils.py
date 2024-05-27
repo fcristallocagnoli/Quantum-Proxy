@@ -58,7 +58,7 @@ def is_authenticated(request):
 def current_account(request: Request):
     auth_header = request.headers.get("Authorization")
 
-    if not auth_header and not auth_header.startswith("Bearer jwt-token"):
+    if not auth_header or not auth_header.startswith("Bearer jwt-token"):
         return None
 
     token_fragment = auth_header.split(".")[1]

@@ -6,9 +6,9 @@ from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
 from apscheduler.schedulers.background import BackgroundScheduler
 from database.mongo_client import is_empty
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.logger import logger
-from routers import provider_router, user_router
+from fastapi.middleware.cors import CORSMiddleware
+from routers import provider_router, user_router, account_router
 from utils.scheduler_functions import init_backends, init_providers, job_manager
 
 
@@ -89,6 +89,10 @@ app.add_middleware(
 
 app.include_router(
     user_router.router,
+)
+
+app.include_router(
+    account_router.router,
 )
 
 app.include_router(
