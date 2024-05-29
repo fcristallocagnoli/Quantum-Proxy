@@ -32,6 +32,6 @@ class UserModel(BaseModel):
 
 
 class UserInDBModel(UserModel):
-    verification_token: Optional[str] = Field(default=None)
+    verification_token: Optional[float] = Field(default=None)
     is_verified: Optional[bool] = Field(default=False)
     refresh_tokens: Optional[list[float]] = Field(default=[])
