@@ -10,7 +10,7 @@ const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule
 const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [authGuard] },
+    { path: '', component: HomeComponent },
     { path: 'account', loadChildren: accountModule },
     { path: 'profile', loadChildren: profileModule, canActivate: [authGuard] },
     { path: 'admin', loadChildren: adminModule, canActivate: [authGuard], data: { roles: [Role.Admin] } },

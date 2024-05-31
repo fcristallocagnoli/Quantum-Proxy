@@ -1,6 +1,65 @@
-﻿<div class="p-4">
-    <div class="container">
-        <h1>Hi {{account?.firstName}}!</h1>
-        <p>You're logged in with Angular 15 & JWT!!</p>
+﻿<!-- app.component.html -->
+
+<main class="main-content py-3">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="mt-4 p-5 bg-secondary-subtle rounded">
+          <h1 class="display-4">Welcome to Quantum-Proxy</h1>
+          <p class="lead">A platform for choosing and managing heterogeneous quantum computing providers</p>
+          <hr class="my-4">
+          <p>Systems are updated every day at 2:00 a.m.</p>
+          <div class="d-flex justify-content-end">
+            <a href="mailto:fcristallocagnoli@uma.es" class="text-secondary fs-2 ps-4">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://github.com/fcristallocagnoli/Quantum-Proxy" target="_blank"
+              class="text-secondary fs-2 ps-4">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="mt-4 p-5 bg-secondary-subtle rounded">
+          <p class="lead">
+            Take a look at our features:
+          </p>
+          <hr class="my-4">
+          <ul class="list-group">
+            <a routerLink="/providers" class="list-group-item list-group-item-action">
+              Providers
+              <ul class="list-unstyle">
+                <li>List of providers available</li>
+              </ul>
+            </a>
+            <a routerLink="/backens" class="list-group-item list-group-item-action">
+              Systems
+              <ul class="list-unstyle">
+                <li>List of systems available</li>
+              </ul>
+            </a>
+            <a routerLink="/compare" class="list-group-item list-group-item-action">
+              Compare
+              <ul class="list-unstyle">
+                <li>Compare two systems</li>
+              </ul>
+            </a>
+            <a routerLink="/wizard" class="list-group-item list-group-item-action">
+              Wizard
+              <ul class="list-unstyle">
+                <li>Assistant to choose a system according to user's needs</li>
+              </ul>
+            </a>
+          </ul>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</main>
+
+<!-- <footer class="footer bg-dark text-white py-3" style="position: absolute; bottom: 0; width: 100%;">
+  <div class="container text-center">
+    <p>&copy; 2024 Quantum-Proxy. Todos los derechos reservados.</p>
+  </div>
+</footer> -->

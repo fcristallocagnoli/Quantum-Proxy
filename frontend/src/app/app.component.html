@@ -1,25 +1,55 @@
 <div class="app-container" [ngClass]="{ 'bg-light': account }">
   <!-- main nav -->
-  @if (account) {
   <nav class="navbar navbar-expand navbar-dark bg-dark px-3">
-    <div class="navbar-nav">
+    <div class="container">
       <!-- Home -->
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link navbar-brand">Quantum-Proxy</a>
-      <!-- Providers -->
-      <a class="nav-item nav-link">Providers</a>
-      <!-- Compare two providers (or backends ¿maybe?) -->
-      <a class="nav-item nav-link">Compare</a>
-      <!-- User Profile -->
-      <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
-      <!-- Admin Utils -->
-      @if (account.role === Role.Admin) {
-      <a routerLink="/admin" routerLinkActive="active" class="nav-item nav-link">Admin</a>
-      }
-      <!-- Logout -->
-      <button (click)="logout()" class="btn btn-link nav-item nav-link">Logout</button>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+        class="nav-item nav-link navbar-brand">Quantum-Proxy</a>
+      <div class="navbar-nav ms-auto me-5 align-items-center">
+        <!-- Providers -->
+        <a routerLink="/providers" class="nav-item nav-link ps-4">Providers</a>
+        <!-- Systems (backends) -->
+        <a routerLink="/systems" class="nav-item nav-link ps-4">Systems</a>
+        <!-- Compare two providers (or systems ¿maybe?) -->
+        <a routerLink="/compare" class="nav-item nav-link ps-4">Compare</a>
+        <!-- Wizard -->
+        <a routerLink="/wizard" class="nav-item nav-link ps-4">Wizard</a>
+        <li class="nav-item dropdown ps-4" data-bs-theme="dark">
+          @if (!account) {
+          <!-- If user not loged in, mistery person avatar -->
+          <img id="logout-user" class="nav-link dropdown-toggle" src="https://www.gravatar.com/avatar/?d=mp&f=y&s=32"
+            data-bs-toggle="dropdown" role="button" aria-expanded="false" />
+          }@else {
+          <!-- If user loged in, email-hash based avatar -->
+          <img id="logout-user" class="nav-link dropdown-toggle"
+            src="https://www.gravatar.com/avatar/{{ account.email| hash }}?d=retro&f=y&s=32" data-bs-toggle="dropdown"
+            role="button" aria-expanded="false" />
+          }
+          <ul class="dropdown-menu">
+            @if (account) {
+            <!-- If user loged in, settings + logout -->
+            <li class="dropdown-item-text">Signed in as<br><strong>{{ account.email }}</strong></li>
+            <li><a routerLink="/profile" class="dropdown-item">Account Settings</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            @if (account.role === Role.Admin) {
+            <!-- If user has admin role, show admin utils -->
+            <a routerLink="/admin" class="dropdown-item">Admin Tools</a>
+            }
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><button (click)="logout()" class="dropdown-item">Logout</button></li>
+            }@else {
+            <!-- If user not loged in, show login button -->
+            <li><a routerLink="/account/login" class="dropdown-item">Login</a></li>
+            }
+          </ul>
+        </li>
+      </div>
     </div>
   </nav>
-  }
 
   <!-- subnav router outlet -->
   <router-outlet name="subnav"></router-outlet>

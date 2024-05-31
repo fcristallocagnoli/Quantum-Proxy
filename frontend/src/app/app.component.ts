@@ -17,5 +17,7 @@ export class AppComponent {
 
   logout() {
     this.accountService.logout();
+    // para solucionar un pequeño bug. el dropdown no se cierra al hacer logout
+    document.getElementById('logout-user')?.click();
   }
 }
