@@ -65,7 +65,7 @@ class BaseProviderModel(BaseModel):
     name: Optional[str] = Field(default=None)
     pid: Optional[str] = Field(default=None)
     description: Optional[Any] = Field(default="")
-    url: Optional[str] = Field(default=None)
+    website: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------
     third_party: Optional[ThirdPartyKey] = Field(default=None)
@@ -157,7 +157,7 @@ def main():
             name="IonQ",
             pid="ionq",
             description="IonQ is a quantum computing company that builds quantum computers for commercial applications.",
-            url="https://ionq.com/",
+            website="https://ionq.com/",
             backend_request=APIRequest(
                 base_url="https://ionq.com/",
                 auth={"Authorization": "apiKey TOKEN"},
