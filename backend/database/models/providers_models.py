@@ -14,7 +14,7 @@ class ProviderName(StrEnum):
 
 class ThirdPartyEnum(StrEnum):
     AWS = "Amazon Braket"
-    AZURE = "Azure Quantum"
+    # AZURE = "Azure Quantum"
 
 
 class ThirdPartyKey(BaseModel):
@@ -64,7 +64,7 @@ class BaseProviderModel(BaseModel):
     )
     name: Optional[str] = Field(default=None)
     pid: Optional[str] = Field(default=None)
-    description: Optional[Any] = Field(default="")
+    description: Optional[str] = Field(default=None)
     website: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------
