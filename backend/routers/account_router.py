@@ -41,7 +41,7 @@ from database.mongo_client import (
     db_update_user,
 )
 
-router = APIRouter(tags=["Accounts"])
+router = APIRouter(tags=["Accounts"], prefix="/accounts")
 
 
 class HTTPCodeModel(BaseModel):
@@ -49,7 +49,7 @@ class HTTPCodeModel(BaseModel):
 
 
 @router.get(
-    "/accounts",
+    "",
     description="List all accounts",
     responses={status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel}},
 )
@@ -71,7 +71,7 @@ def get_accounts(request: Request) -> list[dict]:
 
 
 @router.post(
-    "/accounts",
+    "",
     description="Add new account",
     response_model=UserInDBModel,
     status_code=status.HTTP_201_CREATED,
@@ -114,7 +114,7 @@ def create_account(request: Request, user: dict = Body(...)) -> UserInDBModel:
 
 
 @router.post(
-    "/accounts/register",
+    "/register",
     description="Register new account",
     status_code=status.HTTP_201_CREATED,
     response_model=UserInDBModel,
@@ -167,7 +167,7 @@ def register_account(user: UserModel = Body(...)) -> UserInDBModel:
 
 
 @router.get(
-    "/accounts/verify-email",
+    "/verify-email",
     description="Verify email",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
@@ -189,7 +189,7 @@ def verify_email(token: Annotated[str, Query(...)]):
 
 
 @router.post(
-    "/accounts/authenticate",
+    "/authenticate",
     description="Authenticate account",
     status_code=status.HTTP_201_CREATED,
     response_model=dict,
@@ -236,7 +236,7 @@ def authenticate_account(
 
 
 @router.post(
-    "/accounts/revoke-token",
+    "/revoke-token",
     description="Revoke token",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
@@ -263,7 +263,7 @@ def revoke_token(
 
 
 @router.post(
-    "/accounts/refresh-token",
+    "/refresh-token",
     description="Refresh token",
     response_model=dict,
     responses={
@@ -306,7 +306,7 @@ def refresh_token(
 
 
 @router.get(
-    "/accounts/{id}",
+    "/{id}",
     description="Get a single account (from the frontend).",
     response_model=dict,
     responses={
@@ -355,7 +355,7 @@ def get_account(
 
 
 @router.put(
-    "/accounts/{id}",
+    "/{id}",
     description="Update an account (from the frontend).",
     responses={
         status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
@@ -420,7 +420,7 @@ def update_account(
 
 
 @router.delete(
-    "/accounts/{id}",
+    "/{id}",
     description="Delete an aacount",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={

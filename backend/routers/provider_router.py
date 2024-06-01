@@ -41,6 +41,7 @@ async def get_providers() -> list[BaseProviderModel]:
     """
     return db_find_providers()
 
+
 @router.post(
     "",
     description="List providers (filtered and/or projected)",
