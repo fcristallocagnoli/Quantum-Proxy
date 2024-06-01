@@ -19,6 +19,7 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
     )
 
     # --------------------------------------
+    supports_gates = device.properties.action.get(DeviceActionType.OPENQASM, None)
     return {
         "provider": {
             "provider_id": ObjectId(provider["_id"]),
@@ -28,7 +29,7 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
         "status": device.status.lower(),
         "qubit_count": device.properties.paradigm.qubitCount,
         "queue_depth": device.queue_depth().quantum_tasks.get(QueueType.NORMAL, -1),
-        "gates_supported": device.properties.action[DeviceActionType.OPENQASM].supportedOperations,
+        "gates_supported": supports_gates.supportedOperations if supports_gates else None,
         "shots_range": {
             "min": device.properties.service.shotsRange[0],
             "max": device.properties.service.shotsRange[1],
