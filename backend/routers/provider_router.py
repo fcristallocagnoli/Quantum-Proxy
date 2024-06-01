@@ -34,7 +34,22 @@ router = APIRouter(tags=["Providers"])
     # Para en caso de usar projection, no devolver campos nulo
     response_model_exclude_none=True,
 )
-async def get_providers(
+async def get_providers() -> list[BaseProviderModel]:
+    """
+    Get all providers.
+    - **returns**: All providers.
+    """
+    return db_find_providers()
+
+@router.post(
+    "/providers/",
+    description="List providers (filtered and/or projected)",
+    response_model=list[BaseProviderModel],
+    response_model_by_alias=False,
+    # Para en caso de usar projection, no devolver campos nulo
+    response_model_exclude_none=True,
+)
+async def get_providers_filtered(
     filter: Annotated[
         dict, Body(title="Filter", description="Filter the providers")
     ] = {},
@@ -43,7 +58,7 @@ async def get_providers(
     ] = {},
 ) -> list[BaseProviderModel]:
     """
-    Get all providers.
+    Get providers (filtered and/or projected).
     - **filter**: Filter to query the providers.
     - **projection**: Filter to select which fields to return.
     - **returns**: All providers.
