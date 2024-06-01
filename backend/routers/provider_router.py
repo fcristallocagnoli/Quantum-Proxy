@@ -23,11 +23,11 @@ class HTTPCodeModel(BaseModel):
     detail: str = None
 
 
-router = APIRouter(tags=["Providers"])
+router = APIRouter(tags=["Providers"], prefix="/providers")
 
 
 @router.get(
-    "/providers/",
+    "",
     description="List all providers",
     response_model=list[BaseProviderModel],
     response_model_by_alias=False,
@@ -42,7 +42,7 @@ async def get_providers() -> list[BaseProviderModel]:
     return db_find_providers()
 
 @router.post(
-    "/providers/",
+    "",
     description="List providers (filtered and/or projected)",
     response_model=list[BaseProviderModel],
     response_model_by_alias=False,
@@ -67,7 +67,7 @@ async def get_providers_filtered(
 
 
 @router.get(
-    "/providers/{pid}",
+    "/{pid}",
     description="Get a single provider",
     response_model=BaseProviderModel,
     response_model_by_alias=False,
@@ -110,7 +110,7 @@ async def get_provider(
 
 
 @router.post(
-    "/providers/",
+    "",
     description="Add new provider",
     response_model=BaseProviderModel,
     status_code=status.HTTP_201_CREATED,
@@ -153,7 +153,7 @@ async def post_provider(provider: BaseProviderModel = Body(...)) -> BaseProvider
 
 # Mejor usar PATCH para actualizar solo los campos que se necesiten
 @router.put(
-    "/providers/{pid}",
+    "/{pid}",
     response_model=BaseProviderModel,
     status_code=status.HTTP_200_OK,
     responses={
@@ -197,7 +197,7 @@ async def update_provider(
 
 
 @router.patch(
-    "/providers/{pid}",
+    "/{pid}",
     description="Modify a provider",
     response_model=BaseProviderModel,
     response_model_by_alias=False,
@@ -245,7 +245,7 @@ async def modify_provider(
 
 
 @router.delete(
-    "/providers/{pid}",
+    "/{pid}",
     description="Delete a provider",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
