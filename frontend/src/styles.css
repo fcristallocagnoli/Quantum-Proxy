@@ -8,6 +8,11 @@ body {
     margin: 0;
 }
 
+body:has(.app-container) {
+    /* for nav not to overlap */
+    padding-top: 64px;
+}
+
 /* Add application styles & imports to this file! */
 .app-container {
     min-height: 320px;
@@ -26,9 +31,7 @@ body {
     box-sizing: content-box;
 }
 
-/* Para el avatar de usuario */
-#avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
+::-webkit-scrollbar {
+    /* to avoid showing the scrollbar, it shifts the content */
+    display: none;
 }

@@ -6,8 +6,8 @@
         <tr>
             <th style="width:30%">Name</th>
             <th style="width:30%">Email</th>
-            <th style="width:30%">Role</th>
-            <th style="width:10%"></th>
+            <th style="width:15%">Role</th>
+            <th style="width:25%"></th>
         </tr>
     </thead>
     <tbody>
@@ -16,8 +16,8 @@
                 <td class="align-middle">{{account.firstName}} {{account.lastName}}</td>
                 <td class="align-middle">{{account.email}}</td>
                 <td class="align-middle">{{account.role}}</td>
-                <td style="white-space: nowrap">
-                    <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary me-1">Edit</a>
+                <td style="white-space: nowrap" class="d-flex justify-content-evenly">
+                    <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary">Edit</a>
                     <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger btn-delete-account" [disabled]="account.isDeleting">
                         @if (account.isDeleting) {
                             <span class="spinner-border spinner-border-sm"></span>

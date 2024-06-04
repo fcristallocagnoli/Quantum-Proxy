@@ -1,6 +1,6 @@
 <div class="app-container" [ngClass]="{ 'bg-light': account }">
   <!-- main nav -->
-  <nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+  <nav class="navbar navbar-expand navbar-dark bg-dark px-3 fixed-top" data-bs-theme="dark">
     <div class="container">
       <!-- Home -->
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
@@ -29,18 +29,21 @@
             @if (account) {
             <!-- If user loged in, settings + logout -->
             <li class="dropdown-item-text">Signed in as<br><strong>{{ account.email }}</strong></li>
-            <li><a routerLink="/profile" class="dropdown-item">Account Settings</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            @if (account.role === Role.Admin) {
-            <!-- If user has admin role, show admin utils -->
-            <a routerLink="/admin" class="dropdown-item">Admin Tools</a>
-            }
             <li>
               <hr class="dropdown-divider">
             </li>
             <li><button (click)="logout()" class="dropdown-item">Logout</button></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a routerLink="/profile" class="dropdown-item">Account Settings</a></li>
+            @if (account.role === Role.Admin) {
+            <!-- If user has admin role, show admin utils -->
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <a routerLink="/admin" class="dropdown-item">Admin Tools</a>
+            }
             }@else {
             <!-- If user not loged in, show login button -->
             <li><a routerLink="/account/login" class="dropdown-item">Login</a></li>
