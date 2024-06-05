@@ -1,15 +1,17 @@
+from datetime import timedelta
 from typing import Annotated
 
 from auth.utils import (
     basic_details,
     current_account,
+    generate_expire_date,
     generate_jwt_token,
     generate_refresh_token,
     get_refresh_token,
     is_authenticated,
     is_authorized,
 )
-from utils.email_utils import send_verification_email
+from utils.email_utils import send_reset_email, send_verification_email
 from utils.utils import (
     get_current_datetime,
     get_timestamp,
@@ -179,7 +181,8 @@ def verify_email(token: Annotated[str, Query(...)]):
     Verify email (from the frontend).
     """
     user = db_update_user(
-        filter={"verification_token": float(token)}, cambios={"$set": {"is_verified": True}}
+        filter={"verification_token": float(token)},
+        cambios={"$set": {"is_verified": True}},
     )
     if not user:
         raise HTTPException(
@@ -305,6 +308,114 @@ def refresh_token(
     return account
 
 
+@router.post(
+    "/forgot-password",
+    description="Forgot password",
+    status_code=status.HTTP_201_CREATED,
+    response_model=UserInDBModel,
+    responses={
+        status.HTTP_200_OK: {"model": HTTPCodeModel},
+    },
+)
+def forgot_password(email: str = Body(..., embed=True)) -> UserInDBModel:
+    """
+    Forgot password (from the frontend).
+    """
+    filter = {"email": email}
+
+    user = db_find_user(filter=filter)
+
+    # always return 200 OK response to prevent email enumeration
+    if not user:
+        return Response(status_code=status.HTTP_200_OK)
+
+    resetToken = get_timestamp()
+    resetTokenExpires = generate_expire_date(timedelta(days=1))
+
+    cambios = {
+        "$set": {"reset_token": resetToken, "reset_token_expires": resetTokenExpires}
+    }
+
+    user_in_db = UserInDBModel(**db_update_user(filter=filter, cambios=cambios))
+
+    send_reset_email(
+        user_in_db.email,
+        f"http://localhost:4200/account/reset-password?token={user_in_db.reset_token}",
+    )
+
+    return user_in_db
+
+
+@router.post(
+    "/validate-reset-token",
+    description="Validate reset token",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+    },
+)
+def validate_reset_token(token: str = Body(..., embed=True)):
+    """
+    Validate reset token (from the frontend).
+    """
+    user = db_find_user(filter={"reset_token": float(token)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Verification failed",
+        )
+
+    user = UserInDBModel(**user)
+    if get_current_datetime() > user.reset_token_expires:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token has expired",
+        )
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post(
+    "/reset-password",
+    description="Reset password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+    },
+)
+def reset_password(token: str = Body(...), password: str = Body(...)):
+    """
+    Reset password (from the frontend).
+    """
+    filter = {"reset_token": float(token)}
+
+    user = db_find_user(filter=filter)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Verification failed",
+        )
+
+    user = UserInDBModel(**user)
+    if get_current_datetime() > user.reset_token_expires:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token has expired",
+        )
+
+    cambios = {
+        "$set": {
+            "password": hash_password(password),
+            "reset_token": None,
+            "reset_token_expires": None,
+        }
+    }
+
+    db_update_user(filter=filter, cambios=cambios)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.get(
     "/{id}",
     description="Get a single account (from the frontend).",
@@ -397,7 +508,7 @@ def update_account(
         "last_name": new_user["lastName"],
         "email": new_user["email"],
     }
-    
+
     # Only change password if it is not empty
     if password := new_user["password"]:
         user_to_store["password"] = hash_password(password)

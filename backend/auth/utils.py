@@ -1,5 +1,6 @@
 import base64
 import json
+from datetime import datetime, timedelta, timezone
 
 from database.models.user_models import UserInDBModel
 from database.mongo_client import db_find_user
@@ -19,13 +20,19 @@ def basic_details(user: UserInDBModel):
     }
 
 
+def generate_expire_date(delta: timedelta):
+    now = datetime.now(timezone.utc)
+
+    expiration_date = now + delta
+
+    return expiration_date
+
+
 def generate_refresh_token(response: Response):
     token = get_timestamp()
 
     # add token cookie that expires in 7 days
-    from datetime import datetime, timedelta, timezone
-
-    future_date = datetime.now(timezone.utc) + timedelta(days=7)
+    future_date = generate_expire_date(timedelta(days=7))
     utc_string = future_date.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
     response.set_cookie(
@@ -37,11 +44,10 @@ def generate_refresh_token(response: Response):
 
     return token
 
+
 # FIXME: Parece que no está funcionando correctamente
 def generate_jwt_token(account: UserInDBModel):
-    from datetime import datetime, timedelta, timezone
-
-    future_time = datetime.now(timezone.utc) + timedelta(minutes=15)
+    future_time = generate_expire_date(timedelta(minutes=15))
     expires = round(future_time.timestamp())
     # create token that expires in 15 minutes
     token_payload = {"exp": expires, "id": account.id}

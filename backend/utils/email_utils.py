@@ -108,7 +108,7 @@ def send_verification_email(receiver: str, verifyUrl: str):
     email_msg = create_email(
         receivers=set([receiver]),
         subject="Verification Email",
-        body="This is a test email from QuantumProxy App.",
+        body=f"This is a email from QuantumProxy App.\nPlease click the below link to verify your email address.\n{verifyUrl}",
         html=textwrap.dedent(
             f"""
         <title>Verification Email</title>
@@ -155,6 +155,69 @@ def send_verification_email(receiver: str, verifyUrl: str):
                     <p>Thanks for registering!</p>
                     <p>Please click the below link to verify your email address:</p>
                     <p><a href="{verifyUrl}">{verifyUrl}</a></p>
+                </div>
+                <div class="footer">
+                    <p>&mdash; QuantumProxy App &mdash;</p>
+                </div>
+            </div>
+        </body>
+        """
+        ),
+    )
+    send_email(email_msg)
+
+
+def send_reset_email(receiver: str, resetUrl: str):
+    email_msg = create_email(
+        receivers=set([receiver]),
+        subject="Password Reset Email",
+        body=f"This is a email from QuantumProxy App.\nForgot your password?\nPlease click the below link to reset your password.\n{resetUrl}",
+        html=textwrap.dedent(
+            f"""
+        <title>Password Reset Email</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                background-color: #007bff;
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+                border-radius: 5px 5px 0 0;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .footer {{
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 10px;
+                text-align: center;
+                border-radius: 0 0 5px 5px;
+            }}
+        </style>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Password Reset Email</h1>
+                </div>
+                <div class="content">
+                    <p>Forgot your password?</p>
+                    <p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
+                    <p><a href="{resetUrl}">{resetUrl}</a></p>
                 </div>
                 <div class="footer">
                     <p>&mdash; QuantumProxy App &mdash;</p>

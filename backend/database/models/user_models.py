@@ -35,3 +35,5 @@ class UserInDBModel(UserModel):
     verification_token: Optional[float] = Field(default=None)
     is_verified: Optional[bool] = Field(default=False)
     refresh_tokens: Optional[list[float]] = Field(default=[])
+    reset_token: Optional[float] = Field(default=None)
+    reset_token_expires: Optional[Date] = Field(default=None)
