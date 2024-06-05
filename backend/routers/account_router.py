@@ -168,7 +168,7 @@ def register_account(user: UserModel = Body(...)) -> UserInDBModel:
     return created_user
 
 
-@router.get(
+@router.post(
     "/verify-email",
     description="Verify email",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -176,7 +176,7 @@ def register_account(user: UserModel = Body(...)) -> UserInDBModel:
         status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
     },
 )
-def verify_email(token: Annotated[str, Query(...)]):
+def verify_email(token: str = Body(..., embed=True)):
     """
     Verify email (from the frontend).
     """

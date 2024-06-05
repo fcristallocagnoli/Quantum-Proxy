@@ -56,7 +56,7 @@ export class AccountService {
   }
 
   verifyEmail(token: string) {
-    return this.http.get(`${baseUrl}/verify-email?token=${token}`);
+    return this.http.post(`${baseUrl}/verify-email`, { token });
   }
 
   forgotPassword(email: string) {
