@@ -1,0 +1,35 @@
+<div class="p-4">
+    <div class="container">
+        <div class="row">
+            @for (provider of providers; track provider.id) {
+            <div class="col-4 mb-3">
+                <div class="card mb-3 shadow-sm bg-body-tertiary rounded">
+                    <div class="card-header">
+                        Featured
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ provider.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ provider.thirdParty?.name ? 'From: ' +
+                            provider.thirdParty?.name : 'Direct Access' }}
+                        </h6>
+                        <p class="card-text">{{ provider.description }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a routerLink="{{provider.pid}}" class="btn btn-primary">Show provider</a>
+                            <a class="btn btn-primary" [ngClass]="{'disabled': !provider.website}"
+                                [href]="provider.website" target="_blank">
+                                <i class="fa-solid fa-arrow-up-right-from-square pe-1"></i>
+                                View website
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+            @if (!providers) {
+            <div class="col-12 text-center">
+                <span class="spinner-border spinner-border-lg"></span>
+            </div>
+            }
+        </div>
+    </div>
+</div>

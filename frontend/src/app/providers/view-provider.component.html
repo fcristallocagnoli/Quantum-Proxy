@@ -1,0 +1,8 @@
+<div class="container p-4">
+    <h1 class="display-6">{{ provider?.name }}</h1>
+    @if (provider?.description === '') {
+        <p>No description</p>
+    }@else {
+        <p>{{ provider?.description }}</p>
+    }
+</div>
