@@ -8,7 +8,7 @@ from database.mongo_client import is_empty
 from fastapi import FastAPI
 from fastapi.logger import logger
 from fastapi.middleware.cors import CORSMiddleware
-from routers import provider_router, user_router, account_router
+from routers import provider_router, user_router, account_router, backend_router
 from utils.scheduler_functions import init_backends, init_providers, job_manager
 
 
@@ -89,14 +89,22 @@ app.add_middleware(
 
 app.include_router(
     user_router.router,
+    # prefix="/api/v1",
 )
 
 app.include_router(
     account_router.router,
+    # prefix="/api/v1",
 )
 
 app.include_router(
     provider_router.router,
+    # prefix="/api/v1",
+)
+
+app.include_router(
+    backend_router.router,
+    # prefix="/api/v1",
 )
 
 
