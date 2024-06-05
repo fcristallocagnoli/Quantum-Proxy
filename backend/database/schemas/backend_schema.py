@@ -1,3 +1,4 @@
+from database.models.backends_models import ClassType
 from database.mongo_client import db_find_provider
 from database.models.providers_models import ProviderName, ThirdPartyEnum
 from utils.utils import convert_from_ms, from_seconds_to_date, fromisoformat, get_current_time_iso
@@ -33,6 +34,7 @@ def ionq_normalizer(backend: dict) -> dict:
     """Normalize IonQ backend data"""
     is_simulator: bool = backend["backend"] == "simulator"
     norm_back = {
+        "class_type": ClassType.IONQ,
         "provider": backend["provider"],
         "backend_name": str(backend["backend"]).removeprefix("qpu.").capitalize(),
         # --------------------------------------
@@ -65,6 +67,7 @@ def ibm_normalizer(backend: dict):
     """Normalize IBM backend data"""
     extra: dict = backend["extra"]
     norm_back = {
+        "class_type": ClassType.IBM,
         "provider": backend["provider"],
         "backend_name": str(backend["backend"]).removeprefix("ibm_").capitalize(),
         # --------------------------------------
@@ -72,7 +75,7 @@ def ibm_normalizer(backend: dict):
         "qubits": backend["qubits"],
         "queue": {
             "type": "jobs_remaining",
-            "value": backend["queue"],
+            "value": str(backend["queue"]),
         },
         "last_updated": fromisoformat(backend["last_updated"]),
         "basis_gates": extra["basis_gates"],
@@ -93,6 +96,7 @@ def rigetti_normalizer(backend: dict):
     """Normalize Rigetti backend data"""
     system, performance = backend["System"], backend["Performance Snapshot"]
     return {
+        "class_type": ClassType.RIGETTI,
         "provider": backend["provider"],
         "backend_name": backend["backend"],
         # --------------------------------------
@@ -116,6 +120,7 @@ def rigetti_normalizer(backend: dict):
 def braket_normalizer(backend: dict):
     """Normalize Braket backend data"""
     return {
+        "class_type": ClassType.BRAKET,
         "provider": backend["provider"],
         "backend_name": backend["device_name"],
         # --------------------------------------
