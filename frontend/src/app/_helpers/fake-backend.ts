@@ -32,12 +32,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 //     return register();
                 // case url.endsWith('/accounts/verify-email') && method === 'POST':
                 //     return verifyEmail();
-                case url.endsWith('/accounts/forgot-password') && method === 'POST':
-                    return forgotPassword();
-                case url.endsWith('/accounts/validate-reset-token') && method === 'POST':
-                    return validateResetToken();
-                case url.endsWith('/accounts/reset-password') && method === 'POST':
-                    return resetPassword();
+                // case url.endsWith('/accounts/forgot-password') && method === 'POST':
+                //     return forgotPassword();
+                // case url.endsWith('/accounts/validate-reset-token') && method === 'POST':
+                //     return validateResetToken();
+                // case url.endsWith('/accounts/reset-password') && method === 'POST':
+                //     return resetPassword();
                 // case url.endsWith('/accounts') && method === 'GET':
                 //     return getAccounts();
                 // case url.match(/\/accounts\/\d+$/) && method === 'GET':

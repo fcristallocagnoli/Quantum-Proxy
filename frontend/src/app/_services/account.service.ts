@@ -67,8 +67,8 @@ export class AccountService {
     return this.http.post(`${baseUrl}/validate-reset-token`, { token });
   }
 
-  resetPassword(token: string, password: string, confirmPassword: string) {
-    return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
+  resetPassword(token: string, password: string) {
+    return this.http.post(`${baseUrl}/reset-password`, { token, password });
   }
 
   getAll() {
