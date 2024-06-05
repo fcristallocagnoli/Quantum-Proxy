@@ -29,7 +29,7 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
         "status": device.status.lower(),
         "qubit_count": device.properties.paradigm.qubitCount,
         "queue_depth": device.queue_depth().quantum_tasks.get(QueueType.NORMAL, -1),
-        "gates_supported": supports_gates.supportedOperations if supports_gates else None,
+        "gates_supported": supports_gates.supportedOperations if supports_gates else [],
         "shots_range": {
             "min": device.properties.service.shotsRange[0],
             "max": device.properties.service.shotsRange[1],
