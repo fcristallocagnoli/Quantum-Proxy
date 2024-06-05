@@ -283,6 +283,28 @@ def db_delete_provider(*, filter: dict) -> bool:
 # region Backends ----------------------------
 
 
+def db_find_backend(*, filter: ObjectId | dict = None, projection: dict = {}) -> dict:
+    """
+    Get the backend matching the id or query a document.
+    :param ``filter`` (optional): a dictionary specifying the query to be performed
+    OR any other type to be used as the value for a query for ``"_id"``
+    :param ``projection`` (optional): fields to include or exclude in the result
+    """
+    if projection:
+        projection.update({"class_type": 1})
+    return db_find_one(backends_coll, filter=filter, projection=projection)
+
+
+def db_find_backends(*, filter: dict = {}, projection: dict = {}) -> Cursor:
+    """
+    Get all backends that match the filter.
+    :param filter: query document
+    """
+    if projection:
+        projection.update({"class_type": 1})
+    return db_find_many(backends_coll, filter=filter, projection=projection)
+
+
 def db_insert_backend(backend: dict) -> str:
     """
     Insert a new backend into the database.
