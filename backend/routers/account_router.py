@@ -507,6 +507,7 @@ def update_account(
         "first_name": new_user["firstName"],
         "last_name": new_user["lastName"],
         "email": new_user["email"],
+        "api_keys": new_user["apiKeys"],
     }
 
     # Only change password if it is not empty
@@ -527,6 +528,7 @@ def update_account(
         "lastName": user_in_db["last_name"],
         "email": user_in_db["email"],
         "role": user_in_db["roles"][0],
+        "apiKeys": user_in_db["api_keys"]
     }
 
 

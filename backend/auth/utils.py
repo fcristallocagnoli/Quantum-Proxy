@@ -17,6 +17,7 @@ def basic_details(user: UserInDBModel):
         "role": user.roles[0],
         "dateCreated": user.created_at,
         "isVerified": user.is_verified,
+        "apiKeys": user.api_keys,
     }
 
 
