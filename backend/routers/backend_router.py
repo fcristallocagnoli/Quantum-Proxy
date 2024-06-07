@@ -5,6 +5,8 @@ from database.mongo_client import db_find_backend, db_find_backends
 from fastapi import APIRouter, Body, HTTPException, Path, status
 from pydantic import BaseModel
 
+from routers.provider_router import sf_parse_object_id
+
 
 # For documentation purposes
 class HTTPCodeModel(BaseModel):
@@ -101,8 +103,9 @@ async def get_backend_by_id(
     """
 
     if (
-        backend := db_find_backend(filter={"id": id}, projection=projection)
+        backend := db_find_backend(filter=sf_parse_object_id(id), projection=projection)
     ) is not None:
+        backend = retrieve_backend(Backend(backend=backend), as_dict=True)
         return backend
 
     raise HTTPException(
