@@ -15,8 +15,6 @@ export class UpdateComponent implements OnInit {
     submitting = false;
     submitted = false;
     deleting = false;
-    // Para mostrar algun mensaje indicando que se debe pulsar 'Update' para guardar los cambios
-    apiKeysChanged: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -49,7 +47,16 @@ export class UpdateComponent implements OnInit {
         ref.componentInstance.userPlatformMap = this.form.value.apiKeys;
         ref.result.then((resultado) => {
             this.form.patchValue({ apiKeys: resultado });
-            this.apiKeysChanged = true;
+            this.accountService.patch(this.account.id!, { apiKeys: resultado })
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('API Keys & Secrets updated successfully');
+                },
+                error: error => {
+                    this.alertService.error(error);
+                }
+            });
         }, () => { console.log("Edición cancelada") });
     }
 

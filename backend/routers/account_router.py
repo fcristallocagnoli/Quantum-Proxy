@@ -532,6 +532,77 @@ def update_account(
     }
 
 
+@router.patch(
+    "/{id}",
+    description="Patch an account (from the frontend).",
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": HTTPCodeModel},
+    },
+)
+def patch_account(
+    request: Request,
+    id: Annotated[
+        str,
+        Path(
+            title="The ID of the account",
+        ),
+    ],
+    new_user: dict = Body(...),
+):
+
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_update = UserInDBModel(**db_find_user(filter=sf_parse_object_id(id)))
+
+    account = current_account(request)
+
+    # user accounts can update OWN profile
+    # admin accounts can update ALL profiles
+    if not account or (
+        user_to_update.id != account.id and not is_authorized(account, "Admin")
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
+    user_to_store = {
+        "first_name": new_user.get("firstName", None),
+        "last_name": new_user.get("lastName", None),
+        "email": new_user.get("email", None),
+        "api_keys": new_user.get("apiKeys", None),
+    }
+
+    # Only change password if it is not empty or field does not exist
+    if password := new_user.get("password", None):
+        user_to_store["password"] = hash_password(password)
+
+    # Only admins can change roles
+    if new_role := new_user.get("role", None):
+        user_to_store["roles"] = [new_role]
+
+    cambios: dict = {
+        k: v for k, v in user_to_store.items() if v is not None
+    }
+
+    user_in_db = db_update_user(
+        filter={"_id": sf_parse_object_id(id)}, cambios={"$set": cambios}
+    )
+
+    return {
+        "id": str(user_in_db["_id"]),
+        "firstName": user_in_db["first_name"],
+        "lastName": user_in_db["last_name"],
+        "email": user_in_db["email"],
+        "role": user_in_db["roles"][0],
+        "apiKeys": user_in_db["api_keys"]
+    }
+
+
 @router.delete(
     "/{id}",
     description="Delete an aacount",
