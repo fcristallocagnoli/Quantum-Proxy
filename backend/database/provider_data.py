@@ -1,3 +1,4 @@
+import textwrap
 from braket.aws import AwsDevice
 from dotenv import load_dotenv
 
@@ -29,7 +30,10 @@ providers_api_data = [
     {
         "name": "IBM Quantum",
         "pid": "native.ibm_quantum",
-        "description": "",
+        "description": textwrap.dedent("""
+        <p>Check the <a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantum Platform</a> for more information about systems.</p>
+        """
+        ),
         "website": "https://www.ibm.com/quantum",
         "from_third_party": False,
         "backend_request": {

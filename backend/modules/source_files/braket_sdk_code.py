@@ -23,7 +23,7 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
     return {
         "provider": {
             "provider_id": ObjectId(provider["_id"]),
-            "provider_name": provider["name"],
+            "provider_name": provider["name"] + f" ({ThirdPartyEnum.AWS})",
         },
         "device_name": device.name,
         "status": device.status.lower(),
