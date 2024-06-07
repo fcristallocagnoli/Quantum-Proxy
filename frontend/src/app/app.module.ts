@@ -11,12 +11,14 @@ import { AlertComponent } from './_components';
 import { HomeComponent } from './home';;
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { HashPipe } from "./_helpers/hash.pipe";
+import { UpdateSecretsComponent } from './_components/update-secrets.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AlertComponent,
         HomeComponent,
+        UpdateSecretsComponent
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },

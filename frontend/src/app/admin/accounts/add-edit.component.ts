@@ -5,6 +5,8 @@ import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UpdateSecretsComponent } from '@app/_components/update-secrets.component';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -20,7 +22,8 @@ export class AddEditComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private modalService: NgbModal
     ) { }
 
     ngOnInit() {
@@ -31,9 +34,10 @@ export class AddEditComponent implements OnInit {
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             role: ['', Validators.required],
+            apiKeys: [''],
             // password only required in add mode
             password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]],
-            confirmPassword: ['']
+            confirmPassword: [''],
         }, {
             validators: [MustMatch('password', 'confirmPassword')]
         });
@@ -91,5 +95,13 @@ export class AddEditComponent implements OnInit {
                     this.submitting = false;
                 }
             });
+    }
+
+    updateSecrets() {
+        let ref = this.modalService.open(UpdateSecretsComponent, { centered: true, size: 'lg' });
+        ref.componentInstance.userPlatformMap = this.form.value.apiKeys;
+        ref.result.then((resultado) => {
+            this.form.patchValue({ apiKeys: resultado });
+        }, () => { console.log("Edición cancelada") });
     }
 }

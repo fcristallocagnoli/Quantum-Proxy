@@ -2,9 +2,11 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
+import { UpdateSecretsComponent } from '@app/_components/update-secrets.component';
 
 @Component({ templateUrl: 'update.component.html' })
 export class UpdateComponent implements OnInit {
@@ -13,13 +15,16 @@ export class UpdateComponent implements OnInit {
     submitting = false;
     submitted = false;
     deleting = false;
+    // Para mostrar algun mensaje indicando que se debe pulsar 'Update' para guardar los cambios
+    apiKeysChanged: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private modalService: NgbModal
     ) { }
 
     ngOnInit() {
@@ -28,14 +33,25 @@ export class UpdateComponent implements OnInit {
             lastName: [this.account.lastName, Validators.required],
             email: [this.account.email, [Validators.required, Validators.email]],
             password: ['', [Validators.minLength(6)]],
-            confirmPassword: ['']
+            confirmPassword: [''],
+            apiKeys: [this.account.apiKeys],
         }, {
-            validator: MustMatch('password', 'confirmPassword')
+            validators: [MustMatch('password', 'confirmPassword')]
         });
+        console.log("Form value:", this.form.value)
     }
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
+
+    updateSecrets() {
+        let ref = this.modalService.open(UpdateSecretsComponent, { centered: true, size: 'lg' });
+        ref.componentInstance.userPlatformMap = this.form.value.apiKeys;
+        ref.result.then((resultado) => {
+            this.form.patchValue({ apiKeys: resultado });
+            this.apiKeysChanged = true;
+        }, () => { console.log("Edición cancelada") });
+    }
 
     onSubmit() {
         this.submitted = true;
