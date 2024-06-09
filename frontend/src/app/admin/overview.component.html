@@ -2,6 +2,22 @@
     <div class="container">
         <h1>Admin</h1>
         <p>This section can only be accessed by administrators.</p>
-        <p><a routerLink="accounts">Manage Accounts</a></p>
+        <div class="list-group">
+            <a routerLink="accounts"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Manage Accounts</div>
+                    CRUD operations for user accounts
+                </div>
+            </a>
+            <a routerLink="database"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-start disabled">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Manage Database</div>
+                    CRUD operations for database | Update providers & systems
+                </div>
+                <span class="badge text-bg-warning rounded-pill">WIP</span>
+            </a>
+        </div>
     </div>
 </div>
