@@ -34,7 +34,7 @@ def init_providers():
         )
 
 
-def refresh_backend(provider: BaseProviderModel):
+def refresh_backends(provider: BaseProviderModel):
     """
     Refreshes the backends of a provider
 
@@ -59,4 +59,4 @@ def init_backends(scheduler: BackgroundScheduler):
     providers = list(map(lambda p: BaseProviderModel(**p), providers))
     for provider in providers:
         logger.info(f"Processing provider: {provider.name} with id: {provider.id}...")
-        scheduler.add_job(func=refresh_backend, args=[provider], id=provider.name)
+        scheduler.add_job(func=refresh_backends, args=[provider], id=provider.name)
