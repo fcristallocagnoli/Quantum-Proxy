@@ -1,11 +1,14 @@
 from typing import Annotated
 
+from utils.scheduler_functions import refresh_backends
 from database.models.backends_models import Backend, retrieve_backend
-from database.mongo_client import db_find_backend, db_find_backends
+from database.mongo_client import db_find_backend, db_find_backends, db_find_providers
 from fastapi import APIRouter, Body, HTTPException, Path, status
+from fastapi.logger import logger
 from pydantic import BaseModel
-
 from routers.provider_router import sf_parse_object_id
+
+from database.models.providers_models import BaseProviderModel
 
 
 # For documentation purposes
@@ -111,3 +114,28 @@ async def get_backend_by_id(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail=f"Backend with {id} not found"
     )
+
+
+@router.post(
+    "/refresh",
+    description="Refresh backends",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def refresh_backends_api(
+    filter: Annotated[
+        dict, Body(title="Filter", description="Filter the backends", embed=True)
+    ] = {},
+):
+    """
+    Get backends (filtered and/or projected).
+    - **filter**: Filter to query the backends.
+    - **projection**: Filter to select which fields to return.
+    - **returns**: All backends.
+    """
+    filter.update({"from_third_party": False})
+
+    providers = db_find_providers(filter=filter)
+    providers = list(map(lambda p: BaseProviderModel(**p), providers))
+    for provider in providers:
+        logger.info(f"Processing provider: {provider.name} with id: {provider.id}...")
+        refresh_backends(provider)
