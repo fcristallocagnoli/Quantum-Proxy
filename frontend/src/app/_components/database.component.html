@@ -1,0 +1,20 @@
+<h1>Database</h1>
+<p>Database tools from secure (admin only) api end point:</p>
+<div class="list-group">
+    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="fetching"
+        style="cursor: pointer;">
+        <div class="ms-2 me-auto">
+            <div class="fw-bold">Update all systems</div>
+            @if (fetching) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+            }
+            Refresh all system data by fetching from each provider 'backend_request' filed
+        </div>
+    </a>
+    <a class="list-group-item list-group-item-action" style="cursor: pointer;">
+        <div class="ms-2 me-auto">
+            <div class="fw-bold">Manage Database</div>
+            CRUD operations for database | Update providers & systems
+        </div>
+    </a>
+</div>
