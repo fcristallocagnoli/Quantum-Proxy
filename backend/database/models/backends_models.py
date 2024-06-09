@@ -1,3 +1,4 @@
+import datetime
 from enum import StrEnum
 from typing import Annotated, Literal, Optional
 
@@ -5,6 +6,7 @@ from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
+Date = Annotated[datetime.datetime, BeforeValidator(str)]
 
 class ClassType(StrEnum):
     IONQ = "IonQBackend"
@@ -29,6 +31,7 @@ class BaseBackendModel(BaseModel):
         populate_by_name=True,
         arbitrary_types_allowed=True,
     )
+    last_checked: Optional[Date] = Field(default=None)
 
 
 # --------------------------------------
