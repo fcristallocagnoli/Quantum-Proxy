@@ -18,6 +18,7 @@ class ClassType(StrEnum):
 class ProviderFK(BaseModel):
     provider_id: PyObjectId
     provider_name: str
+    provider_from: Optional[str] = None
 
 
 class BaseBackendModel(BaseModel):
