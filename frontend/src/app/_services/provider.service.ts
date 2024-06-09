@@ -12,7 +12,9 @@ const providersProjection = {
     description: 1,
     website: 1,
     from_third_party: 1,
-    third_party: 1
+    backend_request: 1,
+    third_party: 1,
+    backends_ids: 1
   }
 };
 

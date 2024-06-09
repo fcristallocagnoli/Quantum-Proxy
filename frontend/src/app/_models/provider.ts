@@ -10,5 +10,7 @@ export class Provider {
     description?: string;
     website?: string;
     fromThirdParty?: boolean;
+    fetchMethod?: string;
     thirdParty?: ThirdParty;
+    systems?: string[];
 }
