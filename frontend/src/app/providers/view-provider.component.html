@@ -1,8 +1,9 @@
 <div class="container p-4">
     <h1 class="display-6">{{ provider?.name }}</h1>
     @if (provider?.description === '') {
-        <p>No description</p>
+    <p>Description must be manually inserted into the database.</p>
     }@else {
-        <p>{{ provider?.description }}</p>
+    <!-- Usamos innerHTML para incrustar código html que proviene de la descripcion -->
+    <div [innerHTML]="provider?.description"></div>
     }
 </div>
