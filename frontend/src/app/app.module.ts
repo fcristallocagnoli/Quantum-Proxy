@@ -4,13 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
-import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
+import { JwtInterceptor, ErrorInterceptor, appInitializer, HashPipe } from './_helpers';
 import { AccountService } from './_services';
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';;
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
-import { HashPipe } from "./_helpers/hash.pipe";
 import { UpdateSecretsComponent } from './_components/update-secrets.component';
 
 @NgModule({
