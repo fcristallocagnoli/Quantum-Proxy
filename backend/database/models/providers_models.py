@@ -13,7 +13,7 @@ class ProviderName(StrEnum):
 
 
 class ThirdPartyEnum(StrEnum):
-    AWS = "Amazon Braket"
+    AWS = "AWS"
     # AZURE = "Azure Quantum"
 
 

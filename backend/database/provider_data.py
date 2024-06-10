@@ -2,6 +2,7 @@ import textwrap
 from braket.aws import AwsDevice
 from dotenv import load_dotenv
 
+from database.models.providers_models import ThirdPartyEnum
 from utils.utils import norm_str
 
 load_dotenv()
@@ -73,7 +74,7 @@ providers_ws_data = [
 providers_sdk_data = [
     {
         "name": "Amazon Braket",
-        "pid": "native.amazon_braket",
+        "pid": "native.aws",
         "description": "",
         "website": "https://aws.amazon.com/braket/",
         "from_third_party": False,
@@ -106,13 +107,13 @@ def get_braket_providers():
         providers.append(device.provider_name)
         template = {
             "name": device.provider_name,
-            "pid": f"amazon_braket.{norm_str(device.provider_name)}",
+            "pid": f"{norm_str(ThirdPartyEnum.AWS)}.{norm_str(device.provider_name)}",
             "description": "",
             "website": None,
             "from_third_party": True,
             "third_party": {
                 "third_party_id": None,
-                "third_party_name": "Amazon Braket",
+                "third_party_name": ThirdPartyEnum.AWS,
             },
             "backends_ids": [],
         }
