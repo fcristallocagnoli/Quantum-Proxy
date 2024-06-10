@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from auth.utils import (
+from security.auth.utils import (
     basic_details,
     current_account,
     generate_expire_date,
