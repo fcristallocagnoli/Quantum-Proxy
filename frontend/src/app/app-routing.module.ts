@@ -7,12 +7,14 @@ import { Role } from './_models';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 const providersModule = () => import('./providers/providers.module').then(x => x.ProvidersModule);
+const systemsModule = () => import('./systems/systems.module').then(x => x.SystemsModule);
 const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
 const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'providers', loadChildren: providersModule },
+    { path: 'systems', loadChildren: systemsModule },
     { path: 'account', loadChildren: accountModule },
     { path: 'profile', loadChildren: profileModule, canActivate: [authGuard] },
     { path: 'admin', loadChildren: adminModule, canActivate: [authGuard], data: { roles: [Role.Admin] } },

@@ -1,0 +1,192 @@
+<div class="container p-4">
+    @if (system) {
+    <div class="card" style="max-width: 700px; margin: auto;">
+        <div class="card-header">
+            <h2 class="card-title">
+                {{ system.backend_name }} <i class="fa-solid fa-minus align-middle"></i> {{
+                system.provider.provider_name }}
+            </h2>
+        </div>
+        <div class="card-body px-4">
+            <div>
+                <!-- <p class="card-text">
+                    ¿Algo más?
+                </p> -->
+                <!-- TODO: Mejorar cómo se muestran las tablas -->
+                <!-- Fields in common -->
+                <h3 class="h5">Common Fields</h3>
+                <div class="table-responsive" style="max-width: 600px; margin: auto;">
+                    <table class="table table-striped align-middle-table">
+                        <tbody>
+                            <tr>
+                                <td><strong>Backend Name</strong></td>
+                                <td>{{ system.backend_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Provider</strong></td>
+                                <td>{{ system.provider.provider_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status</strong></td>
+                                <td>
+                                    @switch (true) {
+                                    @case (["running", "online", "available"].includes(system.status ?? 'N/A')) {
+                                    <span class="text-success">
+                                        <i class="fa-regular fa-circle-check"></i>
+                                        {{ system.status | titlecase }} <br>
+                                    </span>
+                                    }
+                                    @case (system.status === "offline") {
+                                    <span class="text-danger">
+                                        <i class="fa-regular fa-circle-xmark"></i>
+                                        {{ system.status | titlecase }} <br>
+                                    </span>
+                                    }
+                                    @case (system.status === "calibrating") {
+                                    <span class="text-secondary">
+                                        <i class="fa-regular fa-clock"></i>
+                                        {{ system.status | titlecase }} <br>
+                                    </span>
+                                    }
+                                    @case (!system.status) {
+                                    <span class="text-warning">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        Unknown <br>
+                                    </span>
+                                    }
+                                    @default {
+                                    <span class="text-info">
+                                        <span class="fa-stack" style="font-size: 8px;">
+                                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                            <i class="fa-solid fa-info fa-stack-1x text-info fa-inverse"></i>
+                                        </span>
+                                        {{ system.status | titlecase }} <br>
+                                    </span>
+                                    }
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Qubits</strong></td>
+                                <td>{{ system.qubits }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Queue</strong></td>
+                                <td>{{ system.queue?.value }} - [{{ system.queue?.type }}]</td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <h3 class="h5">Extra Fields</h3>
+                <div class="table-responsive" style="max-width: 600px; margin: auto;">
+                    <table class="table table-striped align-middle-table">
+                        <tbody>
+                            <!-- extra fields (ionq) -->
+                            <tr *ngIf="system.degraded !== undefined">
+                                <td
+                                    title="The system is in a degraded state and may be processing jobs slower than usual">
+                                    <strong>Degraded</strong>
+                                </td>
+                                <td>{{ system.degraded }}</td>
+                            </tr>
+                            <tr *ngIf="system.has_access !== undefined">
+                                <td><strong>Has Access</strong></td>
+                                <td>{{ system.has_access }}</td>
+                            </tr>
+                            <tr *ngIf="system.characterization">
+                                <td><strong>Characterization</strong></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" (click)="openModal()">View
+                                        Characterization</button>
+                                </td>
+                            </tr>
+                            <!-- extra fields (braket) -->
+                            <tr *ngIf="system.gates_supported">
+                                <td><strong>Gates Supported</strong></td>
+                                <td>{{ system.gates_supported.join(', ') }}</td>
+                            </tr>
+                            <tr *ngIf="system.shots_range">
+                                <td><strong>Shots Range</strong></td>
+                                <td>{{ system.shots_range.min }} - {{ system.shots_range.max }}</td>
+                            </tr>
+                            <tr *ngIf="system.device_cost">
+                                <td><strong>Device Cost</strong></td>
+                                <td>{{ system.device_cost.price | currency }}/{{ system.device_cost.unit }}</td>
+                            </tr>
+                            <!-- extra fields (rigetti) -->
+                            <tr *ngIf="system.rep_rate">
+                                <td><strong>Rep Rate</strong></td>
+                                <td>{{ system.rep_rate }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_t1">
+                                <td><strong>Median T1</strong></td>
+                                <td>{{ system.median_t1 }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_t2">
+                                <td><strong>Median T2</strong></td>
+                                <td>{{ system.median_t2 }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_sim_1q_fidelity">
+                                <td><strong>Median 1Q Fidelity</strong></td>
+                                <td>{{ system.median_sim_1q_fidelity }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_2q_xy_fidelity">
+                                <td><strong>Median 2Q XY Fidelity</strong></td>
+                                <td>{{ system.median_2q_xy_fidelity }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_2q_cz_fidelity">
+                                <td><strong>Median 2Q CZ Fidelity</strong></td>
+                                <td>{{ system.median_2q_cz_fidelity }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_ro_fidelity">
+                                <td><strong>Median RO Fidelity</strong></td>
+                                <td>{{ system.median_ro_fidelity }}</td>
+                            </tr>
+                            <tr *ngIf="system.median_Active_reset_fidelity">
+                                <td><strong>Median Active Reset Fidelity</strong></td>
+                                <td>{{ system.median_Active_reset_fidelity }}</td>
+                            </tr>
+                            <!-- extra fields (ibm) -->
+                            <tr *ngIf="system.basis_gates">
+                                <td><strong>Basis Gates</strong></td>
+                                <td>{{ system.basis_gates.join(', ') }}</td>
+                            </tr>
+                            <tr *ngIf="system.clops_h">
+                                <td><strong>Clops H</strong></td>
+                                <td>{{ system.clops_h }}</td>
+                            </tr>
+                            <tr *ngIf="system.credits_required !== undefined">
+                                <td><strong>Credits Required</strong></td>
+                                <td>{{ system.credits_required }}</td>
+                            </tr>
+                            <tr *ngIf="system.max_experiments">
+                                <td><strong>Max Experiments</strong></td>
+                                <td>{{ system.max_experiments }}</td>
+                            </tr>
+                            <tr *ngIf="system.max_shots">
+                                <td><strong>Max Shots</strong></td>
+                                <td>{{ system.max_shots }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Last Checked</strong></td>
+                                <td>{{ system.last_checked }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    }@else {
+    <div class="col-12 text-center">
+        <span class="spinner-border spinner-border-lg"></span>
+    </div>
+    }
+</div>
+
+<style>
+    .align-middle-table td {
+        vertical-align: middle;
+    }
+</style>

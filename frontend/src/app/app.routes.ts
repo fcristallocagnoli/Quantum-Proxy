@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [authGuard], data: { roles: [Role.Admin] } },
   { path: 'providers', loadChildren: () => import('./providers/providers.module').then(m => m.ProvidersModule) },
+  { path: 'systems', loadChildren: () => import('./systems/systems.module').then(m => m.SystemsModule) },
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
