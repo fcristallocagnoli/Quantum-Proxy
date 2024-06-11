@@ -3,7 +3,7 @@ from typing import Annotated
 from bson import ObjectId
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Path, Body, Response, status
-from utils.utils import get_current_time_iso, norm_str
+from utils.utils import get_current_datetime, norm_str
 
 from database.models.providers_models import (
     BaseProviderModel,
@@ -144,7 +144,7 @@ async def post_provider(provider: BaseProviderModel = Body(...)) -> BaseProvider
 
     provider_dict = provider.model_dump(by_alias=True, exclude="_id")
 
-    provider_dict["last_updated_at"] = get_current_time_iso()
+    provider_dict["last_checked"] = get_current_datetime()
 
     provider_db_id = db_insert_provider(provider_dict)
     provider_db = db_find_provider(filter=sf_parse_object_id(provider_db_id))
@@ -185,7 +185,7 @@ async def update_provider(
 
     provider_dict = provider.model_dump(exclude=["id"])
 
-    provider_dict["last_updated_at"] = get_current_time_iso()
+    provider_dict["last_checked"] = get_current_datetime()
     doc_after = db_replace_provider(filter={"pid": pid}, replacement=provider_dict)
 
     if not doc_after:

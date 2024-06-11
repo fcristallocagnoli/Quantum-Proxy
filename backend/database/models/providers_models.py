@@ -1,9 +1,12 @@
+import datetime
 from enum import StrEnum
 from typing import Annotated, Any, Literal, Optional
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
+
+Date = Annotated[datetime.datetime, BeforeValidator(str)]
 
 
 class ProviderName(StrEnum):
@@ -77,7 +80,7 @@ class BaseProviderModel(BaseModel):
 
     backends_ids: Optional[list[PyObjectId]] = Field(default=None)
     # --------------------------------------------------------------
-    last_updated_at: Optional[str] = None
+    last_checked: Optional[Date] = Field(default=None)
     model_config = ConfigDict(
         # Para permitir "Class(id=...)", en vez de "Class(_id=...)"
         populate_by_name=True,
