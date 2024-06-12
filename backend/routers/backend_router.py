@@ -140,6 +140,9 @@ async def refresh_backends_api(
     if not filter:
         filter.update({"from_third_party": False})
 
+    if "_id" in filter:
+        filter["_id"] = sf_parse_object_id(filter["_id"])
+
     providers = db_find_providers(filter=filter)
     providers = list(map(lambda p: BaseProviderModel(**p), providers))
 
@@ -150,7 +153,9 @@ async def refresh_backends_api(
         if provider.pid.split(".")[0] in [e.value.lower() for e in ThirdPartyEnum]:
             tp_provider = BaseProviderModel(
                 **db_find_provider(
-                    filter={"_id": sf_parse_object_id(provider.third_party.third_party_id)}
+                    filter={
+                        "_id": sf_parse_object_id(provider.third_party.third_party_id)
+                    }
                 )
             )
             # Si el proveedor ya está en la lista, no se añade
