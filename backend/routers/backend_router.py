@@ -2,13 +2,18 @@ from typing import Annotated
 
 from utils.scheduler_functions import refresh_backends
 from database.models.backends_models import Backend, retrieve_backend
-from database.mongo_client import db_find_backend, db_find_backends, db_find_providers
+from database.mongo_client import (
+    db_find_backend,
+    db_find_backends,
+    db_find_provider,
+    db_find_providers,
+)
 from fastapi import APIRouter, Body, HTTPException, Path, status
 from fastapi.logger import logger
 from pydantic import BaseModel
 from routers.provider_router import sf_parse_object_id
 
-from database.models.providers_models import BaseProviderModel
+from database.models.providers_models import BaseProviderModel, ThirdPartyEnum
 
 
 # For documentation purposes
@@ -132,10 +137,28 @@ async def refresh_backends_api(
     - **projection**: Filter to select which fields to return.
     - **returns**: All backends.
     """
-    filter.update({"from_third_party": False})
+    if not filter:
+        filter.update({"from_third_party": False})
 
     providers = db_find_providers(filter=filter)
     providers = list(map(lambda p: BaseProviderModel(**p), providers))
+
+    filtered_providers: list[BaseProviderModel] = []
+    # Si alguno de los proveedores es de terceros,
+    # se elimina y se añade la plataforma que lo provee
     for provider in providers:
+        if provider.pid.split(".")[0] in [e.value.lower() for e in ThirdPartyEnum]:
+            tp_provider = BaseProviderModel(
+                **db_find_provider(
+                    filter={"_id": sf_parse_object_id(provider.third_party.third_party_id)}
+                )
+            )
+            # Si el proveedor ya está en la lista, no se añade
+            if not any(tp_provider.id == p.id for p in filtered_providers):
+                filtered_providers.append(tp_provider)
+        else:
+            filtered_providers.append(provider)
+
+    for provider in filtered_providers:
         logger.info(f"Processing provider: {provider.name} with id: {provider.id}...")
         refresh_backends(provider)
