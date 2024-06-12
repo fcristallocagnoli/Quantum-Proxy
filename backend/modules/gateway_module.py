@@ -6,7 +6,10 @@ from modules.sdk_module import fetch_from_sdk
 
 
 def fetch_data(provider: BaseProviderModel):
-    match provider.backend_request.fetch_method:
+    request = provider.backend_request
+    if not request:
+        return None
+    match request.fetch_method:
         case "API":
             data = fetch_from_api(provider)
         case "WEB-SCRAPING":
@@ -14,7 +17,5 @@ def fetch_data(provider: BaseProviderModel):
         case "SDK":
             data = fetch_from_sdk(provider)
         case _:
-            data = None
-    if data:
-        data = list(map(normalize_backend, data))
-    return data
+            return None
+    return list(map(normalize_backend, data))
