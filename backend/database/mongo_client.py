@@ -4,6 +4,12 @@ from pymongo import MongoClient, ReturnDocument
 from pymongo.collection import Collection
 from pymongo.cursor import Cursor
 
+from security.aes_cipher import decrypt_data, encrypt_data
+
+# Cuidado con variables de entorno.
+# Avisar al usuario de que debe tener un archivo .env
+# O proporcionar valores por defecto en caso de que no exista
+
 config = dotenv_values()
 
 # Client for the database
@@ -169,7 +175,10 @@ def db_find_user(*, filter: ObjectId | dict = None, projection: dict = {}) -> di
     OR any other type to be used as the value for a query for ``"_id"``
     :param ``projection`` (optional): fields to include or exclude in the result
     """
-    return db_find_one(users_coll, filter=filter, projection=projection)
+    user = db_find_one(users_coll, filter=filter, projection=projection)
+    if user and (api_keys := user.get("api_keys", None)):
+        user["api_keys"] = decrypt_api_keys(api_keys)
+    return user
 
 
 def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
@@ -177,7 +186,11 @@ def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
     Get all users that match the filter.
     :param filter: query document
     """
-    return db_find_many(users_coll, filter=filter, projection=projection)
+    users = list(db_find_many(users_coll, filter=filter, projection=projection))
+    for user in users:
+        if api_keys := user.get("api_keys", None):
+            user["api_keys"] = decrypt_api_keys(api_keys)
+    return users
 
 
 def db_insert_user(user) -> str:
@@ -186,6 +199,7 @@ def db_insert_user(user) -> str:
     :param user: dict
     :return: Inserted ID (str)
     """
+    user["api_keys"] = encrypt_api_keys(user["api_keys"])
     return db_insert_one(users_coll, user)
 
 
@@ -337,3 +351,22 @@ def db_delete_backends(*, filter: dict) -> bool:
     :param filter: backend query
     """
     return db_delete_many(backends_coll, filter=filter)
+
+
+# region Helpers ----------------------------
+
+
+def decrypt_api_keys(api_keys: dict[str, dict]):
+    for platform, secrets in api_keys.items():
+        api_keys[platform] = {
+            key: decrypt_data(value) for key, value in secrets.items()
+        }
+    return api_keys
+
+
+def encrypt_api_keys(api_keys: dict[str, dict]):
+    for platform, secrets in api_keys.items():
+        api_keys[platform] = {
+            key: encrypt_data(value) for key, value in secrets.items()
+        }
+    return api_keys

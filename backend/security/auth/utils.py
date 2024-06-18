@@ -2,7 +2,6 @@ import base64
 import json
 from datetime import datetime, timedelta, timezone
 
-from security.aes_cipher import decrypt_data, encrypt_data
 from database.models.user_models import UserInDBModel
 from database.mongo_client import db_find_user
 from fastapi import Request, Response
@@ -18,20 +17,8 @@ def basic_details(user: UserInDBModel):
         "role": user.roles[0],
         "dateCreated": user.created_at,
         "isVerified": user.is_verified,
-        "apiKeys": decrypt_api_keys(user.api_keys),
+        "apiKeys": user.api_keys,
     }
-
-
-def decrypt_api_keys(api_keys: dict[str, dict]):
-    for platform, secrets in api_keys.items():
-        api_keys[platform] = {key: decrypt_data(value) for key, value in secrets.items()}
-    return api_keys
-
-
-def encrypt_api_keys(api_keys: dict[str, dict]):
-    for platform, secrets in api_keys.items():
-        api_keys[platform] = {key: encrypt_data(value) for key, value in secrets.items()}
-    return api_keys
 
 
 def generate_expire_date(delta: timedelta):

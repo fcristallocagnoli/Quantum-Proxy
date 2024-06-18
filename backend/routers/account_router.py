@@ -1,12 +1,9 @@
 from datetime import timedelta
 from typing import Annotated
 
-from security.aes_cipher import encrypt_data
 from security.auth.utils import (
     basic_details,
     current_account,
-    decrypt_api_keys,
-    encrypt_api_keys,
     generate_expire_date,
     generate_jwt_token,
     generate_refresh_token,
@@ -31,7 +28,6 @@ from fastapi import (
     APIRouter,
     HTTPException,
     Path,
-    Query,
     Request,
     Response,
     status,
@@ -510,7 +506,7 @@ def update_account(
         "first_name": new_user["firstName"],
         "last_name": new_user["lastName"],
         "email": new_user["email"],
-        "api_keys": encrypt_api_keys(new_user["apiKeys"]),
+        "api_keys": new_user["apiKeys"],
     }
 
     # Only change password if it is not empty
@@ -531,7 +527,7 @@ def update_account(
         "lastName": user_in_db["last_name"],
         "email": user_in_db["email"],
         "role": user_in_db["roles"][0],
-        "apiKeys": decrypt_api_keys(user_in_db["api_keys"]),
+        "apiKeys": user_in_db["api_keys"],
     }
 
 
@@ -577,7 +573,7 @@ def patch_account(
         "first_name": new_user.get("firstName", None),
         "last_name": new_user.get("lastName", None),
         "email": new_user.get("email", None),
-        "api_keys": encrypt_api_keys(new_user.get("apiKeys", {})),
+        "api_keys": new_user.get("apiKeys", {}),
     }
 
     # Only change password if it is not empty or field does not exist
@@ -600,7 +596,7 @@ def patch_account(
         "lastName": user_in_db["last_name"],
         "email": user_in_db["email"],
         "role": user_in_db["roles"][0],
-        "apiKeys": decrypt_api_keys(user_in_db["api_keys"]),
+        "apiKeys": user_in_db["api_keys"],
     }
 
 
