@@ -1,9 +1,19 @@
 <div class="container p-4">
     <h1 class="display-6">{{ provider?.name }}</h1>
-    @if (provider?.description === '') {
-    <p>Description must be manually inserted into the database.</p>
-    }@else {
-    <!-- Usamos innerHTML para incrustar código html que proviene de la descripcion -->
-    <div [innerHTML]="provider?.description"></div>
-    }
+    <div class="row">
+        <div class="col-8">
+            @if (provider?.description === '') {
+            <p>Description must be manually inserted into the database.</p>
+            }@else {
+            <!-- Usamos innerHTML para incrustar código html que proviene de la descripcion -->
+            <div [innerHTML]="provider?.description"></div>
+            }
+        </div>
+        <div class="col-4">
+            <a class="btn btn-primary" [ngClass]="{'disabled': !provider?.website}" [href]="provider?.website" target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square pe-1"></i>
+                View website
+            </a>
+        </div>
+    </div>
 </div>

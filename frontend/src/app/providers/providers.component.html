@@ -31,11 +31,9 @@
                         </p>
                         <div class="d-flex justify-content-between">
                             <a routerLink="{{provider.pid}}" class="btn btn-primary">Show provider</a>
-                            <a class="btn btn-primary" [ngClass]="{'disabled': !provider.website}"
-                                [href]="provider.website" target="_blank">
-                                <i class="fa-solid fa-arrow-up-right-from-square pe-1"></i>
-                                View website
-                            </a>
+                            <small class="text-muted align-self-center">
+                                Last updated: {{ provider.lastChecked | date: 'HH:mm' }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -63,7 +61,6 @@
                             <span class="placeholder col-8"></span>
                         </p>
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-primary disabled placeholder col-4" aria-disabled="true"></a>
                             <a class="btn btn-primary disabled placeholder col-4" aria-disabled="true"></a>
                         </div>
                     </div>

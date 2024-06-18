@@ -34,7 +34,8 @@ export class ProvidersComponent implements OnInit {
           id: provider.third_party.third_party_id,
           name: provider.third_party.third_party_name
         } : null,
-        systems: provider.backends_ids
+        systems: provider.backends_ids,
+        lastChecked: provider.last_checked
       };
     });
   }

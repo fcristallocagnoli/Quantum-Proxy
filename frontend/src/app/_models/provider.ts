@@ -13,4 +13,5 @@ export class Provider {
     fetchMethod?: string;
     thirdParty?: ThirdParty;
     systems?: string[];
+    lastChecked?: string;
 }
