@@ -56,9 +56,6 @@ RequestTypes = APIRequest | SDKRequest | ScraperRequest
 class BaseProviderModel(BaseModel):
     """
     Modelo base para los proveedores de servicios cuánticos.
-
-    Fields (the ones required):
-    - No fields are required ;)
     """
 
     # Así, el campo id se valida como "_id" y se selializa como "id"
@@ -69,6 +66,7 @@ class BaseProviderModel(BaseModel):
     pid: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
     website: Optional[str] = Field(default=None)
+    wiki_name: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------
     third_party: Optional[ThirdPartyKey] = Field(default=None)
@@ -152,6 +150,7 @@ class RigettiProvider(BaseProviderModel):
     def build_backends(self) -> dict[str, Any]: ...
 
 
+# [ ]: Limpiar el código, eliminar pruebas # [ ]
 # Pruebas varias
 def main():
     ...

@@ -13,6 +13,7 @@ providers_api_data = [
         "pid": "native.ionq",
         "description": "",
         "website": "https://ionq.com/",
+        "wiki_name": "IonQ",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -31,11 +32,13 @@ providers_api_data = [
     {
         "name": "IBM Quantum",
         "pid": "native.ibm_quantum",
-        "description": textwrap.dedent("""
-        <p>Check the <a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantum Platform</a> for more information about systems.</p>
-        """
+        "description": textwrap.dedent(
+            """
+            <p>Check the <a href="https://quantum.ibm.com/services/resources" target="_blank">IBM Quantum Platform</a> for more information about systems.</p>
+            """
         ),
         "website": "https://www.ibm.com/quantum",
+        "wiki_name": "IBM Quantum Platform",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -58,6 +61,7 @@ providers_ws_data = [
         "pid": "native.rigetti",
         "description": "",
         "website": "https://www.rigetti.com/",
+        "wiki_name": "Rigetti Computing",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "WEB-SCRAPING",
@@ -75,8 +79,16 @@ providers_sdk_data = [
     {
         "name": "Amazon Braket",
         "pid": "native.aws",
-        "description": "",
+        "description": textwrap.dedent(
+            """
+            <p>
+                <a href="https://aws.amazon.com/es/braket/" target="_blank">Amazon Braket</a> is a fully managed service for quantum computing in the cloud.
+                You can either run your algorithms within a simulator or on real quantum computing hardware called Quantum Processing Unit (QPU).
+                Programming will be done using the Python-based <a href="https://github.com/amazon-braket/amazon-braket-sdk-python" target="_blank">Amazon Braket SDK</a>
+            """
+        ),
         "website": "https://aws.amazon.com/braket/",
+        "wiki_name": "",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "SDK",
@@ -110,6 +122,7 @@ def get_braket_providers():
             "pid": f"{norm_str(ThirdPartyEnum.AWS)}.{norm_str(device.provider_name)}",
             "description": "",
             "website": None,
+            "wiki_name": "",
             "from_third_party": True,
             "third_party": {
                 "third_party_id": None,
