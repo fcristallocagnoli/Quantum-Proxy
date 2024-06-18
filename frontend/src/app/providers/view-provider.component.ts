@@ -20,5 +20,28 @@ export class ViewProviderComponent implements OnInit {
             .subscribe(provider => this.provider = provider);
     }
 
+    getDescription(provider: Provider, scope: string = 'all') {
+        let description: string = ''
+        if (provider.description instanceof Object) {
+            switch (scope) {
+                case 'summary':
+                    description = provider.description.summary
+                    break
+                case 'history':
+                    description = provider.description.history
+                    break
+                case 'all':
+                    description = `
+                    <h2>Summary</h2>
+                    ${provider.description.summary}
+                    <h2>History</h2>
+                    ${provider.description.history}
+                    `
+                    break
+            }
+        }
+        return description
+    }
+
 }
 

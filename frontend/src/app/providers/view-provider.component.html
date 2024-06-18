@@ -6,7 +6,7 @@
             <p>Description must be manually inserted into the database.</p>
             }@else {
             <!-- Usamos innerHTML para incrustar código html que proviene de la descripcion -->
-            <div [innerHTML]="provider?.description"></div>
+            <div [innerHTML]="getDescription(provider!)"></div>
             }
         </div>
         <div class="col-4">
