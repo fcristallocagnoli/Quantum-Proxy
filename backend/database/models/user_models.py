@@ -19,7 +19,7 @@ class UserModel(BaseModel):
     email: str = Field(default=None)
     password: str = Field(default=None)
     roles: Optional[list[str]] = Field(default=[])
-    api_keys: Optional[dict[str, dict]] = Field(default=None)
+    api_keys: Optional[dict[str, dict]] = Field(default={})
     created_at: Optional[Date] = Field(default=None)
     disabled: Optional[bool] = Field(default=False)
     model_config = ConfigDict(
