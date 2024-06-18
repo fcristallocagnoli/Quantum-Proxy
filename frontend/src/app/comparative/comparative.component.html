@@ -1,0 +1,74 @@
+<div class="container pt-5" style="max-width: 800px; margin: auto;">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4">Compare Quantum Providers</h1>
+            <p class="lead">Select any two quantum providers to compare them side by side:</p>
+            <div class="row">
+                <div class="col-4">
+                    <select class="form-select" [(ngModel)]="selectedProvider1">
+                        @for (provider of getFilteredProviders(selectedProvider2); track provider.id) {
+                        <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
+                            provider.thirdParty?.name + ')' : '') }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <p class="vs-text">vs</p>
+                </div>
+                <div class="col-4">
+                    <select class="form-select" [(ngModel)]="selectedProvider2">
+                        @for (provider of getFilteredProviders(selectedProvider1); track provider.id) {
+                        <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
+                            provider.thirdParty?.name + ')' : '') }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block"
+                        (click)="compare(selectedProvider1, selectedProvider2)">Compare</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="container py-5" style="max-width: 800px; margin: auto;">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4">Compare Quantum Systems</h1>
+            <p class="lead">Select any two quantum systems to compare them side by side:</p>
+            <div class="row">
+                <div class="col-4">
+                    <select class="form-select" [(ngModel)]="selectedSystem1">
+                        @for (system of getFilteredSystems(selectedSystem2); track system.id) {
+                        <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
+                            (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}
+                        </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <p class="vs-text">vs</p>
+                </div>
+                <div class="col-4">
+                    <select class="form-select" [(ngModel)]="selectedSystem2">
+                        @for (system of getFilteredSystems(selectedSystem1); track system.id) {
+                        <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
+                            (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}
+                        </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block"
+                        (click)="compare(selectedSystem1, selectedSystem2)">Compare</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<style>
+    .vs-text {
+        font-size: 24px;
+        margin-top: 8px;
+    }
+</style>

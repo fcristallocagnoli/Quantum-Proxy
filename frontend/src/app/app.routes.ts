@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [authGuard], data: { roles: [Role.Admin] } },
   { path: 'providers', loadChildren: () => import('./providers/providers.module').then(m => m.ProvidersModule) },
   { path: 'systems', loadChildren: () => import('./systems/systems.module').then(m => m.SystemsModule) },
+  { path: 'comparative', loadChildren: () => import('./comparative/comparative.module').then(m => m.ComparativeModule) },
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
