@@ -181,4 +181,4 @@ def get_wiki_content(wiki_name: str):
         # logger.debug(f"Page {wiki_name} does not exist")
         return ""
 
-    return f"<h2>Summary:</h2>{page.summary}<h2>History:</h2>{page.section_by_title('History').text}"
+    return {"summary": page.summary, "history": page.section_by_title("History").text}
