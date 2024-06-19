@@ -3,12 +3,13 @@
 <main class="main-content py-3">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-8">
-        <div class="mt-4 p-5 bg-secondary-subtle rounded">
+      <div class="col-lg-8 px-3">
+        <div class="mt-4 p-5 bg-body-tertiary rounded">
           <h1 class="display-4">Welcome to Quantum-Proxy</h1>
           <p class="lead">A platform for choosing and managing heterogeneous quantum computing providers</p>
           <hr class="my-4">
           <p>Systems are updated every day at 2:00 a.m.</p>
+          <p><span class="badge text-bg-warning me-2">Experimental</span>User can update them at any time.</p>
           <div class="d-flex justify-content-end">
             <a href="mailto:fcristallocagnoli@uma.es" class="text-secondary fs-2 ps-4">
               <i class="fas fa-envelope"></i>
@@ -20,8 +21,8 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="mt-4 p-5 bg-secondary-subtle rounded">
+      <div class="col-lg-4 px-3">
+        <div class="mt-4 p-5 bg-body-tertiary rounded">
           <p class="lead">
             Take a look at our features:
           </p>
@@ -62,6 +63,12 @@
   .fa-envelope:hover,
   .fa-github:hover {
     color: Dodgerblue;
+  }
+  .list-group a {
+    background-color: var(--bs-secondary-subtle);
+  }
+  .list-group a:hover {
+    background-color: var(--bs-dark);
   }
 </style>
 

@@ -1,28 +1,28 @@
-<div class="app-container" [ngClass]="{ 'bg-light': account }">
+<div class="app-container">
   <!-- main nav -->
-  <nav class="navbar navbar-expand navbar-dark bg-dark px-3 fixed-top" data-bs-theme="dark">
-    <div class="container">
+  <nav class="navbar navbar-expand bg-body-tertiary fixed-top">
+    <div class="container px-0">
       <!-- Home -->
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-        class="nav-item nav-link navbar-brand">Quantum-Proxy</a>
-      <div class="navbar-nav ms-auto me-5 align-items-center">
+        class="nav-item nav-link navbar-brand px-3">Quantum-Proxy</a>
+      <div class="navbar-nav ms-auto align-items-center">
         <!-- Providers -->
-        <a routerLink="/providers" routerLinkActive="active" class="nav-item nav-link ps-4">
+        <a routerLink="/providers" routerLinkActive="active" class="nav-item nav-link px-3">
           Providers
         </a>
         <!-- Systems (backends) -->
-        <a routerLink="/systems" routerLinkActive="active" class="nav-item nav-link ps-4">
+        <a routerLink="/systems" routerLinkActive="active" class="nav-item nav-link px-3">
           Systems
         </a>
         <!-- Compare two providers (or systems ¿maybe?) -->
-        <a routerLink="/compare" routerLinkActive="active" class="nav-item nav-link ps-4">
+        <a routerLink="/compare" routerLinkActive="active" class="nav-item nav-link px-3">
           Compare
         </a>
         <!-- Wizard -->
-        <a routerLink="/wizard" routerLinkActive="active" class="nav-item nav-link ps-4">
+        <a routerLink="/wizard" routerLinkActive="active" class="nav-item nav-link px-3">
           Wizard
         </a>
-        <li class="nav-item dropdown ps-4" data-bs-theme="dark">
+        <li class="nav-item dropdown px-3" data-bs-theme="dark">
           @if (!account) {
           <!-- If user not loged in, mistery person avatar -->
           <img id="logout-user" class="nav-link dropdown-toggle" src="https://www.gravatar.com/avatar/?d=mp&f=y&s=32"
@@ -33,7 +33,7 @@
             src="https://www.gravatar.com/avatar/{{ account.email| hash }}?d=retro&f=y&s=32" data-bs-toggle="dropdown"
             role="button" aria-expanded="false" />
           }
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu dropdown-menu-end">
             @if (account) {
             <!-- If user loged in, settings + logout -->
             <li class="dropdown-item-text">Signed in as<br><strong>{{ account.email }}</strong></li>
@@ -71,7 +71,7 @@
   <!-- main router outlet -->
   <router-outlet></router-outlet>
 
-  <a [class.show]="showScroll" (click)="scrollToTop()" class="scroll-to-top">
+  <a [class.show]="showScroll" (click)="scrollToTop()" class="scroll-to-top text-secondary">
     <!-- Volver al principio -->
     <span class="fa-stack">
       <i class="fa fa-circle fa-stack-2x"></i>
@@ -98,5 +98,9 @@
   .scroll-to-top.show {
     opacity: 1;
     visibility: visible;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bs-dark);
   }
 </style>
