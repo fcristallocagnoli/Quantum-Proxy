@@ -30,6 +30,9 @@ export class AlertComponent implements OnInit, OnDestroy {
                     return;
                 }
 
+                // Para no mostrar el mismo mensaje varias veces
+                this.alerts = this.alerts.filter(x => x.id !== alert.id);
+
                 // add alert to array
                 this.alerts.push(alert);
 
@@ -74,7 +77,7 @@ export class AlertComponent implements OnInit, OnDestroy {
     cssClasses(alert: Alert) {
         if (!alert) return;
 
-        const classes = ['alert', 'alert-dismissible', 'mt-4', 'container'];
+        const classes = ['alert', 'alert-dismissible', 'container'];
 
         const alertTypeClass = {
             [AlertType.Success]: 'alert-success',

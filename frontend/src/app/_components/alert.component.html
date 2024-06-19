@@ -1,8 +1,8 @@
 @if (alerts.length) {
 <div class="container" style="max-width: 1000px; margin: auto;">
-    <div class="m-3">
+    <div class="m-3 alert-container">
         @for (alert of alerts; track alert.id) {
-        <div class="{{cssClasses(alert)}}">
+        <div class="{{cssClasses(alert)}} custom-alert">
             <span [innerHTML]="alert.message"></span>
             <button class="btn-close" (click)="removeAlert(alert)"></button>
         </div>
@@ -10,3 +10,20 @@
     </div>
 </div>
 }
+
+<style>
+    .alert-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 300px;
+    }
+
+    .custom-alert {
+        width: 100%;
+    }
+</style>
