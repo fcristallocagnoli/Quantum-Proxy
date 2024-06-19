@@ -193,13 +193,14 @@ def db_find_users(*, filter: dict = {}, projection: dict = {}) -> Cursor:
     return users
 
 
-def db_insert_user(user) -> str:
+def db_insert_user(user: dict) -> str:
     """
     Insert a new user into the database.
     :param user: dict
     :return: Inserted ID (str)
     """
-    user["api_keys"] = encrypt_api_keys(user["api_keys"])
+    if api_keys := user.get("api_keys", None):
+        user["api_keys"] = encrypt_api_keys(api_keys)
     return db_insert_one(users_coll, user)
 
 
@@ -209,6 +210,8 @@ def db_update_user(*, filter: dict, cambios: dict):
     :param filter: user query
     :param cambios: dict with the changes to apply
     """
+    if api_keys := cambios.get("api_keys", None):
+        cambios["api_keys"] = encrypt_api_keys(api_keys)
     return db_update_one(users_coll, filter=filter, cambios=cambios)
 
 
