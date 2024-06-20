@@ -2,71 +2,53 @@
     <div class="container">
         <div class="row">
             @for (system of systems; track system.id) {
-            <div class="col-4 mb-3">
+            <div class="col-3 mb-3">
                 <div class="card mb-3 shadow-sm bg-body-tertiary rounded">
                     <div class="card-header">
-                        From {{ system.provider.provider_name }} provider
-                        @if (system.provider.provider_from) {
-                        (by {{ system.provider.provider_from }})
-                        }
+                        <div class="d-flex justify-content-between">
+                            From {{ system.provider.provider_name }}
+                            @if (system.provider.provider_from) {
+                            (by {{ system.provider.provider_from }})
+                            }
+                            <a class="btn-primary" title="Update system"
+                                [ngStyle]="{'cursor': isFetchingData ? 'not-allowed' : 'pointer'}"
+                                (click)="updateSystem(system)">
+                                <!-- (Para evitar que todos se pongan como cargando) -->
+                                <!-- Si estoy trayendo datos, y el backend se corresponde con la tarjeta:
+                                 o bien en el proveedor del que proviene (terceros)
+                                 o bien en el proveedor de acceso directo
+                                 -->
+                                @if (isFetchingData && (system.provider.provider_from === fetchingFrom ||
+                                system.provider.provider_id === fetchingFrom)) {
+                                <span class="spinner-border spinner-border-sm"></span>
+                                }@else {
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                }
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ system.backend_name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Basic info</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ system.qubits }} qubits</h6>
                         <p class="card-text">
-                            @switch (true) {
-                            @case (["running", "online", "available"].includes(system.status ?? 'N/A')) {
-                            Status:
-                            <span class="text-success">
-                                <i class="fa-regular fa-circle-check"></i>
-                                {{ system.status | titlecase }} <br>
-                            </span>
-                            }
-                            @case (system.status === "offline") {
-                            Status:
-                            <span class="text-danger">
-                                <i class="fa-regular fa-circle-xmark"></i>
-                                {{ system.status | titlecase }} <br>
-                            </span>
-                            }
-                            @case (system.status === "calibrating") {
-                            Status:
-                            <span class="text-secondary">
-                                <i class="fa-regular fa-clock"></i>
-                                {{ system.status | titlecase }} <br>
-                            </span>
-                            }
-                            @case (!system.status) {
-                            Status: <span class="text-warning">
-                                <i class="fa-regular fa-circle-question"></i>
-                                Unknown <br>
-                            </span>
-                            }
-                            @default {
-                            Status: <span class="text-info">
-                                <span class="fa-stack" style="font-size: 8px;">
-                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
-                                    <i class="fa-solid fa-info fa-stack-1x text-info fa-inverse"></i>
-                                </span>
-                                {{ system.status | titlecase }} <br>
-                            </span>
-                            }
-                            }
-                            Qubits: {{ system.qubits ?? 'N/A' }} <br>
-                            Queue: {{ system.queue?.value ?? 'N/A' }} <br>
+                            Status: <status [status]="system.status"></status>
+                            <queue [queue]="system.queue"></queue>
                         </p>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-grid gap-2">
                             <a routerLink="{{system.id}}" class="btn btn-primary">Show system</a>
-                            <small class="text-muted align-self-center">Last updated: {{ system.last_checked | date:
-                                'dd/MM/yyyy' }}</small>
                         </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <small class="text-muted align-self-center">
+                            Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                        </small>
                     </div>
                 </div>
             </div>
             }
             @if (!systems) {
-            @for (p of [1,2,3,4,5,6,7,8,9]; track p) {
-            <div class="col-4 mb-3">
+            @for (p of [1,2,3,4,5,6,7,8]; track p) {
+            <div class="col-3 mb-3">
                 <div class="card mb-3 shadow-sm bg-body-tertiary rounded" aria-hidden="true">
                     <div class="card-header placeholder-glow">
                         <span class="placeholder col-6"></span>
@@ -79,15 +61,16 @@
                             <span class="placeholder col-4"></span>
                         </h6>
                         <p class="card-text placeholder-glow">
-                            <span class="placeholder col-7"></span>
                             <span class="placeholder col-4"></span>
                             <span class="placeholder col-4"></span>
-                            <span class="placeholder col-6"></span>
                             <span class="placeholder col-8"></span>
                         </p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn btn-primary disabled placeholder col-4" aria-disabled="true"></a>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary disabled placeholder col-12" aria-disabled="true"></a>
                         </div>
+                    </div>
+                    <div class="card-footer placeholder-glow text-center">
+                        <span class="placeholder col-6"></span>
                     </div>
                 </div>
             </div>

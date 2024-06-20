@@ -1,6 +1,6 @@
 <div class="container p-4">
     @if (system) {
-    <div class="card" style="max-width: 700px; margin: auto;">
+    <div class="card shadow-sm" style="max-width: 700px; margin: auto;">
         <div class="card-header">
             <h2 class="card-title">
                 {{ system.backend_name }} <i class="fa-solid fa-minus align-middle"></i> {{
@@ -29,41 +29,7 @@
                             <tr>
                                 <td><strong>Status</strong></td>
                                 <td>
-                                    @switch (true) {
-                                    @case (["running", "online", "available"].includes(system.status ?? 'N/A')) {
-                                    <span class="text-success">
-                                        <i class="fa-regular fa-circle-check"></i>
-                                        {{ system.status | titlecase }} <br>
-                                    </span>
-                                    }
-                                    @case (system.status === "offline") {
-                                    <span class="text-danger">
-                                        <i class="fa-regular fa-circle-xmark"></i>
-                                        {{ system.status | titlecase }} <br>
-                                    </span>
-                                    }
-                                    @case (system.status === "calibrating") {
-                                    <span class="text-secondary">
-                                        <i class="fa-regular fa-clock"></i>
-                                        {{ system.status | titlecase }} <br>
-                                    </span>
-                                    }
-                                    @case (!system.status) {
-                                    <span class="text-warning">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        Unknown <br>
-                                    </span>
-                                    }
-                                    @default {
-                                    <span class="text-info">
-                                        <span class="fa-stack" style="font-size: 8px;">
-                                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                                            <i class="fa-solid fa-info fa-stack-1x text-info fa-inverse"></i>
-                                        </span>
-                                        {{ system.status | titlecase }} <br>
-                                    </span>
-                                    }
-                                    }
+                                    <status [status]="system.status"></status>
                                 </td>
                             </tr>
                             <tr>
@@ -71,8 +37,19 @@
                                 <td>{{ system.qubits }}</td>
                             </tr>
                             <tr>
-                                <td><strong>Queue</strong></td>
-                                <td>{{ system.queue?.value }} - [{{ system.queue?.type }}]</td>
+                                @switch (system.queue?.type) {
+                                @case ("jobs_remaining") {
+                                <td><strong>Queued jobs</strong></td>
+                                <td>{{ system.queue?.value }}</td>
+                                }
+                                @case ("avg_time") {
+                                <td><strong>Queue time</strong></td>
+                                <td>{{ system.queue?.value }}</td>
+                                }
+                                @default {
+                                Queue: N/A
+                                }
+                                }
                             </tr>
                     </table>
                 </div>
