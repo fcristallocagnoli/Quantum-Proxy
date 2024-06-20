@@ -32,7 +32,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">{{ system.qubits }} qubits</h6>
                         <p class="card-text">
                             Status: <status [status]="system.status"></status>
-                            <queue [queue]="system.queue"></queue>
+                            <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
                         </p>
                         <div class="d-grid gap-2">
                             <a routerLink="{{system.id}}" class="btn btn-primary">Show system</a>

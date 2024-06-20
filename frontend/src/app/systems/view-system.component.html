@@ -37,19 +37,10 @@
                                 <td>{{ system.qubits }}</td>
                             </tr>
                             <tr>
-                                @switch (system.queue?.type) {
-                                @case ("jobs_remaining") {
-                                <td><strong>Queued jobs</strong></td>
-                                <td>{{ system.queue?.value }}</td>
-                                }
-                                @case ("avg_time") {
-                                <td><strong>Queue time</strong></td>
-                                <td>{{ system.queue?.value }}</td>
-                                }
-                                @default {
-                                Queue: N/A
-                                }
-                                }
+                                <td>
+                                    <strong><queue [queue]="system.queue"></queue></strong>
+                                </td>
+                                <td>{{ system.queue?.value ?? 'N/A' }}</td>
                             </tr>
                     </table>
                 </div>

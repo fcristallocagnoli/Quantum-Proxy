@@ -57,13 +57,13 @@ export class StatusComponent {
     template: `
         @switch (queue?.type) {
         @case ("jobs_remaining") {
-        Queued jobs: {{ queue?.value }}
+        Queued jobs:
         }
         @case ("avg_time") {
-        Queue time: {{ queue?.value }}
+        Queue time:
         }
         @default {
-        Queue: N/A
+        Queue:
         }
         }
     `
