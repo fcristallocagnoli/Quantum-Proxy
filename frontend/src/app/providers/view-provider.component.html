@@ -1,8 +1,9 @@
 <div class="container p-4">
-    <h1 class="display-6">{{ provider?.name }}</h1>
+    @if (provider) {
+    <h1 class="display-6">{{ provider.name }}</h1>
     <div class="row">
         <div class="col-8">
-            @if (provider?.description === '') {
+            @if (provider.description === '') {
             <p>Description must be manually inserted into the database.</p>
             }@else {
             <!-- Usamos innerHTML para incrustar código html que proviene de la descripcion -->
@@ -10,10 +11,61 @@
             }
         </div>
         <div class="col-4">
-            <a class="btn btn-primary" [ngClass]="{'disabled': !provider?.website}" [href]="provider?.website" target="_blank">
+            <a class="btn btn-primary" style="margin: auto 4.5rem;" [ngClass]="{'disabled': !provider.website}"
+                [href]="provider.website" target="_blank">
                 <i class="fa-solid fa-arrow-up-right-from-square pe-1"></i>
                 View website
             </a>
+            @if (systems) {
+            <div id="carouselExample" class="carousel slide mt-5" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (system of systems; track index; let index = $index, isFirst = $first) {
+                    <div class="carousel-item" [ngClass]="{'active': isFirst}" data-bs-interval="5000">
+                        <div class="card" style="margin: auto 4.5rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ system.backend_name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ system.qubits }} qubits</h6>
+                                <p class="card-text">
+                                    <status [status]="system.status"></status>
+                                    <queue [queue]="system.queue"></queue>
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <a routerLink="../../systems/{{system.id}}" class="btn btn-primary">Show system</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+                <a class="btn btn-secondary carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="btn btn-secondary carousel-control-next" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
+            }
         </div>
     </div>
+    }@else {
+    <div class="col-12 text-center">
+        <span class="spinner-border spinner-border-lg"></span>
+    </div>
+    }
 </div>
+
+<style>
+    .carousel-control-next,
+    .carousel-control-prev {
+        filter: invert(100%);
+    }
+
+    .carousel-control-next:hover,
+    .carousel-control-prev:hover {
+        filter: invert(0);
+    }
+</style>

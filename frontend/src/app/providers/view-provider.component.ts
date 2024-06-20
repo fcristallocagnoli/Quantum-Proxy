@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Provider } from '@app/_models';
+import { Provider, System } from '@app/_models';
+import { SystemService } from '@app/_services';
 import { ProviderService } from '@app/_services/provider.service';
 import { first } from 'rxjs';
 
@@ -10,14 +11,24 @@ import { first } from 'rxjs';
 export class ViewProviderComponent implements OnInit {
     pid: string
     provider?: Provider
+    systems?: System[]
 
-    constructor(private route: ActivatedRoute, private providerService: ProviderService) { }
+    constructor(
+        private route: ActivatedRoute,
+        private providerService: ProviderService,
+        private systemService: SystemService
+    ) { }
 
     ngOnInit(): void {
         this.pid = this.route.snapshot.params['pid']
         this.providerService.getByPid(this.pid)
             .pipe(first())
             .subscribe(provider => this.provider = provider);
+        this.systemService.getAll()
+            .pipe(first())
+            .subscribe(systems => {
+                this.systems = systems.filter(s => s.provider.provider_id === this.provider?.id)
+            });
     }
 
     getDescription(provider: Provider, scope: string = 'all') {
