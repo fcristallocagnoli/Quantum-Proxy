@@ -10,6 +10,8 @@
                             @if (system.provider.provider_from) {
                             (by {{ system.provider.provider_from }})
                             }
+                            <!-- User can only update systems if logged in -->
+                            @if (account) {
                             <a class="btn-primary" title="Update system"
                                 [ngStyle]="{'cursor': isFetchingData ? 'not-allowed' : 'pointer'}"
                                 (click)="updateSystem(system)">
@@ -25,6 +27,7 @@
                                 <i class="fa-solid fa-arrows-rotate"></i>
                                 }
                             </a>
+                            }
                         </div>
                     </div>
                     <div class="card-body">

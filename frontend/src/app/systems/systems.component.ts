@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Account } from '@app/_models';
 import { System } from '@app/_models/system';
-import { AlertService, ProviderService } from '@app/_services';
+import { AccountService, AlertService, ProviderService } from '@app/_services';
 import { SystemService } from '@app/_services/system.service';
 import { first } from 'rxjs';
 
@@ -14,13 +15,17 @@ export class SystemsComponent {
   showScroll: boolean = false;
   isFetchingData: boolean = false;
   fetchingFrom: string = "";
+  account?: Account | null;
 
   constructor(
     private systemService: SystemService,
     private providerService: ProviderService,
+    private accountService: AccountService,
     private alertService: AlertService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.accountService.account.subscribe(x => this.account = x);
+  }
 
   ngOnInit() {
     const pid = this.route.snapshot.params['pid'];
