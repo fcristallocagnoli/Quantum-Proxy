@@ -17,36 +17,47 @@
                 View website
             </a>
             @if (systems) {
-            <div id="carouselExample" class="carousel slide mt-5" data-bs-ride="carousel">
+            <p class="lead my-3" style="margin: auto 4.5rem;">
+                Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available:
+            </p>
+            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @for (system of systems; track index; let index = $index, isFirst = $first) {
                     <div class="carousel-item" [ngClass]="{'active': isFirst}" data-bs-interval="5000">
                         <div class="card" style="margin: auto 4.5rem;">
                             <div class="card-body">
-                                <h5 class="card-title">{{ system.backend_name }}</h5>
+                                <h5 class="card-title">
+                                    {{ system.backend_name }}
+                                    @if (system.provider.provider_from) {
+                                        ({{ system.provider.provider_name }})
+                                    }
+                                </h5>
                                 <h6 class="card-subtitle mb-2 text-body-secondary">{{ system.qubits }} qubits</h6>
                                 <p class="card-text">
                                     <status [status]="system.status"></status>
                                     <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
                                 </p>
                                 <div class="d-grid gap-2">
-                                    <a routerLink="../../systems/{{system.id}}" class="btn btn-primary">Show system</a>
+                                    <a routerLink="/systems/{{system.id}}" class="btn bg-body-tertiary">Show system</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     }
                 </div>
-                <a class="btn btn-secondary carousel-control-prev" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="prev">
+                <a class="btn btn-secondary carousel-control-prev" [hidden]="systems.length === 1" type="button"
+                    data-bs-target="#carouselExample" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </a>
-                <a class="btn btn-secondary carousel-control-next" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="next">
+                <a class="btn btn-secondary carousel-control-next" [hidden]="systems.length === 1" type="button"
+                    data-bs-target="#carouselExample" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </a>
+            </div>
+            <div class="d-grid mt-4" style="margin: auto 4.5rem;">
+                <a routerLink="systems" class="btn btn-secondary">View all systems</a>
             </div>
             }
         </div>

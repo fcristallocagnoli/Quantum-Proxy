@@ -9,7 +9,6 @@ import { first } from 'rxjs';
     templateUrl: 'view-provider.component.html',
 })
 export class ViewProviderComponent implements OnInit {
-    pid: string
     provider?: Provider
     systems?: System[]
 
@@ -20,19 +19,22 @@ export class ViewProviderComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.pid = this.route.snapshot.params['pid']
-        this.providerService.getByPid(this.pid)
+        const pid = this.route.snapshot.params['pid']
+        this.providerService.getByPid(pid)
             .pipe(first())
-            .subscribe(provider => this.provider = provider);
-        this.systemService.getAll()
-            .pipe(first())
-            .subscribe(systems => {
-                this.systems = systems.filter(s => s.provider.provider_id === this.provider?.id)
+            .subscribe(provider => {
+                this.provider = provider;
+                let providerSystems = provider["backends_ids"] ?? [];
+                this.systemService.getAll()
+                    .pipe(first())
+                    .subscribe(systems => {
+                        this.systems = systems.filter(s => providerSystems.includes(s.id));
+                    });
             });
     }
 
     getDescription(provider: Provider, scope: string = 'all') {
-        let description: string = ''
+        let description = provider.description
         if (provider.description instanceof Object) {
             switch (scope) {
                 case 'summary':
