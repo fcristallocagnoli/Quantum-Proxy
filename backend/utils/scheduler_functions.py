@@ -1,6 +1,6 @@
 from bson import ObjectId
 from fastapi.logger import logger
-from utils.utils import get_current_datetime, get_wiki_content
+from utils.utils import get_current_datetime
 from database.models.providers_models import BaseProviderModel, ThirdPartyEnum
 from modules.gateway_module import fetch_data
 from database.provider_data import providers_data
@@ -23,14 +23,6 @@ def job_manager(event):
         logger.error(f"Job {event.job_id} failed with exception {event.exception}")
         return
     logger.debug(f"Job {event.job_id} executed successfully")
-
-
-def pre_process_providers(provider_list: list[dict]):
-    # rellenar con contenido de wikipedia (si procede)
-    for provider in provider_list:
-        if provider["wiki_name"]:
-            provider.update({"description": get_wiki_content(provider["wiki_name"])})
-    return provider_list
 
 
 def post_process_providers():

@@ -3,7 +3,6 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-import wikipediaapi
 from bson import ObjectId
 from database.mongo_client import count_documents
 from fastapi import HTTPException, status
@@ -165,20 +164,3 @@ def check_code(file_path: Path):
                 # raise type("ParseException", (Exception,), {"msg": error})
         return False
     return True
-
-
-def get_wiki_content(wiki_name: str):
-    """
-    Extrae el contenido de la página de Wikipedia.
-    - Para rellenar la descripción de los proveedores
-    """
-    wiki_html = wikipediaapi.Wikipedia(
-        user_agent="Quantum-Proxy (tfg.quantum.proxy@gmail.com)",
-        language="en",
-        extract_format=wikipediaapi.ExtractFormat.HTML,
-    )
-    if not (page := wiki_html.page(wiki_name)).exists():
-        # logger.debug(f"Page {wiki_name} does not exist")
-        return ""
-
-    return {"summary": page.summary, "history": page.section_by_title("History").text}
