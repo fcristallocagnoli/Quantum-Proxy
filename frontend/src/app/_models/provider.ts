@@ -3,11 +3,17 @@ export class ThirdParty {
     name?: string;
 }
 
+export class Description {
+    short_description?: string;
+    long_description?: string;
+    history?: string;
+}
+
 export class Provider {
     id?: string;
     pid?: string;
     name?: string;
-    description?: string | { summary: string, history: string};
+    description?: string | Description;
     website?: string;
     fromThirdParty?: boolean;
     fetchMethod?: string;

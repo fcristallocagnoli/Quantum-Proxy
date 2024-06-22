@@ -18,7 +18,8 @@
             </a>
             @if (systems) {
             <p class="lead my-3" style="margin: auto 4.5rem;">
-                Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available:
+                Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available, <br>
+                of which {{ countSystemsOnline() }} online:
             </p>
             <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
