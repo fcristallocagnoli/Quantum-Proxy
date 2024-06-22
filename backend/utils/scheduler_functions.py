@@ -4,6 +4,7 @@ from utils.utils import get_current_datetime, get_wiki_content
 from database.models.providers_models import BaseProviderModel, ThirdPartyEnum
 from modules.gateway_module import fetch_data
 from database.provider_data import providers_data
+from database.scripts.extra_data import get_extra_data
 from database.mongo_client import (
     db_delete_backends,
     db_find_backends,
@@ -32,11 +33,8 @@ def pre_process_providers(provider_list: list[dict]):
     return provider_list
 
 
-def init_providers():
-    new_providers = pre_process_providers(providers_data)
-
-    db_insert_providers(new_providers)
-
+def post_process_providers():
+    # Actualizar los ids de los proveedores de terceros
     for third_party in [e.value for e in ThirdPartyEnum]:
         formated_tp = third_party.lower().replace(" ", "_")
         provider = db_find_provider(filter={"pid": f"native.{formated_tp}"})
@@ -44,6 +42,18 @@ def init_providers():
             filter={"third_party.third_party_name": third_party},
             cambios={"$set": {"third_party.third_party_id": provider["_id"]}},
         )
+    # Añadir datos extra que no se pueden automatizar:
+    # - descripciones
+    extra_data: dict = get_extra_data()
+    for name, data in extra_data.items():
+        db_update_providers(filter={"name": name}, cambios={"$set": data})
+
+
+def init_providers():
+    # Insertamos los proveedores
+    db_insert_providers(providers_data)
+    # Procesamos los proveedores una vez insertados
+    post_process_providers()
 
 
 def refresh_backends(provider: BaseProviderModel):
