@@ -78,7 +78,7 @@ async def get_backends_filtered(
 
 
 @router.get(
-    "/{id}",
+    "/{bid}",
     description="Get a single backend",
     response_model=dict,
     response_model_by_alias=False,
@@ -89,11 +89,11 @@ async def get_backends_filtered(
     # Para en caso de usar projection, no devolver campos nulos
     response_model_exclude_none=True,
 )
-async def get_backend_by_id(
-    id: Annotated[
+async def get_backend_by_bid(
+    bid: Annotated[
         str,
         Path(
-            title="The ID of the backend",
+            title="The BID (Backend Identifier)",
         ),
     ],
     projection: Annotated[
@@ -104,20 +104,20 @@ async def get_backend_by_id(
     """
     Get a single backend.
 
-    - **id**: The ID of the backend.
+    - **bid**: The BID (Backend Identifier).
     - **returns**: The backend
-    - **raises**: HTTPException 400: If the id does not exist.
+    - **raises**: HTTPException 400: If the BID does not exist.
     - **raises**: HTTPException 404: If the backend is not found.
     """
 
     if (
-        backend := db_find_backend(filter=sf_parse_object_id(id), projection=projection)
+        backend := db_find_backend(filter={"bid": bid}, projection=projection)
     ) is not None:
         backend = retrieve_backend(Backend(backend=backend), as_dict=True)
         return backend
 
     raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND, detail=f"Backend with {id} not found"
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Backend with {bid} not found"
     )
 
 
