@@ -15,8 +15,8 @@ export class SystemService {
     return this.http.get<System[]>(baseUrl);
   }
 
-  getById(id: string) {
-    return this.http.get<System>(`${baseUrl}/${id}`);
+  getByBid(bid: string) {
+    return this.http.get<System>(`${baseUrl}/${bid}`);
   }
 
   refreshData(filter: any) {

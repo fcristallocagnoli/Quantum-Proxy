@@ -10,14 +10,14 @@ import { first } from 'rxjs';
     templateUrl: 'view-system.component.html',
 })
 export class ViewSystemComponent implements OnInit {
-    id: string
+    bid: string
     system?: System
 
     constructor(private route: ActivatedRoute, private systemService: SystemService, private modalService: NgbModal) { }
 
     ngOnInit(): void {
-        this.id = this.route.snapshot.params['id']
-        this.systemService.getById(this.id)
+        this.bid = this.route.snapshot.params['bid']
+        this.systemService.getByBid(this.bid)
             .pipe(first())
             .subscribe(system => this.system = system);
     }

@@ -1,6 +1,7 @@
 export interface System {
     id: string;
     provider: { provider_id: string, provider_name: string, provider_from?: string };
+    bid: string;
     backend_name: string;
     
     // -- extra fields (in common) --

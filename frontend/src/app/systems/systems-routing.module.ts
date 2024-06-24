@@ -6,7 +6,7 @@ import { ViewSystemComponent } from './view-system.component';
 
 const routes: Routes = [
     { path: '', component: SystemsComponent },
-    { path: ':id', component: ViewSystemComponent }
+    { path: ':bid', component: ViewSystemComponent }
 ];
 
 @NgModule({
