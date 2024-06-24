@@ -26,6 +26,23 @@ def sf_parse_object_id(id: str | int) -> ObjectId:
         )
 
 
+def create_bid(backend: dict):
+    """
+    Create a unique backend id
+    """
+    backend_name: str = backend["backend_name"]
+    backend_name = backend_name.lower().replace(" ", "-")
+ 
+    provider: dict = backend["provider"]
+    provider_from: str = provider.get("provider_from")
+
+    if provider_from:
+        provider_from = provider_from.lower()
+        return f"{backend_name}-{provider_from}"
+
+    return backend_name
+
+
 def norm_id(db_document: dict) -> str:
     """Extracts the id from a MongoDB document and returns it as a string."""
     return str(db_document["_id"])

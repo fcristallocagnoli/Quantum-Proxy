@@ -1,7 +1,7 @@
 from database.models.backends_models import ClassType
 from database.mongo_client import db_find_provider
 from database.models.providers_models import ProviderName, ThirdPartyEnum
-from utils.utils import convert_from_ms, from_seconds_to_date, fromisoformat, get_current_time_iso
+from utils.utils import convert_from_ms, create_bid, from_seconds_to_date, fromisoformat, get_current_time_iso
 
 
 def normalize_backend(backend: dict):
@@ -26,7 +26,10 @@ def normalize_backend(backend: dict):
                 norm_back = rigetti_normalizer(backend)
             case _:
                 return norm_error(name)
-    norm_back.update({"last_checked": get_current_time_iso()})
+    norm_back.update({
+        "bid": create_bid(norm_back),
+        "last_checked": get_current_time_iso()
+    })
     return norm_back
 
 

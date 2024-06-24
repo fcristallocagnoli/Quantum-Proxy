@@ -26,6 +26,7 @@ class BaseBackendModel(BaseModel):
         validation_alias="_id", serialization_alias="id", default=None
     )
     provider: Optional[ProviderFK] = Field(default=None)
+    bid: Optional[str] = Field(default=None)
     backend_name: Optional[str] = Field(default=None)
     extra: Optional[list[str]] = None
     model_config = ConfigDict(
