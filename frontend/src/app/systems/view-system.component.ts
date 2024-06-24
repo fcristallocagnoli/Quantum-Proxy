@@ -13,11 +13,11 @@ export class ViewSystemComponent implements OnInit {
     id: string
     system?: System
 
-    constructor(private route: ActivatedRoute, private providerService: SystemService, private modalService: NgbModal) { }
+    constructor(private route: ActivatedRoute, private systemService: SystemService, private modalService: NgbModal) { }
 
     ngOnInit(): void {
         this.id = this.route.snapshot.params['id']
-        this.providerService.getById(this.id)
+        this.systemService.getById(this.id)
             .pipe(first())
             .subscribe(system => this.system = system);
     }
