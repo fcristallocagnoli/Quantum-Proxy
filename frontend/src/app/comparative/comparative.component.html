@@ -1,10 +1,24 @@
 <div class="container pt-5" style="max-width: 800px; margin: auto;">
     <div class="container">
         <div class="text-center">
+            <!-- Centrar verticalmente (o meter mas margin top) -->
+            <div class="d-flex justify-content-center mb-4">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{ 'active': compareMode === 'providers' }"
+                            style="cursor: pointer;" (click)="setCompareMode('providers')">Compare Providers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{ 'active': compareMode === 'systems' }" style="cursor: pointer;"
+                            (click)="setCompareMode('systems')">Compare Systems</a>
+                    </li>
+                </ul>
+            </div>
+            @if (compareMode === 'providers') {
             <h1 class="display-4">Compare Quantum Providers</h1>
             <p class="lead">Select any two quantum providers to compare them side by side:</p>
             <div class="row">
-                <div class="col-4">
+                <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedProvider1">
                         @for (provider of getFilteredProviders(selectedProvider2); track provider.id) {
                         <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
@@ -13,9 +27,9 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <p class="vs-text">vs</p>
+                    <p style="font-size: 24px;">vs</p>
                 </div>
-                <div class="col-4">
+                <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedProvider2">
                         @for (provider of getFilteredProviders(selectedProvider1); track provider.id) {
                         <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
@@ -23,21 +37,15 @@
                         }
                     </select>
                 </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-block"
-                        (click)="compare(selectedProvider1, selectedProvider2)">Compare</button>
-                </div>
             </div>
-        </div>
-    </div>
-</div>
-<!-- <div class="container py-5" style="max-width: 800px; margin: auto;">
-    <div class="container">
-        <div class="text-center">
+            <div class="d-grid col-4 mx-auto mt-3">
+                <button class="btn btn-primary" (click)="compareProviders(selectedProvider1, selectedProvider2)">Compare</button>
+            </div>
+            } @else if (compareMode === 'systems') {
             <h1 class="display-4">Compare Quantum Systems</h1>
             <p class="lead">Select any two quantum systems to compare them side by side:</p>
             <div class="row">
-                <div class="col-4">
+                <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedSystem1">
                         @for (system of getFilteredSystems(selectedSystem2); track system.id) {
                         <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
@@ -47,9 +55,9 @@
                     </select>
                 </div>
                 <div class="col-2">
-                    <p class="vs-text">vs</p>
+                    <p style="font-size: 24px;">vs</p>
                 </div>
-                <div class="col-4">
+                <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedSystem2">
                         @for (system of getFilteredSystems(selectedSystem1); track system.id) {
                         <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
@@ -58,17 +66,11 @@
                         }
                     </select>
                 </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-block"
-                        (click)="compare(selectedSystem1, selectedSystem2)">Compare</button>
-                </div>
             </div>
+            <div class="d-grid col-4 mx-auto mt-3">
+                <button class="btn btn-primary" (click)="compareSystems(selectedSystem1, selectedSystem2)">Compare</button>
+            </div>
+            }
         </div>
     </div>
-</div> -->
-<style>
-    .vs-text {
-        font-size: 24px;
-        margin-top: 8px;
-    }
-</style>
+</div>

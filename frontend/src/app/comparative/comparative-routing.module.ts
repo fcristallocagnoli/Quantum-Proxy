@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ComparativeComponent } from './comparative.component';
-import { ViewComparativeComponent } from './view-comparative.component';
+import { CompareProvidersComponent } from './compare-providers.component';
 
 
 const routes: Routes = [
     { path: '', component: ComparativeComponent },
-    { path: ':versus', component: ViewComparativeComponent },
+    { path: 'providers/:versus', component: CompareProvidersComponent },
 ];
 
 @NgModule({

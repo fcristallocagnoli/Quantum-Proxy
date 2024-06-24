@@ -11,6 +11,8 @@ export class ComparativeComponent {
     entity1: string
     entity2: string
 
+    compareMode: string = 'providers';
+
     providers: Provider[] = []
     systems: System[] = []
 
@@ -41,6 +43,10 @@ export class ComparativeComponent {
         });
     }
 
+    setCompareMode(mode: string): void {
+        this.compareMode = mode;
+    }
+
     getFilteredProviders(selectedProvider: string): Provider[] {
         return this.providers.filter(provider => provider.pid !== selectedProvider);
     }
@@ -49,8 +55,12 @@ export class ComparativeComponent {
         return this.systems.filter(system => this.normalizeNameToURL(system) !== selectedSystem);
     }
 
-    compare(entity1: any, entity2: any) {
-        this.router.navigateByUrl(`/compare/${entity1}-vs-${entity2}`);
+    compareProviders(provider1: any, provider2: any) {
+        this.router.navigateByUrl(`/compare/providers/${provider1}-vs-${provider2}`);
+    }
+
+    compareSystems(system1: any, system2: any) {
+        this.router.navigateByUrl(`/compare/systems/${system1}-vs-${system2}`);
     }
 
     transformFromPython(providers: any[]): Provider[] {

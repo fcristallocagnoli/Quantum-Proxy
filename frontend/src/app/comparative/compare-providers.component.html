@@ -1,0 +1,122 @@
+@if (provider1 && provider2) {
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Comparing: {{ provider1.name }} vs {{ provider2.name }}</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ provider1.name }}</h5>
+                    <p class="card-text" [innerHTML]="getDescription(provider1, 'summary')"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3 overflow-auto" style="max-height: 200px;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ provider2.name }}</h5>
+                    <p class="card-text" [innerHTML]="getDescription(provider2, 'summary')"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="container mb-4 ms-3">
+                <div class="row">
+                    <div class="col-8">
+                        {{ provider1.name + ' has ' + systemsP1.length }} systems available,
+                        {{ countSystemsOnline(systemsP1) }} of them online.
+                    </div>
+                    <div class="col-4">
+                        <a routerLink="/providers/{{provider1.pid}}" class="btn btn-primary">Show provider</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="container mb-4 ms-3">
+                <div class="row">
+                    <div class="col-8">
+                        {{ provider2.name + ' has ' + systemsP2.length }} systems available,
+                        {{ countSystemsOnline(systemsP2) }} of them online.
+                    </div>
+                    <div class="col-4">
+                        <a routerLink="/providers/{{provider1.pid}}" class="btn btn-primary">Show provider</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row justify-content-center">
+                @for (system of systemsP1; track system.id) {
+                <div class="col-5 mb-3">
+                    <div class="card mb-3 shadow-sm bg-body-tertiary rounded">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                From {{ system.provider.provider_name }}
+                                @if (system.provider.provider_from) {
+                                (by {{ system.provider.provider_from }})
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ system.backend_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ system.qubits }} qubits</h6>
+                            <p class="card-text">
+                                Status: <status [status]="system.status"></status>
+                                <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
+                            </p>
+                            <div class="d-grid gap-2">
+                                <a routerLink="{{system.id}}" class="btn btn-primary">Show system</a>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <small class="text-muted align-self-center">
+                                Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row justify-content-center">
+                @for (system of systemsP2; track system.id) {
+                <div class="col-5 mb-3">
+                    <div class="card mb-3 shadow-sm bg-body-tertiary rounded">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                From {{ system.provider.provider_name }}
+                                @if (system.provider.provider_from) {
+                                (by {{ system.provider.provider_from }})
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ system.backend_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ system.qubits }} qubits</h6>
+                            <p class="card-text">
+                                Status: <status [status]="system.status"></status>
+                                <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
+                            </p>
+                            <div class="d-grid gap-2">
+                                <a routerLink="{{system.id}}" class="btn btn-primary">Show system</a>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <small class="text-muted align-self-center">
+                                Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}
