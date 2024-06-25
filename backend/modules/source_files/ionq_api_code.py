@@ -46,11 +46,14 @@ def get_backends(request: APIRequest) -> list[dict[str, Any]]:
         ).json()
         # No me interesa la conectividad
         charact.pop("connectivity", None)
+        # No me interesa el id
+        charact.pop("id", None)
+        # No me interesa otro nombre del backend
+        charact.pop("backend", None)
         # TODO: Formatear la fecha a un formato generico
         charact["date"] = charact["date"]
         # Insertamos la caracterización
         backends[idx]["extra"] = {
-            "characterization_id": f"ionq.{charact["backend"]}",
             "characterization": charact
         }
     return backends
