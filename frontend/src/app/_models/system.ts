@@ -27,7 +27,7 @@ export interface System {
     median_2q_xy_fidelity?: string;
     median_2q_cz_fidelity?: string;
     median_ro_fidelity?: string;
-    median_Active_reset_fidelity?: string;
+    median_active_reset_fidelity?: string;
 
     // -- extra fields (ibm) --
     basis_gates?: string[];
@@ -38,4 +38,7 @@ export interface System {
 
     extra: string[];
     last_checked: string;
+
+    // To access the attributes of the object using a string key
+    [key: string]: any;
 }
