@@ -3,8 +3,12 @@
     <div class="card shadow-sm" style="max-width: 700px; margin: auto;">
         <div class="card-header">
             <h2 class="card-title">
-                {{ system.backend_name }} <i class="fa-solid fa-minus align-middle"></i> {{
-                system.provider.provider_name }}
+                <!-- {{ system.backend_name }} <i class="fa-solid fa-minus align-middle"></i> {{
+                system.provider.provider_name }} -->
+                {{ system.backend_name }}
+                <i class="fa-solid fa-minus align-middle"></i>
+                {{ system.provider.provider_name }}
+                {{ system.provider.provider_from ? '(' + system.provider.provider_from + ')' : ''}}
             </h2>
         </div>
         <div class="card-body px-4">
@@ -17,6 +21,12 @@
                 <h3 class="h5">Common Fields</h3>
                 <div class="table-responsive" style="max-width: 600px; margin: auto;">
                     <table class="table table-striped align-middle-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;"></th>
+                                <th style="width: 50%;"></th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td><strong>Backend Name</strong></td>
@@ -38,7 +48,9 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <strong><queue [queue]="system.queue"></queue></strong>
+                                    <strong>
+                                        <queue [queue]="system.queue" [isTable]="true"></queue>
+                                    </strong>
                                 </td>
                                 <td>{{ system.queue?.value ?? 'N/A' }}</td>
                             </tr>
@@ -49,6 +61,12 @@
                 <h3 class="h5">Extra Fields</h3>
                 <div class="table-responsive" style="max-width: 600px; margin: auto;">
                     <table class="table table-striped align-middle-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;"></th>
+                                <th style="width: 50%;"></th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <!-- extra fields (ionq) -->
                             <tr *ngIf="system.degraded !== undefined">
@@ -111,9 +129,9 @@
                                 <td><strong>Median RO Fidelity</strong></td>
                                 <td>{{ system.median_ro_fidelity }}</td>
                             </tr>
-                            <tr *ngIf="system.median_Active_reset_fidelity">
+                            <tr *ngIf="system.median_active_reset_fidelity">
                                 <td><strong>Median Active Reset Fidelity</strong></td>
-                                <td>{{ system.median_Active_reset_fidelity }}</td>
+                                <td>{{ system.median_active_reset_fidelity }}</td>
                             </tr>
                             <!-- extra fields (ibm) -->
                             <tr *ngIf="system.basis_gates">
@@ -138,7 +156,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Last Checked</strong></td>
-                                <td>{{ system.last_checked }}</td>
+                                <td>{{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}</td>
                             </tr>
                         </tbody>
                     </table>

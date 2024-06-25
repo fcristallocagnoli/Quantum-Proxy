@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SystemsRoutingModule } from './systems-routing.module';
 import { SystemsComponent } from './systems.component';
 import { ViewSystemComponent } from './view-system.component';
-import { QueueComponent, StatusComponent } from '@app/_components/properties.component';
+import { QueueComponent, StatusComponent, SystemPropsComponent } from '@app/_components/properties.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +17,8 @@ import { QueueComponent, StatusComponent } from '@app/_components/properties.com
         ReactiveFormsModule,
         SystemsRoutingModule,
         StatusComponent,
-        QueueComponent
+        QueueComponent,
+        SystemPropsComponent
     ]
 })
 export class SystemsModule { }
