@@ -10,7 +10,7 @@ import { NgbActiveModal, NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-boo
     imports: [TitleCasePipe],
     template: `
         @switch (true) {
-        @case (["running", "online", "available"].includes(status ?? 'N/A')) {
+        @case (["running", "online", "available", "completed", "ready"].includes(status ?? 'N/A')) {
         <span class="text-success">
             <i class="fa-regular fa-circle-check"></i>
             {{ status | titlecase }} <br>
