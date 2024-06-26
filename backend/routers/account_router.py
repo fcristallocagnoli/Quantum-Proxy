@@ -279,13 +279,13 @@ def refresh_token(
     """
     Refresh token (from the frontend).
     """
-    if not (refresh_token := get_refresh_token(request)):
+    if not (old_refresh_token := get_refresh_token(request)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Unauthorized",
         )
 
-    filter = {"refresh_tokens": refresh_token}
+    filter = {"refresh_tokens": old_refresh_token}
 
     if not (account := db_find_user(filter=filter)):
         raise HTTPException(
@@ -293,14 +293,16 @@ def refresh_token(
             detail="Unauthorized",
         )
 
+    new_refresh_token = generate_refresh_token(response)
+
     refresh_token_list = list(account["refresh_tokens"])
-    refresh_token_list.remove(refresh_token)
-    refresh_token_list.append(generate_refresh_token(response))
+    refresh_token_list.remove(old_refresh_token)
+    refresh_token_list.append(new_refresh_token)
 
     cambios = {"$set": {"refresh_tokens": refresh_token_list}}
-
     db_update_user(filter=filter, cambios=cambios)
-
+    
+    filter = {"refresh_tokens": new_refresh_token}
     user = UserInDBModel(**db_find_user(filter=filter))
 
     account = basic_details(user)
