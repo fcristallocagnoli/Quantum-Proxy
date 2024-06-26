@@ -229,7 +229,7 @@ def authenticate_account(
             detail="Email or password is incorrect",
         )
 
-    user = UserInDBModel(**user)
+    user = UserInDBModel(**db_find_user(filter=filter))
 
     account = basic_details(user)
     account.update({"jwtToken": generate_jwt_token(user)})
@@ -299,7 +299,9 @@ def refresh_token(
 
     cambios = {"$set": {"refresh_tokens": refresh_token_list}}
 
-    user = UserInDBModel(**db_update_user(filter=filter, cambios=cambios))
+    db_update_user(filter=filter, cambios=cambios)
+
+    user = UserInDBModel(**db_find_user(filter=filter))
 
     account = basic_details(user)
     account.update({"jwtToken": generate_jwt_token(user)})
@@ -335,7 +337,9 @@ def forgot_password(email: str = Body(..., embed=True)) -> UserInDBModel:
         "$set": {"reset_token": resetToken, "reset_token_expires": resetTokenExpires}
     }
 
-    user_in_db = UserInDBModel(**db_update_user(filter=filter, cambios=cambios))
+    db_update_user(filter=filter, cambios=cambios)
+
+    user_in_db = UserInDBModel(**db_find_user(filter=filter))
 
     send_reset_email(
         user_in_db.email,
@@ -517,9 +521,11 @@ def update_account(
     if "role" in new_user:
         user_to_store["roles"] = [new_user["role"]]
 
-    user_in_db = db_update_user(
+    db_update_user(
         filter={"_id": sf_parse_object_id(id)}, cambios={"$set": user_to_store}
     )
+
+    user_in_db = db_find_user(filter=sf_parse_object_id(id))
 
     return {
         "id": str(user_in_db["_id"]),
@@ -586,9 +592,11 @@ def patch_account(
 
     cambios: dict = {k: v for k, v in user_to_store.items() if v is not None}
 
-    user_in_db = db_update_user(
+    db_update_user(
         filter={"_id": sf_parse_object_id(id)}, cambios={"$set": cambios}
     )
+
+    user_in_db = db_find_user(filter=sf_parse_object_id(id))
 
     return {
         "id": str(user_in_db["_id"]),

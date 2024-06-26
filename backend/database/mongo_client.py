@@ -210,8 +210,10 @@ def db_update_user(*, filter: dict, cambios: dict):
     :param filter: user query
     :param cambios: dict with the changes to apply
     """
-    if api_keys := cambios.get("api_keys", None):
-        cambios["api_keys"] = encrypt_api_keys(api_keys)
+    if cambios.get("$set", None) and (
+        api_keys := cambios["$set"].get("api_keys", None)
+    ):
+        cambios["$set"]["api_keys"] = encrypt_api_keys(api_keys)
     return db_update_one(users_coll, filter=filter, cambios=cambios)
 
 
