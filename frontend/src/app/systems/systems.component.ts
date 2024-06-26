@@ -67,15 +67,16 @@ export class SystemsComponent {
           this.isFetchingData = false;
           for (let i = 3; i > 0; i--) {
             setTimeout(() => {
+              this.alertService.clear();
               this.alertService.success(`
                 <h4>System updated successfully</h4>
                 <p>Page will reload in ${i}seg</p>
               `);
             }, (3 - i) * 1000);
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
           }
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         },
         error: error => {
           console.log(error);

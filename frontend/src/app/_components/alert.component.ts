@@ -30,9 +30,6 @@ export class AlertComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                // Para no mostrar el mismo mensaje varias veces
-                this.alerts = this.alerts.filter(x => x.id !== alert.id);
-
                 // add alert to array
                 this.alerts.push(alert);
 
