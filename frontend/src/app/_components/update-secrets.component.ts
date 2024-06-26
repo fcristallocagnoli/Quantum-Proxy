@@ -1,17 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-// interface DtcApiKys {
-//     [key: string]: string;
-// }
-
-interface Platform {
-    platform: string;
-    apiKeys: Map<string, string>;
-}
 
 interface PlatformList {
     platform: number;
@@ -28,14 +17,9 @@ export class UpdateSecretsComponent implements OnInit {
     submitted = false;
     deleting = false;
 
-    // keys: {[key: string]: string} = {};
-
     platformList: PlatformList[] = [];
 
     platformMap: Map<string, Map<string, string>> = new Map<string, Map<string, string>>();
-
-    // platformObj: Platform
-    // platformObjList: Platform[] = [];
 
     userPlatformMap: any;
 
@@ -47,12 +31,10 @@ export class UpdateSecretsComponent implements OnInit {
         console.log("User platform map:", this.userPlatformMap);
         let i = 0;
         for (let key in this.userPlatformMap) {
-            // console.log("Key:", key, "Value:", this.userPlatformMap[key]);
             this.platformList.push({ platform: i, apiKeys: [] });
             this.form.addControl(`plat-${i}`, new FormControl(key, Validators.required));
             let j = 0;
             for (let subkey in this.userPlatformMap[key]) {
-                // console.log("Key:", subkey, "Value:", this.userPlatformMap[key][subkey]);
                 this.platformList[i].apiKeys.push(j);
                 this.form.addControl(`plat-${i}_key-${j}`, new FormControl(subkey, Validators.required));
                 this.form.addControl(`plat-${i}_value-${j}`, new FormControl(this.userPlatformMap[key][subkey]));
@@ -88,7 +70,6 @@ export class UpdateSecretsComponent implements OnInit {
         });
         console.log("Resultado json:", result);
 
-        // this.modal.close({platform: this.form.value.platform, apiKeys: this.apiKeysMap});
         this.modal.close(result);
     }
 
