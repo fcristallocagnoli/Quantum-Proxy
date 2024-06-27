@@ -12,6 +12,8 @@ export const routes: Routes = [
   { path: 'providers', loadChildren: () => import('./providers/providers.module').then(m => m.ProvidersModule) },
   { path: 'systems', loadChildren: () => import('./systems/systems.module').then(m => m.SystemsModule) },
   { path: 'comparative', loadChildren: () => import('./comparative/comparative.module').then(m => m.ComparativeModule) },
+  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(x => x.ProfileModule), canActivate: [authGuard] },
+  { path: 'jobs', loadChildren: () => import('./jobs/jobs.module').then(x => x.JobsModule), canActivate: [authGuard]},
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' }

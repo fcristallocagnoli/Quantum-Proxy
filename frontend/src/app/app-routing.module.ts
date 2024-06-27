@@ -11,6 +11,7 @@ const systemsModule = () => import('./systems/systems.module').then(x => x.Syste
 const comparativeModule = () => import('./comparative/comparative.module').then(x => x.ComparativeModule);
 const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
 const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
+const jobsModule = () => import('./jobs/jobs.module').then(x => x.JobsModule);
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'compare', loadChildren: comparativeModule },
     { path: 'account', loadChildren: accountModule },
     { path: 'profile', loadChildren: profileModule, canActivate: [authGuard] },
+    { path: 'jobs', loadChildren: jobsModule, canActivate: [authGuard] },
     { path: 'admin', loadChildren: adminModule, canActivate: [authGuard], data: { roles: [Role.Admin] } },
 
     // otherwise redirect to home
