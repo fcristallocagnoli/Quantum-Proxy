@@ -1,0 +1,12 @@
+<div class="container p-4">
+    @if (job) {
+    <h1 class="display-6">{{ job.name }}</h1>
+    <div class="row">
+        <pre>{{ job | json}}</pre>
+    </div>
+    }@else {
+    <div class="row">
+        <span class="spinner-border spinner-border-lg"></span>
+    </div>
+    }
+</div>
