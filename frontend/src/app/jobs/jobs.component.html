@@ -1,0 +1,117 @@
+<div class="container mt-5 px-5">
+    @if(jobs) {
+    <h2 class="mb-4">My Jobs</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-primary" (click)="createJob()">Create New Job</button>
+        <button class="btn btn-primary" (click)="refreshJobs()" [disabled]="isRefreshingJobs">
+            @if (isRefreshingJobs) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+            Refreshing...
+            }@else {
+            <i class="fa-solid fa-arrows-rotate me-1"></i>
+            Refresh
+            }
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" style="border: 1px solid; border-color: var(--bs-border-color);">
+            <thead>
+                <tr>
+                    <th class="ps-3" style="width: 20%;">Date <i class="fa-solid fa-arrow-down"></i></th>
+                    <th style="width: 10%;">Status</th>
+                    <th>Name</th>
+                    <th>Provider</th>
+                    <th>Target</th>
+                    <th style="width: 10%;">ID</th>
+                    <th>Usage</th>
+                    <th style="width: 10%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (job of jobs; track job.id) {
+                <tr>
+                    <td class="ps-3" [routerLink]="job.id" role="button">
+                        <span placement="bottom" [ngbTooltip]="timeSince(job.response * 1000)">
+                            @if (job.response) {
+                            {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                            } @else {
+                            N/A
+                            }
+                        </span>
+                    </td>
+                    <td [routerLink]="job.id" role="button">
+                        <span class="badge bg-success">
+                            <i class="fa-regular fa-circle-check"></i>
+                            {{ job.status | titlecase }}
+                        </span>
+                    </td>
+                    <td [routerLink]="job.id" role="button">
+                        {{ job.name }}
+                    </td>
+                    <td [routerLink]="job.id" role="button">
+                        {{ 'IonQ' }}
+                    </td>
+                    <td [routerLink]="job.id" role="button">
+                        {{ job.target }}
+                    </td>
+                    <td role="button" (click)="copyToClipboard(job.id)">
+                        {{ getShortUUID(job.id) }}
+                        <button class="btn-copy">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </td>
+                    <td [routerLink]="job.id" role="button">
+                        @if (job.cost_usd !== undefined) {
+                        {{ job.cost_usd | currency }}
+                        } @else {
+                        N/A
+                        }
+                    </td>
+                    <td role="button">
+                        <div class="dropdown">
+                            <button class="btn bg-body-tertiary" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span style="font-size: small;">
+                                    @if (isDeleting && job.id === deletingId) {
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                    } @else {
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                    }
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button class="dropdown-item" [routerLink]="job.id">
+                                        View Job
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger" (click)="deleteJob(job.id)">
+                                        Delete Job
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }@else {
+    <div class="col-12 text-center">
+        <span class="spinner-border spinner-border-lg"></span>
+    </div>
+    }
+</div>
+<style>
+    .btn-copy {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #6c757d;
+    }
+
+    .btn-copy:hover {
+        color: #343a40;
+    }
+</style>
