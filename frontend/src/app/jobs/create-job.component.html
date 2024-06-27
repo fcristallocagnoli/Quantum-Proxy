@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <h5 class="modal-title">
+        Create Job
+        <a style="cursor: pointer;">
+            <ng-template #tipContent>
+                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                    href="https://docs.ionq.com/guides/direct-api-submission" target="_blank">
+                    How to submit jobs</a> <br>
+                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                    href="https://docs.ionq.com/api-reference/v0.3/writing-quantum-programs" target="_blank">
+                    Writing Quatum Programs</a>
+            </ng-template>
+            <i class="fa-regular fa-circle-question" style="font-size: 16px;" placement="right" triggers="click"
+                [autoClose]="'outside'" [ngbTooltip]="tipContent"></i>
+        </a>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="modal.dismiss('Cierre usuario')"></button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label for="job-name" class="col-form-label">Job Name:</label>
+            <input type="text" class="form-control" id="job-name" formControlName="name">
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label for="provider" class="col-form-label">Provider:</label>
+                <select class="form-select" formControlName="provider" (change)="getFilteredSystems()">
+                    @for (provider of providers; track provider.id) {
+                    <option [value]="provider.pid">
+                        {{ provider.name }}
+                        {{ (provider.fromThirdParty ? ' (' + provider.thirdParty?.name + ')' : '') }}
+                    </option>
+                    }
+                </select>
+            </div>
+            <div class="col-6">
+                <label for="target" class="col-form-label">Target:</label>
+                <select class="form-select" formControlName="target">
+                    @for (system of systems; track $index) {
+                    <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
+                        (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}
+                    </option>
+                    }
+                </select>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label for="shots" class="col-form-label">Shots:</label>
+                    <input id="shots" formControlName="shots" type="number" min="1" max="10000" class="form-control">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label for="qubits" class="col-form-label">Qubits:</label>
+                    <input id="qubits" formControlName="qubits" type="number" min="1" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="circuit" class="col-form-label">Circuit:</label>
+            <textarea class="form-control" id="circuit" formControlName="circuit" rows=5></textarea>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+        (click)="modal.dismiss('Cierre usuario')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()">Save changes</button>
+</div>
