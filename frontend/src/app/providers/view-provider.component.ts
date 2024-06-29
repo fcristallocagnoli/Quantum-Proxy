@@ -66,7 +66,7 @@ export class ViewProviderComponent implements OnInit {
                     description = `
                     <h2>Summary</h2>
                     <p>${provider.description.short_description}</p>
-                    <h2>Long Description</h2>
+                    <h2>Description</h2>
                     <p>${provider.description.long_description}</p>
                     <h2>History</h2>
                     <p>${provider.description.history}</p>
