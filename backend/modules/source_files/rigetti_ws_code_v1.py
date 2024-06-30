@@ -1,7 +1,5 @@
 """
-### V1.0 Module Deprecated
-- La página de Rigetti cambió y el código no es funcional
-- Ya no existen botones para cambiar de QPU, solo se muestra una
+### V1.0: Multiple QPUs available in Rigetti's page
 
 Codigo para obtener la informacion de los QPUs de Rigetti
 - ``get_qpu_name``: Obtiene el nombre de la QPU en la pagina actual

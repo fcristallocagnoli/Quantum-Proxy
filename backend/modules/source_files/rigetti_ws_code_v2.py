@@ -1,7 +1,6 @@
 """
-### V2.0 Actual Module
-- Ya no existen botones para cambiar de QPU, solo se muestra una
-- Código adaptado de V1.0
+### V2.0: Single QPU available in Rigetti's page
+- Código adaptado de V1.0 para obtener la información cuando solo hay una QPU disponible
 
 Codigo para obtener la informacion de los QPUs de Rigetti
 - ``get_qpu_name``: Obtiene el nombre de la QPU en la pagina actual

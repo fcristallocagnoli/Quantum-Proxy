@@ -68,7 +68,7 @@ providers_ws_data = [
             "base_url": "https://qcs.rigetti.com/qpus",
             "module": {
                 "func_to_eval": "get_backends",
-                "module_file": "rigetti_ws_code_v2",
+                "module_file": "rigetti_ws_code_v1",
             },
         },
         "backends_ids": [],
