@@ -1,6 +1,6 @@
 export class ThirdParty {
-    id?: string;
-    name?: string;
+    third_party_id?: string;
+    third_party_name?: string;
 }
 
 export class Description {
@@ -15,11 +15,11 @@ export class Provider {
     name?: string;
     description?: string | Description;
     website?: string;
-    fromThirdParty?: boolean;
+    from_third_party?: boolean;
     fetchMethod?: string;
-    thirdParty?: ThirdParty;
-    systems?: string[];
-    lastChecked?: string;
+    third_party?: ThirdParty;
+    backends_ids: string[];
+    last_checked?: string;
     // To access the attributes of the object using a string key
     [key: string]: any;
 }

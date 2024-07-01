@@ -26,18 +26,19 @@
         <div class="row">
             <div class="col-6">
                 <label for="provider" class="col-form-label">Provider:</label>
-                <select class="form-select" formControlName="provider" (change)="getFilteredSystems()">
+                <select class="form-select" formControlName="provider" (change)="getFilteredSystems()"
+                    [(ngModel)]="selectedProvider">
                     @for (provider of providers; track provider.id) {
                     <option [value]="provider.pid">
                         {{ provider.name }}
-                        {{ (provider.fromThirdParty ? ' (' + provider.thirdParty?.name + ')' : '') }}
+                        {{ (provider.from_third_party ? ' (' + provider.third_party?.third_party_name + ')' : '') }}
                     </option>
                     }
                 </select>
             </div>
             <div class="col-6">
                 <label for="target" class="col-form-label">Target:</label>
-                <select class="form-select" formControlName="target">
+                <select class="form-select" formControlName="target" [(ngModel)]="selectedTarget">
                     @for (system of systems; track $index) {
                     <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
                         (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}

@@ -17,22 +17,23 @@
                         using {{ provider.fetchMethod | lowercase }}
                         }
                         @default {
-                        from {{ provider.thirdParty?.name }}
+                        from {{ provider.third_party?.third_party_name }}
                         }
                         }
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ provider.name }}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">
-                            Has {{ provider.systems?.length }} systems available
+                            Has {{ provider.backends_ids.length }} systems available
                         </h6>
-                        <p class="card-text">
-                            Click 'Show provider' to see more details along with the systems available.
+                        <p class="card-text overflow-auto" style="height: 100px;">
+                            <!-- Click 'Show provider' to see more details along with the systems available. -->
+                            {{ getDescription(provider, 'short') }}
                         </p>
                         <div class="d-flex justify-content-between">
                             <a routerLink="{{provider.pid}}" class="btn btn-primary">Show provider</a>
                             <small class="text-muted align-self-center">
-                                Last updated: {{ provider.lastChecked | date: 'dd/MM/yy, HH:mm' }}
+                                Last updated: {{ provider.last_checked | date: 'dd/MM/yy, HH:mm' }}
                             </small>
                         </div>
                     </div>

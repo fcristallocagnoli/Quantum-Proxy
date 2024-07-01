@@ -13,7 +13,8 @@ export class CreateJobComponent {
     submitted = false;
     deleting = false;
 
-    selectedProvider: string;
+    selectedProvider: string = 'native.ionq';
+    selectedTarget: string = 'simulator';
     providers?: Provider[];
     systems?: System[];
 
@@ -36,9 +37,9 @@ export class CreateJobComponent {
             circuit: ['', Validators.required],
         });
         this.providerService.getAll().subscribe(providers => {
-            this.providers = this.transformFromPython(providers);
-            console.log(this.providers);
+            this.providers = providers;
         });
+        this.getFilteredSystems(this.selectedProvider);
     }
 
     get f() { return this.form.controls; }
@@ -49,8 +50,7 @@ export class CreateJobComponent {
         });
     }
 
-    getFilteredSystems() {
-        const providerPID = this.f["provider"].value
+    getFilteredSystems(providerPID: string = this.f["provider"].value) {
         this.providerService.getByPid(providerPID).subscribe(provider => {
             this.systemService.getAll().subscribe(systems => {
                 this.systems = systems.filter(s => provider["backends_ids"].includes(s.id));
@@ -79,22 +79,6 @@ export class CreateJobComponent {
         }
         this.f["circuit"].setValue(JSON.parse(this.f["circuit"].value));
         this.modal.close(this.form.value);
-    }
-
-    // TODO: Acabar con estos metodos, usar el mismo nombre y ya esta
-    transformFromPython(providers: any[]): Provider[] {
-        return providers.map(provider => {
-            return {
-                ...provider,
-                fromThirdParty: provider.from_third_party,
-                fetchMethod: (provider.backend_request) ? provider.backend_request.fetch_method : null,
-                thirdParty: (provider.third_party) ? {
-                    id: provider.third_party.third_party_id,
-                    name: provider.third_party.third_party_name
-                } : null,
-                systems: provider.backends_ids
-            };
-        });
     }
 
 }

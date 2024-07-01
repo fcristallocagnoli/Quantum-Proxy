@@ -19,23 +19,37 @@ export class ProvidersComponent implements OnInit {
       });
   }
 
-  // TODO: Simplificarlo al igual que en 'systems' ¿?
-  // ¿se podría usar los mismos nombres que en python?
-  // ¿o merece la pena cambiarlos?
-  // recorre el array de providers, y cambia el nombre de la propiedad from_third_party a fromThirdParty
-  // y los atrubutos de third_party (third_party_name y third_party_id) a id y name
+  getDescription(provider: Provider, scope: string = 'all') {
+    let description = provider.description
+    if (provider.description instanceof Object) {
+      switch (scope) {
+        case 'short':
+          description = provider.description.short_description
+          break
+        case 'long':
+          description = provider.description.long_description
+          break
+        case 'history':
+          description = provider.description.history
+          break
+        case 'all':
+          description = `
+                <h2>Summary</h2>
+                <p>${provider.description.short_description}</p>
+                <h2>History</h2>
+                <p>${provider.description.history}</p>
+                `
+          break
+      }
+    }
+    return description
+  }
+
   transformFromPython(providers: any[]): Provider[] {
     return providers.map(provider => {
       return {
         ...provider,
-        fromThirdParty: provider.from_third_party,
         fetchMethod: (provider.backend_request) ? provider.backend_request.fetch_method : null,
-        thirdParty: (provider.third_party) ? {
-          id: provider.third_party.third_party_id,
-          name: provider.third_party.third_party_name
-        } : null,
-        systems: provider.backends_ids,
-        lastChecked: provider.last_checked
       };
     });
   }

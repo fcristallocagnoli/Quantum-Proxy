@@ -37,14 +37,14 @@ export class CompareProvidersComponent implements OnInit {
         this.providerService.getByPid(this.entity1).subscribe(provider => {
             this.provider1 = provider;
             this.systemService.getAll().subscribe(systems => {
-                this.systemsP1 = systems.filter(s => provider["backends_ids"].includes(s.id));
+                this.systemsP1 = systems.filter(s => provider.backends_ids.includes(s.id));
                 this.systemsP1 = this.sortSystems(this.systemsP1);
             });
         });
         this.providerService.getByPid(this.entity2).subscribe(provider => {
             this.provider2 = provider;
             this.systemService.getAll().subscribe(systems => {
-                this.systemsP2 = systems.filter(s => provider["backends_ids"].includes(s.id));
+                this.systemsP2 = systems.filter(s => provider.backends_ids.includes(s.id));
                 this.systemsP2 = this.sortSystems(this.systemsP2);
             });
         });

@@ -21,8 +21,8 @@
                 <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedProvider1">
                         @for (provider of getFilteredProviders(selectedProvider2); track provider.id) {
-                        <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
-                            provider.thirdParty?.name + ')' : '') }}</option>
+                        <option [value]="provider.pid">{{ provider.name + (provider.from_third_party ? ' (' +
+                            provider.third_party?.third_party_name + ')' : '') }}</option>
                         }
                     </select>
                 </div>
@@ -32,8 +32,8 @@
                 <div class="col-5">
                     <select class="form-select" [(ngModel)]="selectedProvider2">
                         @for (provider of getFilteredProviders(selectedProvider1); track provider.id) {
-                        <option [value]="provider.pid">{{ provider.name + (provider.fromThirdParty ? ' (' +
-                            provider.thirdParty?.name + ')' : '') }}</option>
+                        <option [value]="provider.pid">{{ provider.name + (provider.from_third_party ? ' (' +
+                            provider.third_party?.third_party_name + ')' : '') }}</option>
                         }
                     </select>
                 </div>

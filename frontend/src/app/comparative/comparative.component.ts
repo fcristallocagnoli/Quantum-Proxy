@@ -31,7 +31,7 @@ export class ComparativeComponent {
 
     ngOnInit(): void {
         this.providerService.getAll().subscribe(providers => {
-            this.providers = this.transformFromPython(providers);
+            this.providers = providers;
             this.providers.sort((a, b) => a.name!.localeCompare(b.name!));
         });
         this.systemService.getAll().subscribe(systems => {
@@ -61,21 +61,6 @@ export class ComparativeComponent {
 
     compareSystems(system1: any, system2: any) {
         this.router.navigateByUrl(`/compare/systems/${system1}-vs-${system2}`);
-    }
-
-    transformFromPython(providers: any[]): Provider[] {
-        return providers.map(provider => {
-            return {
-                ...provider,
-                fromThirdParty: provider.from_third_party,
-                fetchMethod: (provider.backend_request) ? provider.backend_request.fetch_method : null,
-                thirdParty: (provider.third_party) ? {
-                    id: provider.third_party.third_party_id,
-                    name: provider.third_party.third_party_name
-                } : null,
-                systems: provider.backends_ids
-            };
-        });
     }
 
     normalizeName(name: string): string {
