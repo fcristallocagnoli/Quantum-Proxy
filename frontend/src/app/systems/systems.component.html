@@ -38,7 +38,8 @@
                             <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
                         </p>
                         <div class="d-grid gap-2">
-                            <a routerLink="{{system.bid}}" class="btn btn-primary">Show system</a>
+                            <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show System</a>
+                            <!-- <a routerLink="{{system.bid}}" class="btn btn-primary">Send Job</a> -->
                         </div>
                     </div>
                     <div class="card-footer text-center">
