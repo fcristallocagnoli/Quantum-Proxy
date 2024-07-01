@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home';
 import { authGuard } from './_helpers';
 import { Role } from './_models';
+import { NotFoundComponent } from './_components/not-found.component';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 const providersModule = () => import('./providers/providers.module').then(x => x.ProvidersModule);
@@ -22,9 +23,10 @@ const routes: Routes = [
     { path: 'profile', loadChildren: profileModule, canActivate: [authGuard] },
     { path: 'jobs', loadChildren: jobsModule, canActivate: [authGuard] },
     { path: 'admin', loadChildren: adminModule, canActivate: [authGuard], data: { roles: [Role.Admin] } },
+    { path: 'not-found', component: NotFoundComponent},
 
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: 'not-found' }
 ];
 
 @NgModule({
