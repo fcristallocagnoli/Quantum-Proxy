@@ -1,11 +1,28 @@
+import os
 import textwrap
-from braket.aws import AwsDevice
-from dotenv import load_dotenv
 
+from braket.aws import AwsDevice
 from database.models.providers_models import ThirdPartyEnum
+from dotenv import dotenv_values
 from utils.utils import norm_str
 
-load_dotenv()
+config = dotenv_values()
+
+if not all(
+    [
+        AWS_ACCESS_KEY_ID := config.get("AWS_ACCESS_KEY_ID"),
+        AWS_SECRET_ACCESS_KEY := config.get("AWS_SECRET_ACCESS_KEY"),
+        AWS_DEFAULT_REGION := config.get("AWS_DEFAULT_REGION"),
+    ]
+):
+    raise ValueError(
+        "Missing environment variables for AWS Braket. Please check the .env file."
+    )
+
+os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
+os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
+os.environ["AWS_DEFAULT_REGION"] = AWS_DEFAULT_REGION
+
 
 providers_api_data = [
     {
