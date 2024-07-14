@@ -12,7 +12,7 @@ from utils.utils import check_code
 
 @contextmanager
 def innit_driver(url: str):
-    driver: web.Chrome = None
+    driver: webdriver.Chrome = None
     """Context manager para inicializar y cerrar el webdriver de Chrome."""
     try:
         options = webdriver.ChromeOptions()
@@ -26,7 +26,8 @@ def innit_driver(url: str):
         yield driver
     finally:
         print("Cerrando webdriver...")
-        driver.quit()
+        if driver:
+            driver.quit()
 
 
 def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
