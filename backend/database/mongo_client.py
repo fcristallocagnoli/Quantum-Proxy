@@ -1,3 +1,4 @@
+import os
 from bson import ObjectId
 from dotenv import dotenv_values
 from pymongo import MongoClient, ReturnDocument
@@ -10,10 +11,18 @@ from security.aes_cipher import decrypt_data, encrypt_data
 # Avisar al usuario de que debe tener un archivo .env
 # O proporcionar valores por defecto en caso de que no exista
 
-config = dotenv_values()
+config = {
+    **dotenv_values(),
+    **os.environ
+}
+
+if not (DB_HOST := config.get("DB_HOST")):
+    raise ValueError("DB_HOST can't be empty")
+
+DB_PORT = config.get("DB_PORT", 27017)
 
 # Client for the database
-db_client = MongoClient(config["DB_HOST"], int(config["DB_PORT"]))
+db_client = MongoClient(DB_HOST, int(DB_PORT))
 
 # Available databases
 db_test = db_client["test-database"]
