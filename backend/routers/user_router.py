@@ -3,7 +3,6 @@ from typing import Annotated
 from utils.utils import (
     get_current_datetime,
     hash_password,
-    norm_id,
     sf_parse_object_id,
 )
 from database.models.providers_models import BaseProviderModel
@@ -70,7 +69,6 @@ def get_user(
             title="The ID of the user",
             # get the id of a user to use as an example
             description="A 24-character alphanumeric string representing the user's ID.",
-            example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
     projection: Annotated[
@@ -144,7 +142,6 @@ def update_user(
             title="The ID of the user",
             # get the id of a user to use as an example
             description="A 24-character alphanumeric string representing the user's ID.",
-            example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
     user: UserModel = Body(...),
@@ -214,7 +211,6 @@ def delete_user(
             title="The ID of the user",
             # get the id of a user to use as an example
             description="A 24-character alphanumeric string representing the user's ID.",
-            example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
 ):

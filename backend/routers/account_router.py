@@ -17,7 +17,6 @@ from utils.utils import (
     get_timestamp,
     hash_password,
     is_first_account,
-    norm_id,
     sf_parse_object_id,
     verify_password,
 )
@@ -439,7 +438,6 @@ def get_account(
             title="The ID of the account",
             # get the id of a account to use as an example
             description="A 24-character alphanumeric string representing the account's ID.",
-            example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
 ) -> dict:
@@ -628,7 +626,6 @@ def delete_account(
             title="The ID of the account",
             # get the id of a account to use as an example
             description="A 24-character alphanumeric string representing the account's ID.",
-            example=f"{norm_id(db_find_users()[0])}",
         ),
     ],
 ):
