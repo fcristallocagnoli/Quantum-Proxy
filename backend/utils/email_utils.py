@@ -1,11 +1,15 @@
+import os
 import smtplib
 import ssl
-from email.message import EmailMessage
 import textwrap
+from email.message import EmailMessage
 
 from dotenv import dotenv_values
 
-env = dotenv_values()
+env = {
+    **dotenv_values(),
+    **os.environ
+}
 
 # Para mayor facilidad en un despliegue local, se proporciona una cuenta de gmail de la cual se ha generado una contraseña de aplicación
 # En un entorno real esto sería una brecha de seguridad, no debemos exponer ningún tipo de credenciales en el código

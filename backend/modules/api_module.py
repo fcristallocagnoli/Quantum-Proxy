@@ -1,4 +1,5 @@
 import importlib.util
+import os
 from pathlib import Path
 
 from bson import ObjectId
@@ -8,9 +9,15 @@ from database.mongo_client import db_find_user
 from dotenv import dotenv_values
 from utils.utils import check_code
 
-env = dotenv_values()
+env = {
+    **dotenv_values(),
+    **os.environ
+}
 
-DUMMY_ACCOUNT = env["DUMMY_ACCOUNT"]
+try:
+    DUMMY_ACCOUNT = env["DUMMY_ACCOUNT"]
+except KeyError:
+    raise ValueError("DUMMY_ACCOUNT not found in env vars")
 
 
 def get_auth_if_needed(request: APIRequest, *, provider_key: str):

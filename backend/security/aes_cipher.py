@@ -1,8 +1,12 @@
+import os
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from dotenv import dotenv_values
 
-config = dotenv_values()
+config = {
+    **dotenv_values(),
+    **os.environ
+}
 
 
 class AES_CIPHER_CBC:
