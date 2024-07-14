@@ -6,23 +6,6 @@ from database.models.providers_models import ThirdPartyEnum
 from dotenv import dotenv_values
 from utils.utils import norm_str
 
-config = dotenv_values()
-
-if not all(
-    [
-        AWS_ACCESS_KEY_ID := config.get("AWS_ACCESS_KEY_ID"),
-        AWS_SECRET_ACCESS_KEY := config.get("AWS_SECRET_ACCESS_KEY"),
-        AWS_DEFAULT_REGION := config.get("AWS_DEFAULT_REGION"),
-    ]
-):
-    raise ValueError(
-        "Missing environment variables for AWS Braket. Please check the .env file."
-    )
-
-os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
-os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
-os.environ["AWS_DEFAULT_REGION"] = AWS_DEFAULT_REGION
-
 
 providers_api_data = [
     {
@@ -126,6 +109,29 @@ providers_sdk_data = [
 ]
 
 
+# Amazon Braket config (for fetching initial providers)
+config = {
+    **dotenv_values(),
+    **dotenv_values("/run/secrets/aws_secrets"),
+    **os.environ
+}
+
+
+# Si todas existen...
+if env_vars_set := all(
+    [
+        AWS_ACCESS_KEY_ID := config.get("AWS_ACCESS_KEY_ID"),
+        AWS_SECRET_ACCESS_KEY := config.get("AWS_SECRET_ACCESS_KEY"),
+        AWS_DEFAULT_REGION := config.get("AWS_DEFAULT_REGION"),
+    ]
+):
+    # ... las guardamos en el entorno del SO
+    os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
+    os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
+    os.environ["AWS_DEFAULT_REGION"] = AWS_DEFAULT_REGION
+
+
+# Requires AWS env vars present in OS enviroment
 def get_braket_providers():
     output = []
     devices = AwsDevice.get_devices()
@@ -151,9 +157,10 @@ def get_braket_providers():
     return output
 
 
-# O se añaden a mano, o se puede recurrrir a la función anterior
-# Nota: se necesita cargar el archivo .env con las credenciales de AWS
-providers_data_from_braket = get_braket_providers()
+# Si no se proporcionan las credenciales de AWS, los datos proporcionados
+# por dicha plataforma no se añadirán a la base de datos
+providers_data_from_braket = get_braket_providers() if env_vars_set else []
+
 
 providers_data = (
     providers_api_data
