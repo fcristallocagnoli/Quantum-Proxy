@@ -24,7 +24,7 @@ except KeyError:
 def get_env_vars_if_needed(request: SDKRequest, *, provider_key: str):
     if env_vars := request.auth.get("env_vars", None):
         user = db_find_user(filter={"email": DUMMY_ACCOUNT})
-        assert user, "User not found"
+        assert user, "Dummy account not found in database"
         user = UserModel(**user)
         third_party_env_vars = user.api_keys.get(provider_key)
         return [(var, third_party_env_vars.get(var)) for var in env_vars]
