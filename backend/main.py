@@ -115,7 +115,7 @@ app.include_router(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"api_status": "Available!"}
 
 
 @app.get("/health")

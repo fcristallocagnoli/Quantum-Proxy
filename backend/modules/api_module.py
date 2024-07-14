@@ -22,8 +22,8 @@ except KeyError:
 
 def get_auth_if_needed(request: APIRequest, *, provider_key: str):
     if auth_format := request.auth.get("Authorization", None):
-        user = db_find_user(filter={"email": DUMMY_ACCOUNT})
-        assert user, "Dummy account not found in database"
+        if not (user := db_find_user(filter={"email": DUMMY_ACCOUNT})):
+            raise ValueError("Dummy account not found in database")
         user = UserModel(**user)
         db_api_keys = user.api_keys.get(provider_key)
         auth = auth_format.replace("TOKEN", db_api_keys.get("TOKEN"))

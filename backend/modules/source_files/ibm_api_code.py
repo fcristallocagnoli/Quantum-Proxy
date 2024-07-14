@@ -6,7 +6,11 @@ from modules.api_module import APIRequest, get_auth_if_needed
 
 def get_backends(request: APIRequest) -> list[dict[str, Any]]:
     base_url = request.base_url
-    auth = get_auth_if_needed(request, provider_key="ibm")
+    try:
+        auth = get_auth_if_needed(request, provider_key="ibm")
+    except ValueError as err:
+        print("Exception:", err)
+        return []
     # Obtenemos los backends
     backends = requests.get(
         f"{base_url}/backends",

@@ -68,6 +68,9 @@ def refresh_backends(provider: BaseProviderModel):
 
     # Obtenemos los nuevos backends
     datos = fetch_data(provider)
+    if not datos:
+        # Si no hay datos por lo que sea, terminamos, no podemos insertar nada
+        return
     backends_ids = db_insert_backends(datos)
 
     # Si el proveedor es de terceros, hay que actualizar los proveedores que ofrece

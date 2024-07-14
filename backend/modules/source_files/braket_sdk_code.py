@@ -44,7 +44,11 @@ def process_device(device: AwsDevice) -> dict[str, Any]:
 
 
 def get_backends(request: SDKRequest = None) -> list[dict[str, Any]]:
-    key_value_list = get_env_vars_if_needed(request, provider_key="amazon_braket")
+    try:
+        key_value_list = get_env_vars_if_needed(request, provider_key="amazon_braket")
+    except ValueError as err:
+        print("Exception:", err)
+        return []
 
     for key, value in key_value_list:
         os.environ[key] = value

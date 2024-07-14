@@ -131,7 +131,7 @@ if env_vars_set := all(
     os.environ["AWS_DEFAULT_REGION"] = AWS_DEFAULT_REGION
 
 
-# Requires AWS env vars present in OS enviroment
+# Requires AWS env vars present in OS environment
 def get_braket_providers():
     output = []
     devices = AwsDevice.get_devices()
