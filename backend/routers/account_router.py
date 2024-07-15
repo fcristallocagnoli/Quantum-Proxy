@@ -41,6 +41,16 @@ from database.mongo_client import (
     db_update_user,
 )
 
+import os
+from dotenv import dotenv_values
+
+config = {
+    **dotenv_values(),
+    **os.environ
+}
+
+FRONTEND_URL = config.get("FRONTEND_URL", "http://localhost:4200")
+
 router = APIRouter(tags=["Accounts"], prefix="/accounts")
 
 
@@ -103,6 +113,7 @@ def create_account(request: Request, user: dict = Body(...)) -> UserInDBModel:
         "email": user["email"],
         "password": hash_password(user["password"]),
         "roles": [user["role"]],
+        "api_keys": user["apiKeys"],
         "is_verified": True,
         "created_at": get_current_datetime(),
     }
@@ -158,10 +169,12 @@ def register_account(user: UserModel = Body(...)) -> UserInDBModel:
     created_user = db_find_user(filter=sf_parse_object_id(new_user_id))
 
     # Send verification email
-    send_verification_email(
-        user.email,
-        f"http://localhost:4200/account/verify-email?token={user.verification_token}",
-    )
+    # if first account, already verified
+    if not is_first_account():
+        send_verification_email(
+            user.email,
+            f"{FRONTEND_URL}/account/verify-email?token={user.verification_token}",
+        )
 
     return created_user
 
@@ -344,7 +357,7 @@ def forgot_password(email: str = Body(..., embed=True)) -> UserInDBModel:
 
     send_reset_email(
         user_in_db.email,
-        f"http://localhost:4200/account/reset-password?token={user_in_db.reset_token}",
+        f"{FRONTEND_URL}/account/reset-password?token={user_in_db.reset_token}",
     )
 
     return user_in_db

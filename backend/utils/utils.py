@@ -53,9 +53,11 @@ def norm_str(value: str) -> str:
     return value.lower().replace(" ", "_")
 
 
+# sera 1 si esta la dummy account, sera 0 si no lo esta
+# (en principio no estará, se mete luego)
 def is_first_account():
     # must be == 0
-    return count_documents("users") == 1
+    return count_documents("users") == 0
 
 
 # region Date related
