@@ -24,6 +24,8 @@ def innit_driver(url: str):
         driver.implicitly_wait(10)
 
         yield driver
+    except:
+        yield None
     finally:
         print("Cerrando webdriver...")
         if driver:
@@ -50,6 +52,9 @@ def fetch_from_ws(provider: BaseProviderModel) -> list[dict]:
 
     # Ejecutar el código en un contexto que proporciona un webdriver
     with innit_driver(provider.backend_request.base_url) as driver:
+        # FIX: Por algún motivo selenium no funciona en la versión dockerizada
+        if not driver:
+            return []
         # Importamos el módulo dinámicamente desde el archivo externo
         especificacion = importlib.util.spec_from_file_location(file_name, file_path)
         modulo = importlib.util.module_from_spec(especificacion)

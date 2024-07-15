@@ -25,7 +25,8 @@ def get_auth_if_needed(request: APIRequest, *, provider_key: str):
         if not (user := db_find_user(filter={"email": DUMMY_ACCOUNT})):
             raise ValueError("Dummy account not found in database")
         user = UserModel(**user)
-        db_api_keys = user.api_keys.get(provider_key)
+        if not (db_api_keys := user.api_keys.get(provider_key)):
+            raise ValueError("ApiKeys not found in dummy account")
         auth = auth_format.replace("TOKEN", db_api_keys.get("TOKEN"))
         return auth
 
