@@ -12,10 +12,16 @@ def get_backends(request: APIRequest) -> list[dict[str, Any]]:
         print("Exception:", err)
         return []
     # Obtenemos los backends
-    backends = requests.get(
-        f"{base_url}/backends",
-        headers={"Authorization": auth},
-    ).json()["devices"]
+    try:
+        backends = requests.get(
+            f"{base_url}/backends",
+            headers={"Authorization": auth},
+        ).json()["devices"]
+    # IBM está teniendo problemas con sus API Keys, 
+    # a veces hay que regenerarlas porque las antiguas no funcionan 
+    except Exception as err:
+        print("Exception:", err)
+        return []
 
     output = []
     # Los simuladores de IBM serán retirados proximamente, por lo que no se incluirán
