@@ -75,7 +75,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 origins = [
+    # docker
+    "http://localhost",
+    # develop
     "http://localhost:4200",
+    # cloud
+    "https://quantum-proxy.vercel.app",
 ]
 
 app.add_middleware(
