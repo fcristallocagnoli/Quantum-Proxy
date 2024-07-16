@@ -3,7 +3,8 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+            <input type="text" formControlName="email" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
             <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                 <div *ngIf="f['email'].errors['required']">Email is required</div>
                 <div *ngIf="f['email'].errors['email']">Email is invalid</div>
@@ -11,7 +12,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+            <input type="password" formControlName="password" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
             <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
                 <div *ngIf="f['password'].errors['required']">Password is required</div>
             </div>
@@ -22,11 +24,30 @@
                     <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                     Login
                 </button>
-                <a routerLink="../register" class="btn btn-link">Register</a>
+                <a routerLink="../register" class="btn btn-link
+                    link-offset-2 link-offset-3-hover
+                    link-underline link-underline-opacity-0
+                    link-underline-opacity-75-hover">
+                    Register
+                </a>
             </div>
             <div class="mb-3 col text-end">
-                <a routerLink="../forgot-password" class="btn btn-link">Forgot Password?</a>
+                <a routerLink="../forgot-password" class="btn btn-link
+                link-offset-2 link-offset-3-hover
+                link-underline link-underline-opacity-0
+                link-underline-opacity-75-hover">
+                    Forgot Password?
+                </a>
             </div>
         </div>
+        <!-- <hr class="my-4">
+        <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
+        <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
+            <svg class="bi me-1" width="16" height="16">
+                <use xlink:href="#twitter" />
+            </svg>
+            Sign up with Google
+        </button>
+        <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small> -->
     </form>
 </div>

@@ -51,11 +51,16 @@
         <div class="mb-3 form-check">
             <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input"
                 [ngClass]="{ 'is-invalid': submitted && f['acceptTerms'].errors }" />
-            <label for="acceptTerms" class="form-check-label">Accept <a
-                    href="https://www.iubenda.com/privacy-policy/68883205" title="Política de Privacidad "
-                    target="_blank">Privacy Policy</a> & <a
-                    href="https://www.iubenda.com/privacy-policy/68883205/cookie-policy" title="Política de Cookies "
-                    target="_blank">Cookie Policy</a></label>
+            <label for="acceptTerms" class="form-check-label">
+                Accept
+                <a href="https://www.iubenda.com/privacy-policy/68883205" title="Política de Privacidad" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0
+                        link-underline-opacity-75-hover" target="_blank">
+                    Privacy Policy</a> &
+                <a href="https://www.iubenda.com/privacy-policy/68883205/cookie-policy" title="Política de Cookies"
+                    class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                    target="_blank">
+                    Cookie Policy
+                </a></label>
             <div *ngIf="submitted && f['acceptTerms'].errors" class="invalid-feedback">Accept PP & CP is required</div>
         </div>
         <div class="mb-3">
@@ -63,7 +68,12 @@
                 <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                 Register
             </button>
-            <a routerLink="../login" href="" class="btn btn-link">Cancel</a>
+            <a routerLink="../login" class="btn btn-link btn btn-link
+                link-offset-2 link-offset-3-hover
+                link-underline link-underline-opacity-0
+                link-underline-opacity-75-hover">
+                Cancel
+            </a>
         </div>
     </form>
 </div>
