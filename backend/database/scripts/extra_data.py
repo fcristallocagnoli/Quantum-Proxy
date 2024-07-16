@@ -59,12 +59,4 @@ extra_data = {
             "history": "Founded in 2019 and based in Boston, Massachusetts, QuEra Computing emerged from groundbreaking research conducted at Harvard University and MIT. The company's founders include renowned physicists and researchers who have made significant contributions to the field of quantum computing. QuEra quickly gained attention for its novel approach and potential for scalable quantum systems. Supported by strong academic ties and venture capital, QuEra is on a path to becoming a significant player in the quantum computing industry.",
         },
     },
-    "Oxford": {
-        "website": "https://oqc.tech/",
-        "description": {
-            "short_description": "Oxford Quantum Circuits (OQC) develops superconducting quantum circuits and provides cloud-based quantum computing services.",
-            "long_description": "Oxford Quantum Circuits (OQC) is a leading quantum computing company that specializes in developing superconducting quantum circuits. Their technology focuses on creating high-performance quantum processors with long coherence times and low error rates. OQC provides access to its quantum computers through cloud-based services, enabling researchers, developers, and businesses to harness the power of quantum computing for various applications. The company's mission is to accelerate the development of practical quantum solutions and contribute to the global quantum computing ecosystem.",
-            "history": "OQC was founded in 2017 as a spin-out from the University of Oxford, leveraging years of research in quantum physics and engineering. The company's founder, Dr. Ilana Wisby, and her team have been instrumental in advancing superconducting qubit technology. Based in the UK, OQC has established itself as a prominent player in the European quantum landscape, securing funding and partnerships to further its research and development efforts. OQC's innovative work continues to push the boundaries of quantum computing technology.",
-        },
-    },
 }
