@@ -11,12 +11,14 @@ import { AlertComponent } from './_components';
 import { HomeComponent } from './home';;
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { UpdateSecretsComponent } from './_components/update-secrets.component';
+import { ThemeComponent } from './_components/theme.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AlertComponent,
         HomeComponent,
+        ThemeComponent,
         UpdateSecretsComponent
     ],
     providers: [

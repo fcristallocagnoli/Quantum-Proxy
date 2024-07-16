@@ -22,7 +22,7 @@
         <a routerLink="/wizard" routerLinkActive="active" class="nav-item nav-link px-3">
           Wizard
         </a>
-        <li class="nav-item dropdown px-3" data-bs-theme="dark">
+        <li class="nav-item dropdown px-1">
           @if (!account) {
           <!-- If user not loged in, mistery person avatar -->
           <img id="logout-user" class="nav-link dropdown-toggle" src="https://www.gravatar.com/avatar/?d=mp&f=y&s=32"
@@ -59,6 +59,11 @@
             }
           </ul>
         </li>
+        <li>
+          <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white"></div>
+          <hr class="d-lg-none my-2 text-white-50">
+        </li>
+        <theme [theme]="activeTheme"></theme>
       </div>
     </div>
   </nav>
@@ -99,9 +104,5 @@
   .scroll-to-top.show {
     opacity: 1;
     visibility: visible;
-  }
-
-  .nav-item:hover {
-    background-color: var(--bs-dark);
   }
 </style>
