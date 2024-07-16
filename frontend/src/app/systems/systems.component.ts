@@ -52,6 +52,10 @@ export class SystemsComponent {
   }
 
   compareSystems(a: System, b: System) {
+    // Desplazamos los de estado desconocido al final
+    if (a.status === undefined || b.status === undefined) {
+      return 1;
+    }
     let dateA = new Date(a.last_checked);
     let dateB = new Date(b.last_checked);
     let comparison = dateB.getTime() - dateA.getTime();
