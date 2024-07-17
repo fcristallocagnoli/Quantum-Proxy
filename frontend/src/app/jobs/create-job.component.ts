@@ -9,9 +9,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CreateJobComponent {
     form!: FormGroup;
-    submitting = false;
-    submitted = false;
-    deleting = false;
 
     selectedProvider: string = 'native.ionq';
     selectedTarget: string = 'simulator';

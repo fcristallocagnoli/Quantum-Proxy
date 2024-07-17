@@ -1,6 +1,15 @@
 <div class="container mt-5 px-5">
     @if(jobs) {
-    <h2 class="mb-4">My Jobs</h2>
+    <h2 class="mb-4">My Jobs
+        <ng-template #tipContent>
+            <strong>Disclaimer:</strong>
+            At the moment only the IonQ provider is supported. More specifically, the Simulator target.
+        </ng-template>
+        <a style="cursor: pointer;">
+            <i class="fa-regular fa-circle-question" style="font-size: 24px;"
+            placement="right" [ngbTooltip]="tipContent"></i>
+        </a>
+    </h2>
     <div class="d-flex justify-content-between mb-3">
         <button class="btn btn-primary" (click)="createJob()">Create New Job</button>
         <button class="btn btn-primary" (click)="refreshJobs()" [disabled]="isRefreshingJobs">
