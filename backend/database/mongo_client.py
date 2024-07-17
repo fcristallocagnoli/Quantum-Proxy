@@ -307,6 +307,12 @@ def db_delete_provider(*, filter: dict) -> bool:
     """
     return db_delete_one(providers_coll, filter=filter)
 
+def db_delete_providers(*, filter: dict) -> bool:
+    """
+    Deletes all providers matching the filter.
+    :param filter: provider query
+    """
+    return db_delete_many(providers_coll, filter=filter)
 
 # region Backends ----------------------------
 

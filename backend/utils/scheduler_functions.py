@@ -7,6 +7,7 @@ from database.provider_data import providers_data
 from database.scripts.extra_data import get_extra_data
 from database.mongo_client import (
     db_delete_backends,
+    db_delete_providers,
     db_find_backends,
     db_find_provider,
     db_find_providers,
@@ -46,6 +47,19 @@ def init_providers():
     db_insert_providers(providers_data)
     # Procesamos los proveedores una vez insertados
     post_process_providers()
+
+
+def schedule_providers(scheduler: BackgroundScheduler):
+    # Reseteamos los proveedores
+    # - elimina proveedores obsoletos
+    # - obtiene proveedores nuevos
+    db_delete_providers(filter={})
+    init_providers()
+
+    # Delete all backends
+    db_delete_backends(filter={})
+    # Multihilo
+    init_backends(scheduler)
 
 
 def refresh_backends(provider: BaseProviderModel):
