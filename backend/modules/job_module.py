@@ -19,6 +19,15 @@ def get_job(uuid: str, platform: str, keys: dict):
     return job
 
 
+def get_job_output(uuid: str, platform: str, keys: dict):
+    match platform:
+        case "ionq":
+            job_output = get_job_output_from_ionq(uuid, keys)
+        case _:
+            return None
+    return job_output
+
+
 def create_job(job: dict, api_keys: dict):
     match job["provider"]:
         case "native.ionq":
@@ -54,6 +63,15 @@ def get_job_from_ionq(uuid: str, keys: dict):
         headers={"Authorization": f"apiKey {keys["TOKEN"]}"},
     ).json()
     return job
+
+
+def get_job_output_from_ionq(uuid: str, keys: dict):
+    base_url = "https://api.ionq.co/v0.3"
+    job_output = requests.get(
+        f"{base_url}/jobs/{uuid}/results",
+        headers={"Authorization": f"apiKey {keys["TOKEN"]}"},
+    ).json()
+    return job_output
 
 
 def create_job_on_ionq(job: dict, api_keys: dict):
