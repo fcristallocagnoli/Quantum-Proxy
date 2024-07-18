@@ -11,10 +11,7 @@ from security.aes_cipher import decrypt_data, encrypt_data
 # Avisar al usuario de que debe tener un archivo .env
 # O proporcionar valores por defecto en caso de que no exista
 
-config = {
-    **dotenv_values(),
-    **os.environ
-}
+config = {**dotenv_values(), **os.environ}
 
 if not (DB_HOST := config.get("DB_HOST")):
     raise ValueError("DB_HOST can't be empty")
@@ -64,6 +61,15 @@ def count_documents(collection: str) -> int:
 
 
 # region Generic ----------------------------
+
+
+def aggregate(collection: Collection, pipeline: list[dict]) -> Cursor:
+    """
+    Perform an aggregation on the collection.
+    :param ``collection``: collection on which to aggregate
+    :param ``pipeline``: list of aggregation stages
+    """
+    return collection.aggregate(pipeline)
 
 
 def db_find_one(
@@ -307,12 +313,14 @@ def db_delete_provider(*, filter: dict) -> bool:
     """
     return db_delete_one(providers_coll, filter=filter)
 
+
 def db_delete_providers(*, filter: dict) -> bool:
     """
     Deletes all providers matching the filter.
     :param filter: provider query
     """
     return db_delete_many(providers_coll, filter=filter)
+
 
 # region Backends ----------------------------
 
