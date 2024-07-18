@@ -1,5 +1,6 @@
 from bson import ObjectId
 from fastapi.logger import logger
+from modules.source_files.braket_ws_pricing import get_pricing
 from utils.utils import get_current_datetime
 from database.models.providers_models import BaseProviderModel, ThirdPartyEnum
 from modules.gateway_module import fetch_data
@@ -13,6 +14,7 @@ from database.mongo_client import (
     db_find_providers,
     db_insert_backends,
     db_insert_providers,
+    db_update_backends,
     db_update_provider,
     db_update_providers,
 )
@@ -60,6 +62,17 @@ def schedule_providers(scheduler: BackgroundScheduler):
     db_delete_backends(filter={})
     # Multihilo
     init_backends(scheduler)
+
+
+def post_process_backends():
+    # Añadir datos extra que no se pueden automatizar:
+    # - precios
+    precios: list = get_pricing()
+    for system in precios:
+        db_update_backends(
+            filter={"$text": {"$search": system["qpu_family"]}},
+            cambios={"$set": {"prices": system["prices"]}},
+        )
 
 
 def refresh_backends(provider: BaseProviderModel):
@@ -114,6 +127,7 @@ def refresh_backends(provider: BaseProviderModel):
             }
         },
     )
+    post_process_backends()
 
 
 def init_backends(scheduler: BackgroundScheduler):

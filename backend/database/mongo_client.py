@@ -357,6 +357,24 @@ def db_insert_backends(backends: list[dict]) -> list[str]:
     return db_insert_many(backends_coll, backends)
 
 
+def db_update_backend(*, filter: dict, cambios: dict):
+    """
+    Updates a single backend matching the filter.
+    :param filter: backend query
+    :param cambios: dict with the changes to apply
+    """
+    return db_update_one(backends_coll, filter=filter, cambios=cambios)
+
+
+def db_update_backends(*, filter: dict, cambios: dict):
+    """
+    Updates all backends matching the filter.
+    :param filter: backend query
+    :param cambios: dict with the changes to apply
+    """
+    return db_update_many(backends_coll, filter=filter, cambios=cambios)
+
+
 def db_delete_backend(*, filter: dict) -> bool:
     """
     Deletes a single backend matching the filter.
