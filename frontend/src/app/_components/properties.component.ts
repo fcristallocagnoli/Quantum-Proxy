@@ -11,35 +11,45 @@ import { NgbActiveModal, NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-boo
     template: `
         @switch (true) {
         @case (["running", "online", "available", "completed", "ready"].includes(status ?? 'N/A')) {
-        <span class="text-success">
-            <i class="fa-regular fa-circle-check"></i>
+        <span style="color: #198754;">
+            @if (icon) {
+                <i class="fa-regular fa-circle-check"></i>
+            }
             {{ status | titlecase }} <br>
         </span>
         }
         @case (status === "offline") {
-        <span class="text-danger">
-            <i class="fa-regular fa-circle-xmark"></i>
+        <span style="color: #dc3545;">
+            @if (icon) {
+                <i class="fa-regular fa-circle-xmark"></i>
+            }
             {{ status | titlecase }} <br>
         </span>
         }
         @case (status === "calibrating") {
-        <span class="text-secondary">
-            <i class="fa-regular fa-clock"></i>
+        <span style="color: #6c757d;">
+            @if (icon) {
+                <i class="fa-regular fa-clock"></i>
+            }
             {{ status | titlecase }} <br>
         </span>
         }
         @case (!status) {
-        <span class="text-warning">
-            <i class="fa-regular fa-circle-question"></i>
+        <span style="color: #ffc107;">
+            @if (icon) {
+                <i class="fa-regular fa-circle-question"></i>
+            }
             Unknown <br>
         </span>
         }
         @default {
-        <span class="text-info">
-            <span class="fa-stack" style="font-size: 8px;">
-                <i class="fa-regular fa-circle fa-stack-2x"></i>
-                <i class="fa-solid fa-info fa-stack-1x text-info fa-inverse"></i>
-            </span>
+        <span style="color: #0dcaf0;">
+            @if (icon) {
+                <span class="fa-stack" style="font-size: 8px;">
+                    <i class="fa-regular fa-circle fa-stack-2x"></i>
+                    <i class="fa-solid fa-info fa-stack-1x text-info fa-inverse"></i>
+                </span>
+            }
             {{ status | titlecase }} <br>
         </span>
         }
@@ -48,6 +58,7 @@ import { NgbActiveModal, NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-boo
 })
 export class StatusComponent {
     @Input() status?: string;
+    @Input() icon?: boolean = true;
 
     constructor() { }
 
@@ -61,16 +72,16 @@ export class StatusComponent {
         @switch (queue?.type) {
         @case ("jobs_remaining") {
         @if(!isTable) {
-            Queued jobs:
+            Queued Jobs:
         }@else {
-            Queued jobs
+            Queued Jobs
         }
         }
         @case ("avg_time") {
         @if(!isTable) {
-            Queue time:
+            Queue Time:
         }@else {
-            Queue time
+            Queue Time
         }
         }
         @default {
