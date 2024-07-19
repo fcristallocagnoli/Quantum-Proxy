@@ -55,6 +55,10 @@ async def get_backends() -> list[dict]:
     response_model_exclude_none=True,
 )
 async def get_backends_filtered(
+    usingObjectId: Annotated[
+        dict,
+        Body(title="Using ObjectID", description="Whether is requesting ObjectId or not"),
+    ] = None,
     filter: Annotated[
         dict, Body(title="Filter", description="Filter the backends")
     ] = {},
@@ -68,6 +72,9 @@ async def get_backends_filtered(
     - **projection**: Filter to select which fields to return.
     - **returns**: All backends.
     """
+    if usingObjectId and usingObjectId.get("usingObjectId"):
+        for key, value in filter.items():
+            filter[key] = sf_parse_object_id(value)
     backends = list(
         map(
             lambda b: retrieve_backend(Backend(backend=b), as_dict=True),

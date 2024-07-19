@@ -15,6 +15,10 @@ export class SystemService {
     return this.http.get<System[]>(baseUrl);
   }
 
+  getFiltered(filter: any, usingObjectId?: any) {
+    return this.http.post<System[]>(baseUrl, { usingObjectId, filter });
+  }
+
   getByBid(bid: string) {
     return this.http.get<System>(`${baseUrl}/${bid}`);
   }
