@@ -71,7 +71,7 @@ def post_process_backends():
     for system in precios:
         db_update_backends(
             filter={"$text": {"$search": system["qpu_family"]}},
-            cambios={"$set": {"prices": system["prices"]}},
+            cambios={"$set": {"price": system["price"]}},
         )
 
 
