@@ -1,3 +1,10 @@
+export interface Price {
+    full_price?: string;
+    per_task_price?: number;
+    per_shot_price?: number;
+    per_minute_price?: number;
+}
+
 export interface System {
     id: string;
     provider: { provider_id: string, provider_name: string, provider_from?: string };
@@ -38,6 +45,8 @@ export interface System {
 
     extra: string[];
     last_checked: string;
+
+    price?: Price;
 
     // To access the attributes of the object using a string key
     [key: string]: any;
