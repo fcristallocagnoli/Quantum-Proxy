@@ -44,13 +44,17 @@ def get_system_pricing() -> list:
         # ignoramos la fila de encabezados
         for row in rows[1:]:
             fila = row.find_elements(By.TAG_NAME, "td")
+            hardware_provider, qpu_family = fila[0].text, fila[1].text
+            per_task_price = float(fila[2].text.split()[0].replace(",", "."))
+            per_shot_price = float(fila[3].text.split()[0].replace(",", "."))
             quantum_computers.append(
                 {
-                    "hardware_provider": fila[0].text,
-                    "qpu_family": fila[1].text,
-                    "prices": {
-                        "task_price": fila[2].text.split()[0].replace(",", "."),
-                        "shot_price": fila[3].text.split()[0].replace(",", "."),
+                    "hardware_provider": hardware_provider,
+                    "qpu_family": qpu_family,
+                    "price": {
+                        "full_price": f"${str(per_task_price)}/task + ${str(per_shot_price)}/shot",
+                        "per_task_price": per_task_price,
+                        "per_shot_price": per_shot_price,
                     },
                 }
             )
@@ -61,17 +65,16 @@ def get_simulator_pricing() -> list:
     quantum_circuit_simulators = [
         {
             "qpu_family": "DM1",
-            "prices": {
-                "per_minute_price": "0.075",
-            },
+            "price": {"full_price": "$0.075/minute", "per_minute_price": 0.075},
         },
         {
             "qpu_family": "SV1",
-            "prices": {
-                "per_minute_price": "0.075",
-            },
+            "price": {"full_price": "$0.075/minute", "per_minute_price": 0.075},
         },
-        {"qpu_family": "TN1", "prices": {"per_minute_price": "0.075"}},
+        {
+            "qpu_family": "TN1",
+            "price": {"full_price": "$0.075/minute", "per_minute_price": 0.075},
+        },
     ]
     return quantum_circuit_simulators
 
