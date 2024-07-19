@@ -22,6 +22,11 @@ export class JobService {
     return this.http.post<any>(`${baseUrl}/get/${uuid}`, { 'api_keys': account?.apiKeys });
   }
 
+  getJobResults(uuid: string) {
+    const account = this.accountService.accountValue;
+    return this.http.post<any>(`${baseUrl}/results/${uuid}`, { 'api_keys': account?.apiKeys });
+  }
+
   createJob(job: any) {
     const account = this.accountService.accountValue;
     return this.http.post<any>(`${baseUrl}/create`, { 'job': job, 'api_keys': account?.apiKeys });
