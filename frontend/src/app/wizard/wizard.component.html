@@ -1,1 +1,262 @@
-<p>It works!</p>
+<div class="container mt-4">
+    <h2>Welcome to the Quantum Provider Wizard</h2>
+    <p class="lead">
+        This wizard will help you find the best quantum computing provider for your needs.
+    </p>
+    @if (systems) {
+    <div class="row mt-3">
+        @for (system of subSystems; track $index) {
+        <div class="col-md-4 mb-3">
+            <div class="card bg-body-tertiary">
+                <div class="card-body">
+                    <h5 class="card-title text-center">
+                        {{system.backend_name}} -
+                        from {{ system.provider.provider_name }}
+                        @if (system.provider.provider_from) {
+                        (by {{ system.provider.provider_from }})
+                        }
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary text-center">
+                        Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <span for="qubits" class="mb-1">Qubits</span>
+                            <strong><span class="d-grid">{{ system.qubits }}</span></strong>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <span for="qubits" class="mb-1">
+                                <queue [queue]="system.queue" [isTable]="true"></queue>
+                            </span>
+                            <strong><span class="d-grid">{{ system.queue?.value ?? 'N/A' }}</span></strong>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <span for="qubits" class="mb-1">Price</span>
+                            <!-- Hasta que se arregle el desplazamiento que causa full_price en algunos casos -->
+                            <!-- <strong><span class="d-grid">{{ system.price?.full_price ?? 'N/A' }}</span></strong> -->
+                            <strong>
+                                <span class="d-grid">
+                                    @if (system.price?.per_task_price) {
+                                    ${{ system.price?.per_task_price }}/task
+                                    }@else if(system.price?.per_minute_price) {
+                                    ${{ system.price?.per_minute_price }}/minute
+                                    }@else {
+                                    {{ 'N/A' }}
+                                    }
+                                </span>
+                            </strong>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <span for="qubits" class="mb-1">Status</span>
+                            <strong><span class="d-grid">
+                                    <status [status]="system.status" [icon]="true"></status>
+                                </span></strong>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show system</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="d-flex justify-content-center">
+        <ngb-pagination [collectionSize]="systems.length" [(page)]="page" [pageSize]="pageSize"
+            (pageChange)="updateSystems($event)" />
+    </div>
+
+    <h2 class="mt-3">Quantum Machine Wizard</h2>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="mb-3">Step 1: Select Criteria</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <p class="mt-0 mb-2">Fill up the form to select the criteria for the quantum machine you are
+                        looking for.</p>
+                    <p class="mt-0 mb-2">The more criteria you select, the more accurate the results will be.</p>
+                    <div class="d-grid">
+                        <button class="btn btn-primary mt-3">Submit</button>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="qubits" class="mb-2">Min Qubits</label>
+                    <input id="qubits" type="number" class="form-control bg-body-tertiary mb-2" min="0" max="1000">
+                    <label for="gates" class="mb-2">Supported Gates</label>
+                    <input id="gates" class="form-control bg-body-tertiary mb-2">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="mb-2" for="queue-time">Max Queue Time</label>
+                    <select id="queue-time" class="form-control bg-body-tertiary mb-2">
+                        <option>Select queue time</option>
+                        <!-- Add options here -->
+                    </select>
+                    <label class="mb-2" for="queued-jobs">Max Queued Jobs</label>
+                    <select id="queued-jobs" class="form-control bg-body-tertiary mb-2">
+                        <option>Select queued jobs</option>
+                        <!-- Add options here -->
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="mb-2" for="price-per-task">Max Price per task</label>
+                    <select id="price-per-task" class="form-control bg-body-tertiary mb-2">
+                        <option>Select price per task</option>
+                        <!-- Add options here -->
+                    </select>
+                    <label class="mb-2" for="price-per-shot">Max Price per shot</label>
+                    <select id="price-per-shot" class="form-control bg-body-tertiary mb-2">
+                        <option>Select price per shot</option>
+                        <!-- Add options here -->
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: Remove in next commit -->
+    <!-- <div class="card mt-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5>Step 2: Compare Providers</h5>
+                <div class="d-flex justify-content-center">
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Sort by: {{ sort }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="sort = 'Qubits'">Qubits</button></li>
+                            <li><button class="dropdown-item" (click)="sort = 'Price'">Price</button></li>
+                            <li><button class="dropdown-item" (click)="sort = 'Queue'">Queue</button></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Status: {{ statusSort }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="statusSort = 'All'">All</button></li>
+                            <li><button class="dropdown-item" (click)="statusSort = 'Online'">Online</button></li>
+                            <li><button class="dropdown-item" (click)="statusSort = 'Offline'">Offline</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 mb-3" *ngFor="let machine of machines">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{machine.name}}</h5>
+                            <p class="card-text">{{machine.description}}</p>
+                            <p>Qubits: {{machine.qubits}}</p>
+                            <p>Queue Time: {{machine.queueTime}}</p>
+                            <p>Price: {{machine.price}}</p>
+                            <p>Status: <span
+                                    [ngClass]="{'text-success': machine.status === 'Available', 'text-danger': machine.status === 'Busy'}">{{machine.status}}</span>
+                            </p>
+                            <button class="btn btn-primary">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </div> -->
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5>Step 2: Compare Providers</h5>
+                <div class="d-flex justify-content-center">
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Sort by: {{ sort }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="sort = 'Qubits'">Qubits</button></li>
+                            <li><button class="dropdown-item" (click)="sort = 'Price'">Price</button></li>
+                            <li><button class="dropdown-item" (click)="sort = 'Queue'">Queue</button></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown mx-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Status: {{ statusSort }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="statusSort = 'All'">All</button></li>
+                            <li><button class="dropdown-item" (click)="statusSort = 'Online'">Online</button></li>
+                            <li><button class="dropdown-item" (click)="statusSort = 'Offline'">Offline</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @for (data of dataStructure; track $index) {
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{data["provider"].name}}
+                        @if (data["provider"].thirdParty) {
+                        (by {{ data["provider"].thirdParty }})
+                        }
+                    </h5>
+                    <h6 class="card-subtitle mb-3 text-body-secondary">
+                        Last updated: {{ data["provider"].lastChecked | date: 'dd/MM/yy, HH:mm' }}
+                        <!-- {{ data["provider"].description.short_description }} -->
+                    </h6>
+                    @for (system of data.systems; let isLast = $last; track $index) {
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p>
+                                <strong>{{ system["backend_name"] }}</strong>
+                                @if (system["provider_from"]) {
+                                , by {{ system["provider_from"] }}
+                                }
+                            </p>
+                            <p>Qubits: {{ system["qubits"] }} qubits</p>
+                            <p>Status: <status [status]="system['status']" [icon]="true"></status>
+                            </p>
+                            <p>
+                                <queue [queue]="system.queue"></queue> {{ system.queue?.value ??
+                                'N/A' }}
+                            </p>
+                            <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show System</a>
+                        </div>
+                    </div>
+                    @if (!isLast) {
+                    <hr>
+                    }
+                    }
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }@else {
+    <div class="col-12 text-center">
+        <span class="spinner-border spinner-border-lg"></span>
+    </div>
+    }
+</div>
+<style>
+    body {
+        background-color: #001f3f;
+    }
+
+    /* .card {
+        border: none;
+    } */
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-body p {
+        margin: 0.25rem 0;
+    }
+</style>
