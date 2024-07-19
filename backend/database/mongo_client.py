@@ -13,13 +13,13 @@ from security.aes_cipher import decrypt_data, encrypt_data
 
 config = {**dotenv_values(), **os.environ}
 
-if not (DB_HOST := config.get("DB_HOST")):
-    raise ValueError("DB_HOST can't be empty")
+if not (DB_URI := config.get("DB_URI")):
+    raise ValueError("DB_URI can't be empty")
 
 DB_PORT = config.get("DB_PORT", 27017)
 
 # Client for the database
-db_client = MongoClient(DB_HOST, int(DB_PORT))
+db_client = MongoClient(DB_URI, int(DB_PORT))
 
 # Available databases
 db_test = db_client["test-database"]
@@ -63,7 +63,7 @@ def count_documents(collection: str) -> int:
 # region Generic ----------------------------
 
 
-def aggregate(collection: Collection, pipeline: list[dict]) -> Cursor:
+def aggregate(collection: Collection, *, pipeline: list[dict]) -> Cursor:
     """
     Perform an aggregation on the collection.
     :param ``collection``: collection on which to aggregate
@@ -259,6 +259,14 @@ def db_find_providers(*, filter: dict = {}, projection: dict = {}) -> Cursor:
     :param filter: query document
     """
     return db_find_many(providers_coll, filter=filter, projection=projection)
+
+
+def db_aggregate_providers(*, pipeline: list[dict]) -> Cursor:
+    """
+    Perform an aggregation on the providers collection.
+    :param pipeline: list of aggregation stages
+    """
+    return aggregate(providers_coll, pipeline=pipeline)
 
 
 def db_insert_provider(provider) -> str:
