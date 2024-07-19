@@ -33,6 +33,7 @@ class BaseBackendModel(BaseModel):
         populate_by_name=True,
         arbitrary_types_allowed=True,
     )
+    price: Optional[dict] = Field(default=None)
     last_checked: Optional[Date] = Field(default=None)
 
 
