@@ -91,11 +91,6 @@ class RigettiBackend(BaseBackendModel):
     rep_rate: Optional[str] = Field(default=None)
     median_t1: Optional[str] = Field(default=None)
     median_t2: Optional[str] = Field(default=None)
-    median_sim_1q_fidelity: Optional[str] = Field(default=None)
-    median_2q_xy_fidelity: Optional[str] = Field(default=None)
-    median_2q_cz_fidelity: Optional[str] = Field(default=None)
-    median_ro_fidelity: Optional[str] = Field(default=None)
-    median_active_reset_fidelity: Optional[str] = Field(default=None)
     extra: Optional[list[str]] = Field(default=None)
 
 

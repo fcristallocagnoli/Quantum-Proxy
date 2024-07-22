@@ -10,8 +10,6 @@ Codigo para obtener la informacion de los QPUs de Rigetti
 - ``get_backends``: Reune la informacion del backend
 """
 
-from contextlib import contextmanager
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.relative_locator import locate_with

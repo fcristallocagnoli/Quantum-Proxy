@@ -107,16 +107,9 @@ def rigetti_normalizer(backend: dict):
         "rep_rate": system["Rep rate"],
         "median_t1": performance["Median T1"],
         "median_t2": performance["Median T2"],
-        "median_sim_1q_fidelity": performance["Median Sim 1Q Fidelity"],
-        "median_2q_xy_fidelity": performance["Median 2Q XY Fidelity"],
-        "median_2q_cz_fidelity": performance["Median 2Q CZ Fidelity"],
-        "median_ro_fidelity": performance["Median RO Fidelity"],
-        "median_active_reset_fidelity": performance["Median RO Fidelity"],
         "extra": [
             "qubits", "median_rep_rate",
-            "median_t1", "median_t2", "median_sim_1q_fidelity",
-            "median_2q_xy_fidelity", "median_2q_cz_fidelity",
-            "median_ro_fidelity", "median_active_reset_fidelity"
+            "median_t1", "median_t2",
         ]
     }
 

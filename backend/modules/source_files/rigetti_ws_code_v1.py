@@ -1,5 +1,6 @@
 """
 ### V1.0: Multiple QPUs available in Rigetti's page
+- Note: This is the version currently in use
 
 Codigo para obtener la informacion de los QPUs de Rigetti
 - ``get_qpu_name``: Obtiene el nombre de la QPU en la pagina actual
