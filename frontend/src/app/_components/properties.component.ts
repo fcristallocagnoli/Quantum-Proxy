@@ -263,56 +263,6 @@ export class QueueComponent {
                         }
                     </tr>
                     }
-                    @if (anyIsDefined(systems, 'median_sim_1q_fidelity')) {
-                    <tr>
-                        <td>Median Sim 1Q Fidelity</td>
-                        @for (system of systems; track $index) {
-                        <td>
-                            {{ system.median_sim_1q_fidelity ?? 'N/A' }}
-                        </td>
-                        }
-                    </tr>
-                    }
-                    @if (anyIsDefined(systems, 'median_2q_xy_fidelity')) {
-                    <tr>
-                        <td>Median 2Q XY Fidelity</td>
-                        @for (system of systems; track $index) {
-                        <td>
-                            {{ system.median_2q_xy_fidelity ?? 'N/A' }}
-                        </td>
-                        }
-                    </tr>
-                    }
-                    @if (anyIsDefined(systems, 'median_2q_cz_fidelity')) {
-                    <tr>
-                        <td>Median 2Q CZ Fidelity</td>
-                        @for (system of systems; track $index) {
-                        <td>
-                            {{ system.median_2q_cz_fidelity ?? 'N/A' }}
-                        </td>
-                        }
-                    </tr>
-                    }
-                    @if (anyIsDefined(systems, 'median_ro_fidelity')) {
-                    <tr>
-                        <td>Median RO Fidelity</td>
-                        @for (system of systems; track $index) {
-                        <td>
-                            {{ system.median_ro_fidelity ?? 'N/A' }}
-                        </td>
-                        }
-                    </tr>
-                    }
-                    @if (anyIsDefined(systems, 'median_active_reset_fidelity')) {
-                    <tr>
-                        <td>Median Active Reset Fidelity</td>
-                        @for (system of systems; track $index) {
-                        <td>
-                            {{ system.median_active_reset_fidelity ?? 'N/A' }}
-                        </td>
-                        }
-                    </tr>
-                    }
                     <!-- extra fields (ibm) -->
                     @if (anyIsDefined(systems, 'basis_gates')) {
                     <tr>

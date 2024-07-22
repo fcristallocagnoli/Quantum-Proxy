@@ -30,11 +30,6 @@ export interface System {
     rep_rate?: string;
     median_t1?: string;
     median_t2?: string;
-    median_sim_1q_fidelity?: string;
-    median_2q_xy_fidelity?: string;
-    median_2q_cz_fidelity?: string;
-    median_ro_fidelity?: string;
-    median_active_reset_fidelity?: string;
 
     // -- extra fields (ibm) --
     basis_gates?: string[];
