@@ -62,7 +62,7 @@
         }
     </div>
     <div class="d-flex justify-content-center">
-        <ngb-pagination [collectionSize]="systems.length" [(page)]="page" [pageSize]="pageSize"
+        <ngb-pagination [collectionSize]="systems.length" [(page)]="currentPage" [pageSize]="pageSize"
             (pageChange)="updateSystems($event)" />
     </div>
 
@@ -175,25 +175,25 @@
                             Sort by: {{ sort }}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" (click)="sort = 'Qubits'">Qubits</button></li>
-                            <li><button class="dropdown-item" (click)="sort = 'Price'">Price</button></li>
-                            <li><button class="dropdown-item" (click)="sort = 'Queue'">Queue</button></li>
+                            <li><button class="dropdown-item" (click)="sortSystems('Qubits')">Qubits</button></li>
+                            <li><button class="dropdown-item" (click)="sortSystems('Queue')">Queue</button></li>
+                            <li><button class="dropdown-item" (click)="sortSystems('Price')">Price</button></li>
                         </ul>
                     </div>
                     <div class="dropdown mx-2">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Status: {{ statusSort }}
+                            Status: {{ statusFilter }}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" (click)="statusSort = 'All'">All</button></li>
-                            <li><button class="dropdown-item" (click)="statusSort = 'Online'">Online</button></li>
-                            <li><button class="dropdown-item" (click)="statusSort = 'Offline'">Offline</button></li>
+                            <li><button class="dropdown-item" (click)="filterSystems('All')">All</button></li>
+                            <li><button class="dropdown-item" (click)="filterSystems('Online')">Online</button></li>
+                            <li><button class="dropdown-item" (click)="filterSystems('Offline')">Offline</button></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            @for (data of dataStructure; track $index) {
+            @for (data of dataStructureFiltered; track $index) {
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title">
