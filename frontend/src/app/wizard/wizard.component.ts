@@ -53,23 +53,17 @@ export class WizardComponent implements OnInit {
 
   ngOnInit() {
     let dataStructure: any[] = [];
-    // se puede mejorar con una agregación de mongodb, 
-    // pero identificar y parsear todos los ObjectId se hace imposible
-    // se podria definir algun esquema con pydantic
     this.systemService.getAll()
       .pipe(first())
       .subscribe(systems => {
         this.systems = systems;
         this.updateSystems(this.page);
-      });
-    this.providerService.getAll()
-      .pipe(first())
-      .subscribe(providers => {
-        providers.forEach(provider => {
-          this.systemService.getFiltered({ "provider.provider_id": provider["id"] }, { usingObjectId: true })
-            .pipe(first())
-            .subscribe(systems => {
-              let newProvider = {
+
+        this.providerService.getAll()
+          .pipe(first())
+          .subscribe(providers => {
+            providers.forEach(provider => {
+              let minimalProvider = {
                 name: provider.name,
                 pid: provider.pid,
                 description: provider.description,
@@ -77,13 +71,13 @@ export class WizardComponent implements OnInit {
                 thirdParty: provider.third_party?.third_party_name,
                 lastChecked: provider.last_checked
               }
-              dataStructure.push({ provider: newProvider, systems: systems });
+              let providerSystems = this.systems.filter(system => system.provider.provider_id === provider["id"]);
+              dataStructure.push({ provider: minimalProvider, systems: providerSystems });
             });
-        });
-        setTimeout(() => {
-          this.dataStructure = dataStructure.filter(elem => elem["systems"].length > 0);
-          console.log(this.dataStructure);
-        }, 1000);
+            // filter out providers with no systems
+            this.dataStructure = dataStructure.filter(elem => elem["systems"].length > 0);
+            console.log(this.dataStructure);
+          });
       });
   }
 
