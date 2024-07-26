@@ -1,40 +1,25 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
     template: `
     <div class="p-4">
-        <div class="container">
-            <div class="error-code">404</div>
-            <div class="error-message">Page Not Found</div>
-            <p class="mb-4">Sorry, the page you are looking for does not exist.</p>
-            <a href="/" class="btn btn-primary">Go to Homepage</a>
+        <div class="container text-center">
+            <div class="error-code" style="font-size: 6rem; font-weight: 700;">
+                404
+            </div>
+            <div class="mb-4" style="font-size: 1.5rem;">
+                Page Not Found
+            </div>
+            <p class="mb-4">
+                Sorry, the page you are looking for does not exist.
+            </p>
+            <a routerLink="/" class="btn btn-primary">Go to Homepage</a>
         </div>
     </div>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8f9fa;
-            color: #343a40;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .error-code {
-            font-size: 6rem;
-            font-weight: 700;
-        }
-
-        .error-message {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-    </style>
-    `
+    `,
+    standalone: true,
+    imports: [RouterLink]
 })
 export class NotFoundComponent {
     constructor() { }
