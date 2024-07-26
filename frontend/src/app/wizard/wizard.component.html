@@ -1,9 +1,9 @@
-<div class="container mt-4">
+<div class="container mt-4 pb-3">
+    @if (systems) {
     <h2>Welcome to the Quantum Provider Wizard</h2>
     <p class="lead">
         This wizard will help you find the best quantum computing provider for your needs.
     </p>
-    @if (systems) {
     <div class="row mt-3">
         @for (system of subSystems; track $index) {
         <div class="col-md-4 mb-3">
@@ -70,46 +70,46 @@
     <div class="card mt-3">
         <div class="card-body">
             <h5 class="mb-3">Step 1: Select Criteria</h5>
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <p class="mt-0 mb-2">Fill up the form to select the criteria for the quantum machine you are
-                        looking for.</p>
-                    <p class="mt-0 mb-2">The more criteria you select, the more accurate the results will be.</p>
-                    <div class="d-grid">
-                        <button class="btn btn-primary mt-3">Submit</button>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <p class="mt-0 mb-2">Fill up the form to select the criteria for the quantum machine you are
+                            looking for.</p>
+                        <p class="mt-0 mb-2">The more criteria you select, the more accurate the results will be.</p>
+                        <div class="d-grid">
+                            <button class="btn btn-primary mt-3" [disabled]="!form.valid">Submit</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="qubits" class="mb-2">Min Qubits</label>
+                        <input id="qubits" formControlName="qubits" type="number"
+                            class="form-control bg-body-tertiary mb-2" min="0" max="1000">
+                        <!--  -->
+                        <label for="gates" class="mb-2">Supported Gates</label>
+                        <input id="gates" formControlName="supportedGates" class="form-control bg-body-tertiary mb-2"
+                        title="Fomato aceptado: 'gate1,gate2,...'">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="mb-2" for="queue-time">Max Queue Time</label>
+                        <input type="text" id="queue-time" formControlName="queueTime"
+                            class="form-control bg-body-tertiary mb-2" pattern="^(\d+d)$|^(\d+hrs)$|^(\d+min)$"
+                            title="Formato aceptado: 'Xd', 'Xhrs', o 'Xmin'">
+                        <!--  -->
+                        <label class="mb-2" for="queued-jobs">Max Queued Jobs</label>
+                        <input id="queued-jobs" formControlName="queuedJobs" type="number"
+                            class="form-control bg-body-tertiary mb-2" min="0">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="mb-2" for="price-per-task">Max Price per task</label>
+                        <input id="price-per-task" formControlName="pricePerTask"
+                            class="form-control bg-body-tertiary mb-2">
+                        <!--  -->
+                        <label class="mb-2" for="price-per-shot">Max Price per shot</label>
+                        <input id="price-per-shot" formControlName="pricePerShot"
+                            class="form-control bg-body-tertiary mb-2">
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="qubits" class="mb-2">Min Qubits</label>
-                    <input id="qubits" type="number" class="form-control bg-body-tertiary mb-2" min="0" max="1000">
-                    <label for="gates" class="mb-2">Supported Gates</label>
-                    <input id="gates" class="form-control bg-body-tertiary mb-2">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label class="mb-2" for="queue-time">Max Queue Time</label>
-                    <select id="queue-time" class="form-control bg-body-tertiary mb-2">
-                        <option>Select queue time</option>
-                        <!-- Add options here -->
-                    </select>
-                    <label class="mb-2" for="queued-jobs">Max Queued Jobs</label>
-                    <select id="queued-jobs" class="form-control bg-body-tertiary mb-2">
-                        <option>Select queued jobs</option>
-                        <!-- Add options here -->
-                    </select>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label class="mb-2" for="price-per-task">Max Price per task</label>
-                    <select id="price-per-task" class="form-control bg-body-tertiary mb-2">
-                        <option>Select price per task</option>
-                        <!-- Add options here -->
-                    </select>
-                    <label class="mb-2" for="price-per-shot">Max Price per shot</label>
-                    <select id="price-per-shot" class="form-control bg-body-tertiary mb-2">
-                        <option>Select price per shot</option>
-                        <!-- Add options here -->
-                    </select>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -164,7 +164,7 @@
         </div>
     </div> -->
 
-    <div class="card mt-3">
+    <div class="card mt-3 mb-5">
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <h5>Step 2: Compare Providers</h5>
@@ -234,6 +234,13 @@
                     }
                 </div>
             </div>
+            }@empty {
+            <div class="card mt-3 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">No systems found</h5>
+                    <p class="card-text">Try changing the criteria to find more systems.</p>
+                </div>
+            </div>
             }
         </div>
     </div>
@@ -244,14 +251,6 @@
     }
 </div>
 <style>
-    body {
-        background-color: #001f3f;
-    }
-
-    /* .card {
-        border: none;
-    } */
-
     .card-title {
         font-size: 1.25rem;
     }
