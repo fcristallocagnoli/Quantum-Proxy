@@ -1,7 +1,6 @@
 <div class="container pt-4" style="max-width: 800px; margin: auto;">
     <div class="container">
         <div class="text-center">
-            <!-- Centrar verticalmente (o meter mas margin top) -->
             <div class="d-flex justify-content-center mb-4">
                 <ul class="nav nav-underline">
                     <li class="nav-item">
@@ -19,7 +18,7 @@
             <p class="lead">Select any two quantum providers to compare them side by side:</p>
             <div class="row">
                 <div class="col-5">
-                    <select class="form-select" [(ngModel)]="selectedProvider1">
+                    <select class="form-select" [(ngModel)]="selectedProvider1" [disabled]="providers.length === 0">
                         @for (provider of getFilteredProviders(selectedProvider2); track provider.id) {
                         <option [value]="provider.pid">{{ provider.name + (provider.from_third_party ? ' (' +
                             provider.third_party?.third_party_name + ')' : '') }}</option>
@@ -30,7 +29,7 @@
                     <p style="font-size: 24px;">vs</p>
                 </div>
                 <div class="col-5">
-                    <select class="form-select" [(ngModel)]="selectedProvider2">
+                    <select class="form-select" [(ngModel)]="selectedProvider2" [disabled]="providers.length === 0">
                         @for (provider of getFilteredProviders(selectedProvider1); track provider.id) {
                         <option [value]="provider.pid">{{ provider.name + (provider.from_third_party ? ' (' +
                             provider.third_party?.third_party_name + ')' : '') }}</option>
@@ -39,14 +38,17 @@
                 </div>
             </div>
             <div class="d-grid col-4 mx-auto mt-3">
-                <button class="btn btn-primary" (click)="compareProviders(selectedProvider1, selectedProvider2)">Compare</button>
+                <button class="btn btn-primary" (click)="compareProviders(selectedProvider1, selectedProvider2)"
+                    [disabled]="providers.length === 0">
+                    Compare
+                </button>
             </div>
             } @else if (compareMode === 'systems') {
             <h1 class="display-4">Compare Quantum Systems</h1>
             <p class="lead">Select any two quantum systems to compare them side by side:</p>
             <div class="row">
                 <div class="col-5">
-                    <select class="form-select" [(ngModel)]="selectedSystem1">
+                    <select class="form-select" [(ngModel)]="selectedSystem1" [disabled]="systems.length === 0">
                         @for (system of getFilteredSystems(selectedSystem2); track system.id) {
                         <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
                             (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}
@@ -58,7 +60,7 @@
                     <p style="font-size: 24px;">vs</p>
                 </div>
                 <div class="col-5">
-                    <select class="form-select" [(ngModel)]="selectedSystem2">
+                    <select class="form-select" [(ngModel)]="selectedSystem2" [disabled]="systems.length === 0">
                         @for (system of getFilteredSystems(selectedSystem1); track system.id) {
                         <option [value]="normalizeNameToURL(system)">{{ normalizeName(system.backend_name) +
                             (system.provider.provider_from ? ' (' + system.provider.provider_from + ')' : '') }}
@@ -68,7 +70,10 @@
                 </div>
             </div>
             <div class="d-grid col-4 mx-auto mt-3">
-                <button class="btn btn-primary" (click)="compareSystems(selectedSystem1, selectedSystem2)">Compare</button>
+                <button class="btn btn-primary" (click)="compareSystems(selectedSystem1, selectedSystem2)"
+                    [disabled]="systems.length === 0">
+                    Compare
+                </button>
             </div>
             }
         </div>
