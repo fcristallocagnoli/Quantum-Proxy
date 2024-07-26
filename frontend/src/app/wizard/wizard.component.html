@@ -82,22 +82,24 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="qubits" class="mb-2">Min Qubits</label>
-                        <input id="qubits" formControlName="qubits" type="number"
-                            class="form-control bg-body-tertiary mb-2" min="0" max="1000">
+                        <input id="qubits" formControlName="qubits" class="form-control bg-body-tertiary mb-2">
                         <!--  -->
-                        <label for="gates" class="mb-2">Supported Gates</label>
-                        <input id="gates" formControlName="supportedGates" class="form-control bg-body-tertiary mb-2"
-                        title="Fomato aceptado: 'gate1,gate2,...'">
+                        <label for="gates" class="mb-2">
+                            Supported Gates
+                            <i class="fa-regular fa-circle-question" ngbTooltip="Fomat: 'gate1,gate2,...'"></i>
+                        </label>
+                        <input id="gates" formControlName="supportedGates" class="form-control bg-body-tertiary mb-2">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label class="mb-2" for="queue-time">Max Queue Time</label>
+                        <label class="mb-2" for="queue-time">
+                            Max Queue Time
+                            <i class="fa-regular fa-circle-question" ngbTooltip="Format: 'Xd', 'Xhrs', or 'Xmin'"></i>
+                        </label>
                         <input type="text" id="queue-time" formControlName="queueTime"
-                            class="form-control bg-body-tertiary mb-2" pattern="^(\d+d)$|^(\d+hrs)$|^(\d+min)$"
-                            title="Formato aceptado: 'Xd', 'Xhrs', o 'Xmin'">
+                            class="form-control bg-body-tertiary mb-2" pattern="^(\d+d)$|^(\d+hrs)$|^(\d+min)$">
                         <!--  -->
                         <label class="mb-2" for="queued-jobs">Max Queued Jobs</label>
-                        <input id="queued-jobs" formControlName="queuedJobs" type="number"
-                            class="form-control bg-body-tertiary mb-2" min="0">
+                        <input id="queued-jobs" formControlName="queuedJobs" class="form-control bg-body-tertiary mb-2">
                     </div>
                     <div class="col-md-3 mb-3">
                         <label class="mb-2" for="price-per-task">Max Price per task</label>
@@ -169,6 +171,7 @@
             <div class="d-flex justify-content-between">
                 <h5>Step 2: Compare Providers</h5>
                 <div class="d-flex justify-content-center">
+                    <span style="padding: 6px 12px;">Found {{ countSystems() }} systems</span>
                     <div class="dropdown mx-2">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -223,6 +226,14 @@
                                 'N/A' }}
                             </p>
                             <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
+                            @if (form.controls['supportedGates'].value) {
+                                @if (system["gates_supported"] && system["gates_supported"].length > 0) {
+                                    <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
+                                }
+                                @if (system["basis_gates"] && system["basis_gates"].length > 0) {
+                                    <p>Gates: {{ system["basis_gates"].join(", ") }}</p>
+                                }
+                            }
                         </div>
                         <div class="text-right">
                             <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show System</a>

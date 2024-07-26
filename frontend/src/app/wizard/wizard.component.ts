@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Provider, System } from '@app/_models';
 import { ProviderService, SystemService } from '@app/_services';
 import { first } from 'rxjs';
@@ -16,9 +17,12 @@ export class WizardComponent implements OnInit {
   currentPage = 1;
   pageSize = 3;
 
+  form: FormGroup;
+
   constructor(
     private providerService: ProviderService,
-    private systemService: SystemService
+    private systemService: SystemService,
+    private formBuilder: FormBuilder,
   ) { }
 
   dataStructure: { provider: any, systems: any }[] = [];
@@ -53,6 +57,18 @@ export class WizardComponent implements OnInit {
   // ];
 
   ngOnInit() {
+    this.getData();
+    this.form = this.formBuilder.group({
+      qubits: ['', [Validators.min(0), Validators.max(1000)]],
+      supportedGates: [''],
+      queueTime: ['', Validators.pattern(/^(\d+d)$|^(\d+hrs)$|^(\d+min)$/)],
+      queuedJobs: ['', Validators.min(0)],
+      pricePerTask: ['', Validators.min(0)],
+      pricePerShot: ['', Validators.min(0)],
+    });
+  }
+
+  getData() {
     let dataStructure: any[] = [];
     this.systemService.getAll()
       .pipe(first())
@@ -94,6 +110,57 @@ export class WizardComponent implements OnInit {
   setSort(sort: string) {
     this.sort = sort;
     console.log(this.sort);
+  }
+
+  filterSystemsForm() {
+    let qubits = this.form.controls['qubits'].value;
+    let supportedGates: string = this.form.controls['supportedGates'].value;
+    let queueTime = this.form.controls['queueTime'].value;
+    let queuedJobs = this.form.controls['queuedJobs'].value;
+    let pricePerTask = this.form.controls['pricePerTask'].value;
+    let pricePerShot = this.form.controls['pricePerShot'].value;
+
+    this.dataStructureFiltered = this.dataStructure.map(provider => {
+      return {
+        provider: provider.provider,
+        systems: provider.systems.filter((system: System) => {
+          let passes = true;
+          if (qubits !== '' && (system.qubits ?? Infinity) < qubits) {
+            passes = false;
+          }
+          if (supportedGates !== '') {
+            const gates_supported = system.gates_supported ?? [];
+            const basis_gates = system.basis_gates ?? [];
+            let gateField1 = supportedGates.split(',').every(gate => gates_supported.includes(gate));
+            let gateField2 = supportedGates.split(',').every(gate => basis_gates.includes(gate));
+            passes = passes && (gateField1 || gateField2);
+          }
+          if (queueTime !== '') {
+            if (system.queue && system.queue?.type === "avg_time") {
+              passes = passes && this.toMilliseconds(system.queue.value) <= this.toMilliseconds(queueTime);
+            } else {
+              passes = false;
+            }
+          }
+          if (queuedJobs !== '') {
+            if (system.queue && system.queue?.type === "jobs_remaining") {
+              passes = passes && parseInt(system.queue.value) <= queuedJobs;
+            } else {
+              passes = false;
+            }
+          }
+          if (pricePerTask !== '' && system.price?.per_task_price !== undefined) {
+            passes = passes && system.price.per_task_price <= parseFloat(pricePerTask);
+          }
+          if (pricePerShot !== '' && system.price?.per_shot_price !== undefined) {
+            passes = passes && system.price.per_shot_price <= parseFloat(pricePerShot);
+          }
+          return passes;
+        })
+      }
+    });
+    this.dataStructureFiltered = this.dataStructureFiltered.filter(elem => elem["systems"].length > 0);
+    this.sortSystems(this.sort);
   }
 
   filterSystems(statusFilter: string = 'All') {
@@ -174,6 +241,20 @@ export class WizardComponent implements OnInit {
     }
   }
 
+  onSubmit() {
+    this.filterSystemsForm();
+    console.log(this.form.value);
+  }
+
+  countSystems() {
+    let count = 0;
+    this.dataStructureFiltered.forEach(provider => {
+      count += provider.systems.length;
+    });
+    return count;
+  }
+
+  // transforms strings like '5d 10hrs 15min' to milliseconds
   private toMilliseconds(formato: string): number {
     const diasRegex = /(\d+)d/;
     const horasRegex = /(\d+)hrs/;
