@@ -37,9 +37,6 @@ export class ComparativeComponent {
         this.systemService.getAll().subscribe(systems => {
             this.systems = systems;
             this.systems.sort((a, b) => a.backend_name!.localeCompare(b.backend_name!));
-            this.systems.forEach(system => {
-                console.log(this.normalizeName(system.backend_name!));
-            });
         });
     }
 

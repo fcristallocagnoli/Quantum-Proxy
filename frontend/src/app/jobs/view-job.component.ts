@@ -40,7 +40,6 @@ export class ViewJobComponent implements OnInit {
         for (let i = 0; i <= maxLabel; i++) {
             newDict[i.toString(2)] = results[i] ?? 0;
         }
-        console.log("new", newDict);
 
         labels = Object.keys(newDict);
         data = Object.values(newDict);

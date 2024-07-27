@@ -28,34 +28,6 @@ export class WizardComponent implements OnInit {
   dataStructure: { provider: any, systems: any }[] = [];
   dataStructureFiltered: { provider: any, systems: any }[] = [];
 
-  // TODO: Remoce in next commit
-  // machines = [
-  //   {
-  //     name: 'IBM Quantum Experience',
-  //     description: 'Explore the power of quantum computing with IBM\'s cloud-based platform.',
-  //     qubits: 65,
-  //     queueTime: '5 mins',
-  //     price: '$0.10/shot',
-  //     status: 'Available'
-  //   },
-  //   {
-  //     name: 'Google Quantum Computing',
-  //     description: 'Harness the power of quantum computing with Google\'s cloud-based platform.',
-  //     qubits: 72,
-  //     queueTime: '10 mins',
-  //     price: '$0.15/shot',
-  //     status: 'Available'
-  //   },
-  //   {
-  //     name: 'Amazon Braket',
-  //     description: 'Explore quantum computing with Amazon\'s cloud-based platform.',
-  //     qubits: 60,
-  //     queueTime: '15 mins',
-  //     price: '$0.20/shot',
-  //     status: 'Busy'
-  //   }
-  // ];
-
   ngOnInit() {
     this.getData();
     this.form = this.formBuilder.group({
@@ -95,7 +67,6 @@ export class WizardComponent implements OnInit {
             });
             // filter out providers with no systems
             this.dataStructure = dataStructure.filter(elem => elem["systems"].length > 0);
-            console.log(this.dataStructure);
             this.filterSystems();
           });
       });
@@ -109,7 +80,6 @@ export class WizardComponent implements OnInit {
 
   setSort(sort: string) {
     this.sort = sort;
-    console.log(this.sort);
   }
 
   filterSystemsForm() {
@@ -243,7 +213,6 @@ export class WizardComponent implements OnInit {
 
   onSubmit() {
     this.filterSystemsForm();
-    console.log(this.form.value);
   }
 
   countSystems() {

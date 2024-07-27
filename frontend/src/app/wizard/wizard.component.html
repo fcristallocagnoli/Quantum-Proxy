@@ -115,57 +115,6 @@
         </div>
     </div>
 
-    <!-- TODO: Remove in next commit -->
-    <!-- <div class="card mt-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <h5>Step 2: Compare Providers</h5>
-                <div class="d-flex justify-content-center">
-                    <div class="dropdown mx-2">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Sort by: {{ sort }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" (click)="sort = 'Qubits'">Qubits</button></li>
-                            <li><button class="dropdown-item" (click)="sort = 'Price'">Price</button></li>
-                            <li><button class="dropdown-item" (click)="sort = 'Queue'">Queue</button></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown mx-2">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Status: {{ statusSort }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" (click)="statusSort = 'All'">All</button></li>
-                            <li><button class="dropdown-item" (click)="statusSort = 'Online'">Online</button></li>
-                            <li><button class="dropdown-item" (click)="statusSort = 'Offline'">Offline</button></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-md-4 mb-3" *ngFor="let machine of machines">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{machine.name}}</h5>
-                            <p class="card-text">{{machine.description}}</p>
-                            <p>Qubits: {{machine.qubits}}</p>
-                            <p>Queue Time: {{machine.queueTime}}</p>
-                            <p>Price: {{machine.price}}</p>
-                            <p>Status: <span
-                                    [ngClass]="{'text-success': machine.status === 'Available', 'text-danger': machine.status === 'Busy'}">{{machine.status}}</span>
-                            </p>
-                            <button class="btn btn-primary">Select</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-primary">Submit</button>
-        </div>
-    </div> -->
-
     <div class="card mt-3 mb-5">
         <div class="card-body">
             <div class="d-flex justify-content-between">
@@ -227,12 +176,12 @@
                             </p>
                             <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
                             @if (form.controls['supportedGates'].value) {
-                                @if (system["gates_supported"] && system["gates_supported"].length > 0) {
-                                    <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
-                                }
-                                @if (system["basis_gates"] && system["basis_gates"].length > 0) {
-                                    <p>Gates: {{ system["basis_gates"].join(", ") }}</p>
-                                }
+                            @if (system["gates_supported"] && system["gates_supported"].length > 0) {
+                            <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
+                            }
+                            @if (system["basis_gates"] && system["basis_gates"].length > 0) {
+                            <p>Gates: {{ system["basis_gates"].join(", ") }}</p>
+                            }
                             }
                         </div>
                         <div class="text-right">

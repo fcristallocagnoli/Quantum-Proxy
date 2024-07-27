@@ -25,7 +25,6 @@
                 <div *ngIf="f['email'].errors['email']">Email must be a valid email address</div>
             </div>
         </div>
-        <!-- Añadir warning o info cuando se alteren las apikeys. Debe pulsarse el boton 'Update' para que haga efecto -->
         <div class="mb-3 col-6">
             <label class="form-label">API Keys & Secrets</label>
             <button type="button" class="form-control btn btn-primary position-relative" (click)="updateSecrets()">

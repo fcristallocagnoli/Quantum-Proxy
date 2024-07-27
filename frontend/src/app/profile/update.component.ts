@@ -36,7 +36,6 @@ export class UpdateComponent implements OnInit {
         }, {
             validators: [MustMatch('password', 'confirmPassword')]
         });
-        console.log("Form value:", this.form.value)
     }
 
     // convenience getter for easy access to form fields

@@ -13,7 +13,6 @@ export class JobService {
 
   getAllJobs() {
     const account = this.accountService.accountValue;
-    console.log("apikeys", account);
     return this.http.post<any[]>(`${baseUrl}/get`, { 'api_keys': account?.apiKeys });
   }
 

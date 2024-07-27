@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface PlatformList {
@@ -23,12 +23,11 @@ export class UpdateSecretsComponent implements OnInit {
 
     userPlatformMap: any;
 
-    constructor(public modal: NgbActiveModal, private formBuilder: FormBuilder) {
+    constructor(public modal: NgbActiveModal) {
         this.form = new FormGroup({});
     }
 
     ngOnInit() {
-        console.log("User platform map:", this.userPlatformMap);
         let i = 0;
         for (let key in this.userPlatformMap) {
             this.platformList.push({ platform: i, apiKeys: [] });
@@ -42,13 +41,11 @@ export class UpdateSecretsComponent implements OnInit {
             }
             i++;
         }
-        console.log("Platform list:", this.platformList);
     }
 
     get f() { return this.form.controls; }
 
     onSubmit() {
-        console.log("List length:", this.platformList.length);
         for (let i = 0; i < this.platformList.length; i++) {
             let apiKeysList = this.platformList[i].apiKeys;
             let apiKeysMap = new Map<string, string>();
@@ -57,7 +54,6 @@ export class UpdateSecretsComponent implements OnInit {
             }
             this.platformMap.set(this.f[`plat-${i}`].value, apiKeysMap);
         }
-        console.log("Resultado map:", this.platformMap);
 
         // expresa el resultado en un formato JSON
         let result: { [key: string]: { [key: string]: string } } = {};
@@ -68,7 +64,6 @@ export class UpdateSecretsComponent implements OnInit {
             });
             result[key] = obj;
         });
-        console.log("Resultado json:", result);
 
         this.modal.close(result);
     }
@@ -76,7 +71,6 @@ export class UpdateSecretsComponent implements OnInit {
     addKeyPair(plat: number) {
         this.form.addControl(`plat-${plat}_key-${this.platformList[plat].apiKeys.length}`, new FormControl('', Validators.required));
         this.form.addControl(`plat-${plat}_value-${this.platformList[plat].apiKeys.length}`, new FormControl(''));
-        console.log("Añadiendo par de claves, plataforma:", plat, "length:", this.platformList[plat].apiKeys.length);
         this.platformList[plat].apiKeys.push(this.platformList[plat].apiKeys.length);
     }
 
@@ -94,11 +88,6 @@ export class UpdateSecretsComponent implements OnInit {
     removePlatform() {
         this.form.removeControl(`plat-${this.platformList.length - 1}`);
         this.platformList.pop();
-    }
-
-    showForm() {
-        console.log("Form value:", this.form.value);
-        console.log("Platform list:", this.platformList);
     }
 
 }
