@@ -50,6 +50,11 @@ def is_empty(collection: str) -> bool:
 
 # count the number of documents in a collection
 def count_documents(collection: str) -> int:
+    """
+    Count the number of documents in a collection.
+    :param collection: <str> collection to count
+    :return: <int> number of documents in the collection
+    """
     coll = {
         "providers": providers_coll,
         "backends": backends_coll,
@@ -63,13 +68,20 @@ def count_documents(collection: str) -> int:
 # region Generic ----------------------------
 
 
-def aggregate(collection: Collection, *, pipeline: list[dict]) -> Cursor:
+def aggregate(*, collection: str, pipeline: list[dict]) -> Cursor:
     """
     Perform an aggregation on the collection.
     :param ``collection``: collection on which to aggregate
     :param ``pipeline``: list of aggregation stages
     """
-    return collection.aggregate(pipeline)
+    coll = {
+        "providers": providers_coll,
+        "backends": backends_coll,
+        "users": users_coll,
+    }.get(collection, None)
+    if coll is None:
+        raise ValueError(f"Collection '{collection}' not found")
+    return coll.aggregate(pipeline)
 
 
 def db_find_one(
