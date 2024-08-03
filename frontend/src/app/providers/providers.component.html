@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             @for (provider of providers; track provider.id) {
-            <div class="col-4 mb-3">
+            <div class="col-md-6 col-lg-4 mb-3">
                 <div class="card mb-3 shadow-sm bg-body-tertiary rounded">
                     <div class="card-header">
                         Data obtained
@@ -41,7 +41,7 @@
             }
             @if (!providers) {
             @for (p of [1,2,3,4,5,6,7,8,9]; track p) {
-            <div class="col-4 mb-3">
+            <div class="col-md-6 col-lg-4 mb-3">
                 <div class="card mb-3 shadow-sm bg-body-tertiary rounded" aria-hidden="true">
                     <div class="card-header placeholder-glow">
                         <span class="placeholder col-3"></span>
