@@ -10,6 +10,8 @@ from contextlib import contextmanager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from utils.email_utils import send_error_mail
+
 
 @contextmanager
 def innit_driver(url: str):
@@ -84,7 +86,12 @@ PRECIOS = []
 def get_pricing() -> list:
     global PRECIOS
     if not PRECIOS:
-        PRECIOS = get_system_pricing() + get_simulator_pricing()
+        try:
+            PRECIOS = get_system_pricing() + get_simulator_pricing()
+        except Exception as e:
+            print(f"Error al obtener los precios de AWS Braket: {e}")
+            send_error_mail(e, "Error al obtener los precios de AWS Braket.")
+
     return PRECIOS
 
 
