@@ -52,7 +52,13 @@
                                         <queue [queue]="system.queue" [isTable]="true"></queue>
                                     </strong>
                                 </td>
-                                <td>{{ system.queue?.value ?? 'N/A' }}</td>
+                                <td>
+                                    @if (system.queue?.type === "avg_time") {
+                                    {{ convertFromMs(system.queue?.value) }}
+                                    }@else {
+                                    {{ system.queue?.value ?? 'N/A' }}
+                                    }
+                                </td>
                             </tr>
                     </table>
                 </div>

@@ -28,7 +28,15 @@
                             <span for="qubits" class="mb-1">
                                 <queue [queue]="system.queue" [isTable]="true"></queue>
                             </span>
-                            <strong><span class="d-grid">{{ system.queue?.value ?? 'N/A' }}</span></strong>
+                            <strong>
+                                <span class="d-grid">
+                                    @if (system.queue?.type === "avg_time") {
+                                        {{ convertFromMs(system.queue?.value) }}
+                                    }@else {
+                                        {{ system.queue?.value ?? 'N/A' }}
+                                    }
+                                </span>
+                            </strong>
                         </div>
                         <div class="col-md-6 mb-3">
                             <span for="qubits" class="mb-1">Price</span>
@@ -171,8 +179,12 @@
                             <p>Status: <status [status]="system['status']" [icon]="true"></status>
                             </p>
                             <p>
-                                <queue [queue]="system.queue"></queue> {{ system.queue?.value ??
-                                'N/A' }}
+                                <queue [queue]="system.queue"></queue>
+                                @if (system.queue?.type === "avg_time") {
+                                    {{ convertFromMs(system.queue?.value) }}
+                                }@else {
+                                    {{ system.queue?.value ?? 'N/A' }}
+                                }
                             </p>
                             <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
                             @if (form.controls['supportedGates'].value) {

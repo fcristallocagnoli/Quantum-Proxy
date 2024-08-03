@@ -67,7 +67,12 @@
                             <h6 class="card-subtitle mb-2 text-muted">{{ system.qubits }} qubits</h6>
                             <p class="card-text">
                                 Status: <status [status]="system.status"></status>
-                                <queue [queue]="system.queue"></queue> {{ system.queue?.value ?? 'N/A' }}
+                                <queue [queue]="system.queue"></queue>
+                                @if (system.queue?.type === "avg_time") {
+                                    {{ convertFromMs(system.queue?.value) }}
+                                }@else {
+                                    {{ system.queue?.value ?? 'N/A' }}
+                                }
                             </p>
                             <div class="d-grid gap-2">
                                 <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show system</a>
