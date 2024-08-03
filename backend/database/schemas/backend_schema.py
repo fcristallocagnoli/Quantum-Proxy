@@ -1,7 +1,7 @@
 from database.models.backends_models import ClassType
 from database.mongo_client import db_find_provider
 from database.models.providers_models import ProviderName, ThirdPartyEnum
-from utils.utils import convert_from_ms, create_bid, from_seconds_to_date, fromisoformat, get_current_time_iso
+from utils.utils import create_bid, from_seconds_to_date, fromisoformat, get_current_time_iso
 
 
 def normalize_backend(backend: dict):
@@ -45,7 +45,7 @@ def ionq_normalizer(backend: dict) -> dict:
         "qubits": backend["qubits"],
         "queue": {
             "type": "avg_time",
-            "value": convert_from_ms(backend["average_queue_time"]),
+            "value": str(backend["average_queue_time"]),
         },
         "last_updated": from_seconds_to_date(backend["last_updated"]),
         "degraded": backend["degraded"],
