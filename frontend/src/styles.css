@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'custom-bootstrap.css';
+
 :root {
     color-scheme: light dark;
 }
@@ -10,7 +11,7 @@ body {
 
 body:has(.app-container) {
     /* for nav not to overlap */
-    padding-top: 64px;
+    padding-top: 56px;
 }
 
 /* Add application styles & imports to this file! */
