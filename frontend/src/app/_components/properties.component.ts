@@ -229,7 +229,7 @@ export class QueueComponent {
                         <td>Device Cost</td>
                         @for (system of systems; track $index) {
                         @if (system.device_cost) {
-                        <td>{{ system.device_cost.price | currency }}/{{ system.device_cost.unit }}</td>
+                        <td>{{ "$" + system.device_cost.price }}/{{ system.device_cost.unit }}</td>
                         }@else {
                         <td>N/A</td>
                         }

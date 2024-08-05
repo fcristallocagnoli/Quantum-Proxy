@@ -104,7 +104,7 @@
                             </tr>
                             <tr *ngIf="system.device_cost">
                                 <td><strong>Device Cost</strong></td>
-                                <td>{{ system.device_cost.price | currency }}/{{ system.device_cost.unit }}</td>
+                                <td>{{ "$" + system.device_cost.price }}/{{ system.device_cost.unit }}</td>
                             </tr>
                             <!-- extra fields (rigetti) -->
                             <tr *ngIf="system.rep_rate">
