@@ -6,6 +6,7 @@ import { ProvidersRoutingModule } from './providers-routing.module';
 import { ProvidersComponent } from './providers.component';
 import { ViewProviderComponent } from './view-provider.component';
 import { QueueComponent, StatusComponent } from '@app/_components/properties.component';
+import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import { QueueComponent, StatusComponent } from '@app/_components/properties.com
         ReactiveFormsModule,
         ProvidersRoutingModule,
         StatusComponent,
-        QueueComponent
+        QueueComponent,
+        CarouselModule
     ],
     declarations: [
         ProvidersComponent,

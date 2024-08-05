@@ -19,6 +19,19 @@ export class WizardComponent implements OnInit {
 
   form: FormGroup;
 
+  responsiveOptions: any[] = [
+    {
+        breakpoint: '1199px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '991px',
+        numVisible: 1,
+        numScroll: 1
+    },
+  ];
+
   constructor(
     private providerService: ProviderService,
     private systemService: SystemService,

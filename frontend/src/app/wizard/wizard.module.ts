@@ -6,6 +6,8 @@ import { WizardComponent } from './wizard.component';
 import { StatusComponent, QueueComponent } from "../_components/properties.component";
 import { NgbPaginationModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
+import { CarouselModule } from 'primeng/carousel';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -14,7 +16,8 @@ import { NgbPaginationModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
         StatusComponent,
         QueueComponent,
         NgbPaginationModule,
-        NgbTooltip
+        NgbTooltip,
+        CarouselModule
     ],
     declarations: [
         WizardComponent

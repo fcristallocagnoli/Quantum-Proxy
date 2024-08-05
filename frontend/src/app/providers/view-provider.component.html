@@ -17,53 +17,79 @@
                 View website
             </a>
             @if (systems) {
-            <p class="lead my-3" style="margin: auto 4.5rem;">
+            <p class="hide-if-needed lead my-3" style="margin: auto 4.5rem;">
                 Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available, <br>
                 of which {{ countSystemsOnline() }} online:
             </p>
-            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @for (system of systems; track index; let index = $index, isFirst = $first) {
-                    <div class="carousel-item" [ngClass]="{'active': isFirst}" data-bs-interval="5000">
-                        <div class="card" style="margin: auto 4.5rem;">
+            <div class="hide-if-needed" style="margin-left: 1.5rem;">
+                <p-carousel [value]="systems" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="5000"
+                    showIndicators="true" showNavigators="true">
+                    <ng-template let-system pTemplate="item">
+                        <div class="card mx-3">
                             <div class="card-body">
-                                <h5 class="card-title">
-                                    {{ system.backend_name }}
+                                <h5 class="card-title text-center">
+                                    {{system.backend_name}} -
+                                    from {{ system.provider.provider_name }}
                                     @if (system.provider.provider_from) {
-                                        ({{ system.provider.provider_name }})
+                                    (by {{ system.provider.provider_from }})
                                     }
                                 </h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ system.qubits }} qubits</h6>
-                                <p class="card-text">
-                                    <status [status]="system.status"></status>
-                                    <queue [queue]="system.queue"></queue>
-                                    @if (system.queue?.type === "avg_time") {
-                                        {{ convertFromMs(system.queue?.value) }}
-                                    }@else {
-                                        {{ system.queue?.value ?? 'N/A' }}
-                                    }
-                                </p>
+                                <h6 class="card-subtitle mb-2 text-body-secondary text-center">
+                                    Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <span for="qubits" class="mb-1">Qubits</span>
+                                        <strong><span class="d-grid">{{ system.qubits }}</span></strong>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <span for="qubits" class="mb-1">
+                                            <queue [queue]="system.queue" [isTable]="true"></queue>
+                                        </span>
+                                        <strong>
+                                            <span class="d-grid">
+                                                @if (system.queue?.type === "avg_time") {
+                                                {{ convertFromMs(system.queue?.value) }}
+                                                }@else {
+                                                {{ system.queue?.value ?? 'N/A' }}
+                                                }
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <span for="qubits" class="mb-1">Price</span>
+                                        <!-- Hasta que se arregle el desplazamiento que causa full_price en algunos casos -->
+                                        <!-- <strong><span class="d-grid">{{ system.price?.full_price ?? 'N/A' }}</span></strong> -->
+                                        <strong>
+                                            <span class="d-grid">
+                                                @if (system.price?.per_task_price) {
+                                                ${{ system.price?.per_task_price }}/task
+                                                }@else if(system.price?.per_minute_price) {
+                                                ${{ system.price?.per_minute_price }}/minute
+                                                }@else {
+                                                {{ 'N/A' }}
+                                                {{ system.price?.full_price }}
+                                                }
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <span for="qubits" class="mb-1">Status</span>
+                                        <strong><span class="d-grid">
+                                                <status [status]="system.status" [icon]="true"></status>
+                                            </span></strong>
+                                    </div>
+                                </div>
                                 <div class="d-grid gap-2">
-                                    <a routerLink="/systems/{{system.bid}}" class="btn bg-body-tertiary">Show system</a>
+                                    <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show system</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    }
+                    </ng-template>
+                </p-carousel>
+                <div class="d-grid" style="margin: auto 4.5rem;">
+                    <a routerLink="systems" class="btn btn-secondary">View all systems</a>
                 </div>
-                <a class="btn btn-secondary carousel-control-prev" [hidden]="systems.length === 1" type="button"
-                    data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </a>
-                <a class="btn btn-secondary carousel-control-next" [hidden]="systems.length === 1" type="button"
-                    data-bs-target="#carouselExample" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </a>
-            </div>
-            <div class="d-grid mt-4" style="margin: auto 4.5rem;">
-                <a routerLink="systems" class="btn btn-secondary">View all systems</a>
             </div>
             }
         </div>
@@ -84,5 +110,11 @@
     .carousel-control-next:hover,
     .carousel-control-prev:hover {
         filter: invert(0);
+    }
+
+    @media (width < 992px) {
+        .hide-if-needed {
+            display: none;
+        }
     }
 </style>
