@@ -40,7 +40,7 @@ def get_system_pricing() -> list:
     with innit_driver("https://aws.amazon.com/es/braket/pricing/") as driver:
         table = driver.find_element(
             By.XPATH,
-            '//*[@id="aws-element-949823fd-c56b-46d8-8955-a6919fa6ee28-panel-1"]/div/div[2]/table',
+            '/html/body/div[2]/main/div[3]/div/div/div/ul[2]/li[2]/div/div[2]/table'
         )
         rows = table.find_elements(By.TAG_NAME, "tr")
         # ignoramos la fila de encabezados
