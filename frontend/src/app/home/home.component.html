@@ -1,79 +1,156 @@
 ﻿<!-- app.component.html -->
 
-<main class="main-content py-3">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-8 px-3">
-        <div class="mt-4 p-5 bg-body-tertiary rounded">
-          <h1 class="display-4">Welcome to Quantum-Proxy</h1>
-          <p class="lead">A platform for choosing and managing heterogeneous quantum computing providers</p>
-          <hr class="my-4">
-          <p>Systems are updated every day at 2:00 a.m.</p>
-          <p><span class="badge text-bg-warning me-2">Experimental</span>Registered user can update them at any time.</p>
-          <div class="d-flex justify-content-end">
-            <a href="mailto:fcristallocagnoli@uma.es" class="text-secondary fs-2 ps-4">
-              <i class="fas fa-envelope"></i>
-            </a>
-            <a href="https://github.com/fcristallocagnoli/Quantum-Proxy" target="_blank"
-              class="text-secondary fs-2 ps-4">
-              <i class="fab fa-github"></i>
-            </a>
+<main>
+  <section id="intro" class="container-fluid py-5 px-2">
+    <div class="text-center">
+      <h1 class="display-4 text-light mb-4">Welcome to Quantum Proxy</h1>
+      <p class="text-light lead">
+        A platform for choosing and managing heterogeneous quantum computing providers
+      </p>
+      <hr class="my-4">
+      <p>Systems are updated every day at 2:00 a.m.</p>
+      <p><span class="badge text-bg-warning me-2">Experimental</span>Registered user can update them at any time.
+      </p>
+    </div>
+  </section>
+
+  <section id="features" class="container my-5">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <h2>Quantum Providers</h2>
+        <p>Explore and compare the leading quantum computing providers.</p>
+        <a routerLink="/providers" class="link-offset-3">View Providers</a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <h2>Quantum Systems</h2>
+        <p>Discover the latest quantum computing systems and their capabilities.</p>
+        <a routerLink="/systems" class="link-offset-3">View Systems</a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <h2>Quantum Comparison</h2>
+        <p>Compare quantum computing providers and systems side-by-side.</p>
+        <a routerLink="/compare" class="link-offset-3">Compare Providers</a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <h2>Quantum Wizard</h2>
+        <!-- <p>Get personalized recommendations for the best quantum solution.</p> -->
+        <p>Assistant to choose a system according to user's needs.</p>
+        <a routerLink="/wizard" class="link-offset-3">Try the Wizard</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="metrics" class="container-fluid bg-primary text-light p-5">
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="fw-bold">Key Platform Metrics</h2>
+        <p>Get an overview of the key metrics for our quantum computing platform.</p>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-light h-100">
+              <div class="card-body text-center">
+                <h3 class="display-4">
+                  {{ highestQubits ?? 'N/A'}}
+                </h3>
+                <p>Highest Number of Qubits</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-light h-100">
+              <div class="card-body text-center">
+                <h3 class="display-4">
+                  {{ lowestQueue }}
+                </h3>
+                <p>Lowest Queue Time</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-light h-100">
+              <div class="card-body text-center">
+                <h3 class="display-4">
+                  {{ nProviders }}
+                </h3>
+                <p>Quantum Providers</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-light h-100">
+              <div class="card-body text-center">
+                <h3 class="display-4">
+                  {{ nSystems }}
+                </h3>
+                <p>Quantum Systems</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 px-3">
-        <div class="mt-4 p-5 bg-body-tertiary rounded">
-          <p class="lead">
-            Take a look at our features:
-          </p>
-          <hr class="my-4">
-          <ul class="list-group">
-            <a routerLink="/providers" class="list-group-item list-group-item-action">
-              Providers
-              <ul class="list-unstyle">
-                <li>List of providers available</li>
-              </ul>
-            </a>
-            <a routerLink="/systems" class="list-group-item list-group-item-action">
-              Systems
-              <ul class="list-unstyle">
-                <li>List of systems available</li>
-              </ul>
-            </a>
-            <a routerLink="/compare" class="list-group-item list-group-item-action">
-              Compare
-              <ul class="list-unstyle">
-                <li>Compare two systems</li>
-              </ul>
-            </a>
-            <a routerLink="/wizard" class="list-group-item list-group-item-action">
-              Wizard
-              <ul class="list-unstyle">
-                <li>Assistant to choose a system according to user's needs</li>
-              </ul>
-            </a>
-          </ul>
-        </div>
-      </div>
     </div>
-  </div>
+  </section>
 </main>
-
+<footer class="container d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+  <p class="col-md-4 mb-0 text-body-secondary">&copy; 2024 Quantum Proxy</p>
+  <ul class="nav col-md-4 justify-content-end">
+    <li class="nav-item">
+      <a href="#" class="nav-link px-2 text-body-secondary">Home</a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link px-2 text-body-secondary">Features</a>
+    </li>
+    <li class="nav-item">
+      <a href="mailto:fcristallocagnoli@uma.es" class="nav-link px-2 text-body-secondary">
+        Contact
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="https://github.com/fcristallocagnoli/Quantum-Proxy" target="_blank"
+        class="nav-link px-2 text-body-secondary">
+        Github
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link disabled px-2 text-body-secondary">FAQs</a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link disabled px-2 text-body-secondary">About</a>
+    </li>
+  </ul>
+</footer>
 <style>
-  .fa-envelope:hover,
-  .fa-github:hover {
-    color: Dodgerblue;
+  #intro {
+    background: linear-gradient(135deg, var(--bs-muted), var(--bs-accent));
   }
-  .list-group a {
-    background-color: var(--bs-secondary-subtle);
+
+  #features {
+    p {
+      font-size: 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
   }
-  .list-group a:hover {
-    background-color: var(--bs-dark);
+
+  #metrics {
+    h2 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.25rem;
+    }
+
+    .card {
+      border: none;
+    }
+  }
+
+  .card-body p {
+    margin: 0;
   }
 </style>
-
-<!-- <footer class="footer bg-dark text-white py-3" style="position: absolute; bottom: 0; width: 100%;">
-  <div class="container text-center">
-    <p>&copy; 2024 Quantum-Proxy. Todos los derechos reservados.</p>
-  </div>
-</footer> -->
