@@ -11,7 +11,10 @@
         </a>
     </h2>
     <div class="d-flex justify-content-between mb-3">
-        <button class="btn btn-primary" (click)="createJob()">Create New Job</button>
+        <button class="btn btn-primary" (click)="createJob()">
+            <i class="fa-solid fa-plus me-1"></i>
+            Create New Job
+        </button>
         <button class="btn btn-primary" (click)="refreshJobs()" [disabled]="isRefreshingJobs">
             @if (isRefreshingJobs) {
             <span class="spinner-border spinner-border-sm me-1"></span>
