@@ -1,8 +1,7 @@
 import { Role } from './role';
 
-export class Platform {
-    platform: string;
-    apiKeys: Map<string, string>;
+export class APIKeys {
+    [platform: string]: { apiKeys: Map<string, string> };
 }
 
 export class Account {
@@ -11,6 +10,7 @@ export class Account {
     lastName?: string;
     email?: string;
     role?: Role;
-    apiKeys?: Platform[];
+    apiKeys?: APIKeys;
     jwtToken?: string;
+    dateCreated?: Date;
 }
