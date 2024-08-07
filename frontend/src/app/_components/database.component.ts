@@ -28,7 +28,10 @@ export class DatabaseComponent implements OnInit {
                     `);
                 },
                 error: error => {
-                    console.log(error);
+                    this.alertService.error(`
+                        <h4>Error updating systems</h4>
+                        <p>${error}</p>
+                    `);
                 }
             });
     }

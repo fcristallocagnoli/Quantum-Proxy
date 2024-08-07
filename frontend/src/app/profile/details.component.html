@@ -1,6 +1,44 @@
-﻿<h1>My Profile</h1>
-<p *ngIf="account">
-    <strong>Name: </strong> {{account.firstName}} {{account.lastName}}<br />
-    <strong>Email: </strong> {{account.email}}
-</p>
-<p><a routerLink="update">Update Profile</a></p>
+﻿@if (account) {
+<div class="card shadow-sm">
+    <div class="card-header d-flex bg-primary text-white justify-content-between">
+        <h3>My Profile</h3>
+        <a routerLink="update" class="btn bg-body-tertiary">Update Profile</a>
+    </div>
+    <div class="card-body px-4">
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="first_name" class="col-form-label"><strong>First Name:</strong></label>
+                <div class="col-12">
+                    {{ account.firstName ?? 'N/A' }}
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="last_name" class="col-form-label"><strong>Last Name:</strong></label>
+                <div class="col-12">
+                    {{ account.lastName ?? 'N/A' }}
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="email" class="col-form-label"><strong>Email:</strong></label>
+                <div class="col-12">
+                    {{ account.email }}
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="role" class="col-form-label"><strong>Role:</strong></label>
+                <div class="col-12">
+                    {{ account.role }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="apikeys" class="col-form-label"><strong>API Keys & Secrets:</strong></label>
+            <div class="col-12">
+                <pre>{{ account.apiKeys | json }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+}

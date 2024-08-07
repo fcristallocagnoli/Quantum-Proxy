@@ -19,7 +19,7 @@
             @if (systems) {
             <p class="hide-if-needed lead my-3" style="margin: auto 4.5rem;">
                 Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available, <br>
-                of which {{ countSystemsOnline() }} online:
+                of which {{ countSystemsOnline() }} {{ systems.length > 1 ? 'are' : 'is' }} online:
             </p>
             <div class="hide-if-needed" style="margin-left: 1.5rem;">
                 <p-carousel [value]="systems" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="5000"
