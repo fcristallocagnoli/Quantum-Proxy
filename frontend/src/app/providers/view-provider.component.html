@@ -17,7 +17,7 @@
                 View website
             </a>
             @if (systems) {
-            <p class="hide-if-needed lead my-3" style="margin: auto 4.5rem;">
+            <p class="hide-if-needed fs-5 my-3" style="margin: auto 4.5rem;">
                 Has {{ systems.length }} system{{ systems.length > 1 ? 's' : '' }} available, <br>
                 of which {{ countSystemsOnline() }} {{ systems.length > 1 ? 'are' : 'is' }} online:
             </p>
@@ -25,7 +25,7 @@
                 <p-carousel [value]="systems" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="5000"
                     showIndicators="true" showNavigators="true">
                     <ng-template let-system pTemplate="item">
-                        <div class="card mx-3">
+                        <div class="card mx-3 bg-body-tertiary">
                             <div class="card-body">
                                 <h5 class="card-title text-center">
                                     {{system.backend_name}} -
