@@ -43,7 +43,7 @@
                 src="https://www.gravatar.com/avatar/{{ account.email| hash }}?d=retro&f=y&s=32"
                 data-bs-toggle="dropdown" role="button" aria-expanded="false" />
               }
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul class="dropdown-menu dropdown-menu-end py-1">
                 @if (account) {
                 <!-- If user loged in, settings + logout -->
                 <li class="dropdown-item-text">Signed in as<br><strong>{{ account.email }}</strong></li>
@@ -70,8 +70,7 @@
               </ul>
             </li>
             <li>
-              <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white"></div>
-              <hr class="d-lg-none my-2 text-white-50">
+              <div class="vr d-none d-lg-flex h-100 mx-lg-2"></div>
             </li>
             <theme [theme]="activeTheme"></theme>
           </div>
@@ -89,7 +88,7 @@
   <!-- global alert -->
   <alert></alert>
 
-  <a [class.show]="showScroll" (click)="scrollToTop()" class="scroll-to-top">
+  <a [class.show]="showScroll" (click)="scrollToTop()" class="scroll-to-top text-accent">
     <!-- Volver al principio -->
     <span class="fa-stack">
       <i class="fa fa-circle fa-stack-2x"></i>
