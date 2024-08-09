@@ -336,6 +336,10 @@ export class QueueComponent {
             height: auto;
             margin-right: 10px;
         }
+        td, th {
+           background-color: var(--bs-tertiary-bg);
+        }
+
     `]
 })
 export class SystemPropsComponent {
@@ -402,7 +406,7 @@ export class SystemPropsComponent {
         <h4 class="modal-title">
             Characterization
             <a style="cursor: pointer;" (click)="openModal()">
-                <i class="fa-regular fa-circle-question" style="font-size: 16px;"
+                <i class="fa-regular fa-circle-question fs-5"
                 placement="bottom" ngbTooltip="Click for info about characterization"></i>
             </a>
         </h4>
