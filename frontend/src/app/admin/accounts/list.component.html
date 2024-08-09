@@ -18,7 +18,7 @@
                 <td class="align-middle">{{account.role}}</td>
                 <td style="white-space: nowrap" class="d-flex justify-content-evenly">
                     <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary">Edit</a>
-                    <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger btn-delete-account" [disabled]="account.isDeleting">
+                    <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger" [disabled]="account.isDeleting">
                         @if (account.isDeleting) {
                             <span class="spinner-border spinner-border-sm"></span>
                         }

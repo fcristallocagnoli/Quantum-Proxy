@@ -1,5 +1,8 @@
-﻿<h3 class="card-header">Login</h3>
-<div class="card-body">
+﻿<div class="card-header">
+    <h1 class="card-title text-center">Quantum Proxy</h1>
+    <h5 class="card-subtitle mb-2 text-body-secondary text-center">Log into your account</h5>
+</div>
+<div class="card-body bg-body-tertiary">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
             <label class="form-label">Email</label>
@@ -40,6 +43,34 @@
                 </a>
             </div>
         </div>
+        <!-- <div class="my-3">
+            <div class="row">
+                <div class="col-5">
+                    <hr>
+                </div>
+                <div class="col-2">
+                    <span class="position-relative" style="top: -10px; background: inherit; padding: 0 10px;">OR</span>
+                </div>
+                <div class="col-5">
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-light btn-block mb-3">
+            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo"> Sign up
+            with Google
+        </button>
+        <button class="btn btn-light btn-block mb-3">
+            <img src="https://img.icons8.com/material-outlined/16/000000/github.png" alt="GitHub logo"> Sign
+            up with GitHub
+        </button>
+        <div class="mt-1 text-center">
+            <div class="mb-2 text-xs text-grey-darker underline-offset-2">By signing up,
+                you agree to Pipedream&#39;s <a href="/terms" target="_blank" rel="noopener" class="underline">Terms of
+                    Service</a> and <a href="/privacy" target="_blank" rel="noopener" class="underline">Privacy
+                    Policy</a>.</div>
+            <div>Already have an account? <a href="#" class="text-blue-darker hover_underline">Sign In</a></div>
+        </div> -->
         <!-- <hr class="my-4">
         <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
         <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
@@ -51,3 +82,45 @@
         <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small> -->
     </form>
 </div>
+<!-- <style>
+    body {
+        background-color: #f7f8fa;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .card-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-block {
+        width: 100%;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+
+    .input-group-append button {
+        border-radius: 0 4px 4px 0;
+    }
+
+    .my-3 hr {
+        margin: 0;
+    }
+</style> -->
