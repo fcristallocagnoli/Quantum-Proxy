@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { StatusComponent } from '@app/_components/properties.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChartModule } from 'primeng/chart';
 import { CreateJobComponent } from './create-job.component';
 import { JobsRoutingModule } from './jobs-routing.module';
 import { JobsComponent } from './jobs.component';
@@ -16,7 +17,8 @@ import { ViewJobComponent } from './view-job.component';
         ReactiveFormsModule,
         NgbTooltipModule,
         JobsRoutingModule,
-        StatusComponent
+        StatusComponent,
+        ChartModule
     ],
     declarations: [
         JobsComponent,

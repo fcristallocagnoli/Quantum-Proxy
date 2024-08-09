@@ -1,57 +1,74 @@
 <div class="container p-4">
     @if (job) {
-    <!-- <h1 class="display-6">Quantum Job Details</h1> -->
     <div class="card mb-3 m-auto" style="max-width: 800px;">
         <div class="card-header text-center bg-primary text-light">
-            Quantum Job Details
+            {{ job.name }} - Job Details
         </div>
         <div class="card-body">
-            <h5 class="card-title">Job Name: {{ job.name }}</h5>
-            <p class="card-text"><strong>Status:</strong> {{ job.status }}</p>
-            <div class="card mb-3">
-                <div class="card-header">General Information</div>
-                <div class="card-body">
-                    <p class="card-text"><strong>ID:</strong> {{ job.id }}</p>
-                    <p class="card-text"><strong>Target:</strong> {{ job.target }}</p>
-                    <p class="card-text"><strong>Qubits:</strong> {{ job.qubits }}</p>
+            <p class="card-text">
+                <span class="ms-2"><strong>Status:</strong> {{ job.status }}</span>
+                <span class="ms-4"><strong>Total Qubits:</strong> {{ job.qubits }}</span>
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">General Information</div>
+                        <div class="card-body">
+                            <p class="card-text" role="button" (click)="copyToClipboard(job.id)">
+                                <strong>ID:</strong> {{ job.id }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Target:</strong> {{ job.target }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">Cost and Noise</div>
+                        <div class="card-body">
+                            <p class="card-text"><strong>Cost:</strong> {{ job.cost_usd | currency }}</p>
+                            <p class="card-text"><strong>Noise Model:</strong> {{ job.noise.model }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card mb-3">
-                <div class="card-header">Gate Counts</div>
+                <div class="card-header d-flex justify-content-between">
+                    Execution Results
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="button" (click)="simplifyResults()">
+                        {{ dataSimplified ? 'Show Full Results' : 'Simplify Results' }}
+                    </button>
+                </div>
                 <div class="card-body">
-                    <p class="card-text"><strong>1Q Gates:</strong> {{ job.gate_counts['1q'] }}</p>
-                    <p class="card-text"><strong>2Q Gates:</strong> {{ job.gate_counts['2q'] }}</p>
+                    <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
                 </div>
             </div>
-            <div class="card mb-3">
-                <div class="card-header">Execution Details</div>
-                <div class="card-body">
-                    <p class="card-text"><strong>Request Time:</strong> {{ job.request * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}</p>
-                    <p class="card-text"><strong>Start Time:</strong> {{ job.start * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}</p>
-                    <p class="card-text"><strong>Response Time:</strong> {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}</p>
-                    <p class="card-text"><strong>Execution Time:</strong> {{ job.execution_time }} miliseconds</p>
-                    <p class="card-text">
-                        <strong>Predicted Execution Time:</strong> {{ job.predicted_execution_time }} miliseconds
-                    </p>
-                </div>
-            </div>
-            <div class="card mb-3">
-                <div class="card-header">Cost and Noise</div>
-                <div class="card-body">
-                    <p class="card-text"><strong>Cost:</strong> {{ job.cost_usd | currency }}</p>
-                    <p class="card-text"><strong>Noise Model:</strong> {{ job.noise.model }}</p>
-                </div>
-            </div>
-            <div class="card mb-3">
+            <!-- Maybe in the future -->
+            <!-- <div class="card mb-3">
                 <div class="card-header">Error Mitigation</div>
                 <div class="card-body">
                     <p class="card-text"><strong>Debias:</strong> {{ job.error_mitigation.debias ? 'Yes' : 'No' }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="card mb-3">
-                <div class="card-header">Execution Results</div>
+                <div class="card-header">Execution Details</div>
                 <div class="card-body">
-                    <canvas id="histogram" width="700" height="400" style="width: 100%; height: 400px;"></canvas>
+                    <p class="card-text"><strong>Request Time:</strong>
+                        {{ job.request * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Start Time:</strong>
+                        {{ job.start * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Response Time:</strong>
+                        {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Execution Time:</strong>
+                        {{ job.execution_time }} miliseconds
+                    </p>
+                    <p class="card-text">
+                        <strong>Predicted Execution Time:</strong> {{ job.predicted_execution_time }} miliseconds
+                    </p>
                 </div>
             </div>
         </div>
