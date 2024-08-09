@@ -1,4 +1,4 @@
-<div class="container mt-5 px-5">
+<div class="container mt-4 px-5">
     @if(jobs) {
     <h2 class="mb-4">My Jobs
         <ng-template #tipContent>
@@ -10,7 +10,7 @@
             placement="right" [ngbTooltip]="tipContent"></i>
         </a>
     </h2>
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between mb-4">
         <button class="btn btn-primary" (click)="createJob()">
             <i class="fa-solid fa-plus me-1"></i>
             Create New Job
@@ -125,5 +125,9 @@
 
     .btn-copy:hover {
         color: #343a40;
+    }
+
+    td, th {
+        background-color: var(--bs-tertiary-bg);
     }
 </style>
