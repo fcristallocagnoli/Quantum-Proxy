@@ -18,14 +18,3 @@ body:has(.app-container) {
 .app-container {
     min-height: 320px;
 }
-
-.admin-nav {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-.btn-delete-account {
-    width: 40px;
-    text-align: center;
-    box-sizing: content-box;
-}
