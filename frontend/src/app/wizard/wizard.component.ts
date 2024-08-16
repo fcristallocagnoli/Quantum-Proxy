@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Provider, System } from '@app/_models';
+import { System } from '@app/_models';
 import { ProviderService, SystemService } from '@app/_services';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { first } from 'rxjs';
 
 @Component({
@@ -21,14 +22,14 @@ export class WizardComponent implements OnInit {
 
   responsiveOptions: any[] = [
     {
-        breakpoint: '1199px',
-        numVisible: 2,
-        numScroll: 1
+      breakpoint: '1199px',
+      numVisible: 2,
+      numScroll: 1
     },
     {
-        breakpoint: '991px',
-        numVisible: 1,
-        numScroll: 1
+      breakpoint: '991px',
+      numVisible: 1,
+      numScroll: 1
     },
   ];
 
@@ -36,6 +37,7 @@ export class WizardComponent implements OnInit {
     private providerService: ProviderService,
     private systemService: SystemService,
     private formBuilder: FormBuilder,
+    private modalService: NgbModal
   ) { }
 
   dataStructure: { provider: any, systems: any }[] = [];
@@ -52,6 +54,8 @@ export class WizardComponent implements OnInit {
       pricePerShot: ['', Validators.min(0)],
     });
   }
+
+  getFromData(data: any) { return data["provider"].controls; }
 
   getData() {
     let dataStructure: any[] = [];
@@ -70,6 +74,7 @@ export class WizardComponent implements OnInit {
                 pid: provider.pid,
                 description: provider.description,
                 website: provider.website,
+                links: provider.links,
                 thirdParty: provider.third_party?.third_party_name,
                 lastChecked: provider.last_checked
               }
@@ -236,6 +241,11 @@ export class WizardComponent implements OnInit {
     return count;
   }
 
+  showLinks(data: any) {
+    let ref = this.modalService.open(LinksModal, { centered: true });
+    ref.componentInstance.links = data["provider"].links;
+  }
+
   // transforms strings like '5d 10hrs 15min' to milliseconds
   private toMilliseconds(formato: string): number {
     const diasRegex = /(\d+)d/;
@@ -333,4 +343,33 @@ export class WizardComponent implements OnInit {
     return avgTimeInQueue;
   }
 
+}
+
+@Component({
+  selector: 'ngbd-modal-content',
+  standalone: true,
+  template: `
+		<div class="modal-header">
+			<h4 class="modal-title">Extra info</h4>
+			<button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+		</div>
+		<div class="modal-body">
+			<span [innerHTML]="links.desc"></span>
+      <ul>
+      @for(link of links.links; track $index) {
+      <li>
+        <a href="{{ link.link }}" target="_blank"
+          class="link-offset-2-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+          {{ link.alt }}
+        </a>
+      </li>
+      }
+      </ul>
+		</div>
+	`,
+})
+export class LinksModal {
+  activeModal = inject(NgbActiveModal);
+
+  @Input() links: { desc: string, links: { alt: string, link: string }[] };
 }

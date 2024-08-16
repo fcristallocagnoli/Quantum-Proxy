@@ -1,75 +1,118 @@
 <div class="container mt-4 pb-3">
-    @if (systems) {
     <h2>Welcome to the Quantum Provider Wizard</h2>
     <p class="lead">
         This wizard will help you find the best quantum computing provider for your needs.
     </p>
-    <p-carousel [value]="systems" [numVisible]="3" [numScroll]="3" [circular]="true"
-        [responsiveOptions]="responsiveOptions" autoplayInterval="5000">
-        <ng-template let-system pTemplate="item">
-            <div class="card bg-body-tertiary my-2 mx-3">
+    @if (systems) {
+    <div class="container">
+        <p-carousel [value]="systems" [numVisible]="3" [numScroll]="3" [circular]="true"
+            [responsiveOptions]="responsiveOptions" autoplayInterval="5000">
+            <ng-template let-system pTemplate="item">
+                <div class="card bg-body-tertiary my-2 mx-3">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            {{system.backend_name}} -
+                            from {{ system.provider.provider_name }}
+                            @if (system.provider.provider_from) {
+                            (by {{ system.provider.provider_from }})
+                            }
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary text-center">
+                            Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="mb-1">Qubits</span>
+                                <strong><span class="d-grid">{{ system.qubits }}</span></strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span class="mb-1">
+                                    <queue [queue]="system.queue" [isTable]="true"></queue>
+                                </span>
+                                <strong>
+                                    <span class="d-grid">
+                                        @if (system.queue?.type === "avg_time") {
+                                        {{ convertFromMs(system.queue?.value) }}
+                                        }@else {
+                                        {{ system.queue?.value ?? 'N/A' }}
+                                        }
+                                    </span>
+                                </strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span class="mb-1">Price</span>
+                                <!-- Hasta que se arregle el desplazamiento que causa full_price en algunos casos -->
+                                <!-- <strong><span class="d-grid">{{ system.price?.full_price ?? 'N/A' }}</span></strong> -->
+                                <strong>
+                                    <span class="d-grid">
+                                        @if (system.price?.per_task_price) {
+                                        ${{ system.price?.per_task_price }}/task
+                                        }@else if(system.price?.per_minute_price) {
+                                        ${{ system.price?.per_minute_price }}/minute
+                                        }@else {
+                                        {{ 'N/A' }}
+                                        {{ system.price?.full_price }}
+                                        }
+                                    </span>
+                                </strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span class="mb-1">Status</span>
+                                <strong><span class="d-grid">
+                                        <status [status]="system.status" [icon]="true"></status>
+                                    </span></strong>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show system</a>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-carousel>
+    </div>
+    }@else {
+    <!-- Placeholder for carousel -->
+    <div class="container row mx-3" style="min-height: 334px;">
+        @for (sys of [1,2,3]; track sys) {
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card bg-body-tertiary my-2 mx-1">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        {{system.backend_name}} -
-                        from {{ system.provider.provider_name }}
-                        @if (system.provider.provider_from) {
-                        (by {{ system.provider.provider_from }})
-                        }
+                    <h5 class="card-title placeholder-glow text-center">
+                        <span class="placeholder col-6"></span>
                     </h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary text-center">
-                        Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                    <h6 class="card-subtitle mb-2 text-body-secondary placeholder-glow text-center">
+                        <span class="placeholder col-4"></span>
                     </h6>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <span for="qubits" class="mb-1">Qubits</span>
-                            <strong><span class="d-grid">{{ system.qubits }}</span></strong>
+                            <span class="mb-1">Qubits</span>
+                            <span class="placeholder col-12"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <span for="qubits" class="mb-1">
-                                <queue [queue]="system.queue" [isTable]="true"></queue>
+                            <span class="mb-1">
+                                <span class="mb-1">Queue</span>
+                                <span class="placeholder col-12"></span>
                             </span>
-                            <strong>
-                                <span class="d-grid">
-                                    @if (system.queue?.type === "avg_time") {
-                                    {{ convertFromMs(system.queue?.value) }}
-                                    }@else {
-                                    {{ system.queue?.value ?? 'N/A' }}
-                                    }
-                                </span>
-                            </strong>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <span for="qubits" class="mb-1">Price</span>
-                            <!-- Hasta que se arregle el desplazamiento que causa full_price en algunos casos -->
-                            <!-- <strong><span class="d-grid">{{ system.price?.full_price ?? 'N/A' }}</span></strong> -->
-                            <strong>
-                                <span class="d-grid">
-                                    @if (system.price?.per_task_price) {
-                                    ${{ system.price?.per_task_price }}/task
-                                    }@else if(system.price?.per_minute_price) {
-                                    ${{ system.price?.per_minute_price }}/minute
-                                    }@else {
-                                    {{ 'N/A' }}
-                                    {{ system.price?.full_price }}
-                                    }
-                                </span>
-                            </strong>
+                            <span class="mb-1">Price</span>
+                            <span class="placeholder col-12"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <span for="qubits" class="mb-1">Status</span>
-                            <strong><span class="d-grid">
-                                    <status [status]="system.status" [icon]="true"></status>
-                                </span></strong>
+                            <span class="mb-1">Status</span>
+                            <span class="placeholder col-12"></span>
                         </div>
                     </div>
                     <div class="d-grid gap-2">
-                        <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show system</a>
+                        <a class="btn btn-primary disabled placeholder" aria-disabled="true"></a>
                     </div>
                 </div>
             </div>
-        </ng-template>
-    </p-carousel>
-
+        </div>
+        }
+    </div>
+    }
     <h2>Quantum Machine Wizard</h2>
     <div class="card mt-3 bg-body-tertiary">
         <div class="card-body">
@@ -118,8 +161,7 @@
             </form>
         </div>
     </div>
-
-    <div class="card mt-3 mb-5 bg-body-tertiary">
+    <div class="card mt-4 mb-5 bg-body-tertiary">
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <h5>Step 2: Compare Providers</h5>
@@ -151,49 +193,76 @@
             </div>
             @for (data of dataStructureFiltered; track $index) {
             <div class="card mt-3 bg-body-tertiary">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{data["provider"].name}}
-                        @if (data["provider"].thirdParty) {
-                        (by {{ data["provider"].thirdParty }})
-                        }
-                    </h5>
-                    <h6 class="card-subtitle mb-3 text-body-secondary">
-                        Last updated: {{ data["provider"].lastChecked | date: 'dd/MM/yy, HH:mm' }}
-                        <!-- {{ data["provider"].description.short_description }} -->
-                    </h6>
-                    @for (system of data.systems; let isLast = $last; track $index) {
-                    <div class="d-flex justify-content-between">
+                <div class="card-header">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <h5 class="card-title">
+                                {{data["provider"].name}}
+                                @if (data["provider"].thirdParty) {
+                                (by {{ data["provider"].thirdParty }})
+                                }
+                            </h5>
+                            <h6 class="card-subtitle text-body-secondary">
+                                Last updated: {{ data["provider"].lastChecked | date: 'dd/MM/yy, HH:mm' }}
+                            </h6>
+                        </div>
                         <div>
+                            <button class="btn btn-secondary" [disabled]="!data['provider'].links"
+                                (click)="showLinks(data)">Learn More&hellip;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @for (system of data.systems; let isLast = $last; track $index) {
+                    <div class="d-flex">
+                        <div style="width: 30%;">
+                            {{ data["provider"].description.short_description }}
+                        </div>
+                        <hr class="vertical-hr mx-3 my-2">
+                        <div class="" style="width: 40%;">
                             <p>
                                 <strong>{{ system["backend_name"] }}</strong>
                                 @if (system["provider_from"]) {
                                 , by {{ system["provider_from"] }}
                                 }
                             </p>
-                            <p>Qubits: {{ system["qubits"] }} qubits</p>
-                            <p>Status: <status [status]="system['status']" [icon]="true"></status>
-                            </p>
-                            <p>
-                                <queue [queue]="system.queue"></queue>
-                                @if (system.queue?.type === "avg_time") {
-                                {{ convertFromMs(system.queue?.value) }}
-                                }@else {
-                                {{ system.queue?.value ?? 'N/A' }}
-                                }
-                            </p>
-                            <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
-                            @if (form.controls['supportedGates'].value) {
-                            @if (system["gates_supported"] && system["gates_supported"].length > 0) {
-                            <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
-                            }
-                            @if (system["basis_gates"] && system["basis_gates"].length > 0) {
-                            <p>Gates: {{ system["basis_gates"].join(", ") }}</p>
-                            }
-                            }
+                            <div class="row">
+                                <div class="col-6">
+                                    <p>Qubits: {{ system["qubits"] }} qubits</p>
+                                    <p>Status: <status [status]="system['status']" [icon]="true"></status>
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p>
+                                        <queue [queue]="system.queue"></queue>
+                                        @if (system.queue?.type === "avg_time") {
+                                        {{ convertFromMs(system.queue?.value) }}
+                                        }@else {
+                                        {{ system.queue?.value ?? 'N/A' }}
+                                        }
+                                    </p>
+                                    <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
+                                    @if (form.controls['supportedGates'].value) {
+                                    @if (system["gates_supported"] && system["gates_supported"].length > 0) {
+                                    <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
+                                    }
+                                    @if (system["basis_gates"] && system["basis_gates"].length > 0) {
+                                    <p>Gates: {{ system["basis_gates"].join(", ") }}</p>
+                                    }
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show System</a>
+                        <div class="ms-auto d-flex flex-column justify-content-between">
+                            <div class="ms-auto">
+                                <a routerLink="/systems/{{system.bid}}" class="btn btn-primary">Show System</a>
+                            </div>
+                            <span class="ms-auto fs-6">
+                                From {{data["provider"].name}}
+                                @if (data["provider"].thirdParty) {
+                                (by {{ data["provider"].thirdParty }})
+                                }
+                            </span>
                         </div>
                     </div>
                     @if (!isLast) {
@@ -212,11 +281,6 @@
             }
         </div>
     </div>
-    }@else {
-    <div class="col-12 text-center">
-        <span class="spinner-border spinner-border-lg"></span>
-    </div>
-    }
 </div>
 <style>
     .card-title {
@@ -225,6 +289,12 @@
 
     .card-body p {
         margin: 0.25rem 0;
+    }
+
+    .vertical-hr {
+        border: none;
+        border-left: 3px solid var(--bs-secondary-color);
+        margin: 0;
     }
 
     @media (width < 768px) {
