@@ -1,0 +1,194 @@
+// styles.scss
+
+@import "../node_modules/bootstrap/scss/_functions";
+@import "../node_modules/bootstrap/scss/_variables";
+
+$custom-colors: (
+    "background": #000f1f,
+    "foreground": #cff,
+    "primary": #005f8f,
+    "primary-foreground": #cff,
+    // "secondary": #3b515e,
+    // "secondary-foreground": #cff,
+    "accent": #26a3d9,
+    "accent-foreground": #1e2424,
+    // "danger": #de0202,
+    "danger-foreground": #fff,
+    "muted": #265973,
+    "muted-foreground": #cff,
+    "card": #001f3d,
+    "card-foreground": #cff,
+    "popover": #00264d,
+    "popover-foreground": #cff,
+    "border": #369,
+    "input": #369,
+    "ring": #cff
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// Importar Bootstrap después de sobrescribir las variables
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+:root {
+    --background: hsl(210, 100%, 6%);
+    --foreground: hsl(180, 100%, 90%);
+    --primary: hsl(200, 100%, 28%);
+    --primary-foreground: hsl(180, 100%, 90%);
+    --secondary: hsl(203, 23%, 30%);
+    --secondary-foreground: hsl(180, 100%, 90%);
+    --accent: hsl(198, 70%, 50%);
+    --accent-foreground: hsl(185, 10%, 13%);
+    --destructive: hsl(0, 98%, 44%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --muted: hsl(200, 50%, 30%);
+    --muted-foreground: hsl(180, 100%, 90%);
+    --card: hsl(210, 100%, 12%);
+    --card-foreground: hsl(180, 100%, 90%);
+    --popover: hsl(210, 100%, 15%);
+    --popover-foreground: hsl(180, 100%, 90%);
+    --border: hsl(210, 50%, 40%);
+    --input: hsl(210, 50%, 40%);
+    --ring: hsl(180, 100%, 90%);
+    --radius: 0rem;
+}
+
+// Changes to dark theme ----------------------------------------------
+
+[data-bs-theme=dark] {
+    .dropdown-menu {
+        --bs-dropdown-bg: var(--bs-tertiary-bg);
+        --bs-dropdown-link-active-bg: var(--primary);
+    }
+
+    .dropdown-item:hover {
+        --bs-dropdown-link-hover-bg: var(--bs-body-bg);
+    }
+
+    .list-group-item {
+        --bs-list-group-bg: var(--bs-tertiary-bg);
+        --bs-list-group-action-hover-bg: var(--bs-secondary-bg);
+    }
+
+    --bs-table-bg: var(--bs-tertiary-bg);
+}
+
+// Changes to light theme --------------------------------------------
+
+[data-bs-theme=light] {
+    --bs-body-color: var(--background);
+    --bs-body-color-rgb: 0, 15, 31;
+    --bs-body-bg: #b6e5e5;
+    --bs-body-bg-rgb: 182, 229, 229;
+    --bs-tertiary-bg: var(--foreground);
+    --bs-tertiary-bg-rgb: 204, 255, 255;
+
+    --bs-secondary-bg: #a3cccc;
+    --bs-secondary-bg-rgb: 163, 204, 204;
+
+    --bs-border-color: #91b6b7;
+
+    .list-group-item {
+        --bs-list-group-bg: var(--foreground);
+        --bs-list-group-action-hover-bg: #a3cccc;
+    }
+
+    .dropdown-menu {
+        --bs-dropdown-link-active-bg: var(--primary);
+    }
+
+    .dropdown-item:hover {
+        --bs-dropdown-link-hover-bg: #a3cccc;
+    }
+
+    footer {
+        border-color: var(--bs-dark-border-subtle) !important;
+    }
+
+    .modal-header {
+        --bs-modal-header-border-color: var(--bs-dark-border-subtle);
+    }
+
+    .modal-footer {
+        --bs-modal-footer-border-color: var(--bs-dark-border-subtle);
+    }
+}
+
+// WIP - New dark theme -----------------------------------------------
+[data-bs-theme=custom-dark] {
+    --bs-body-color: var(--foreground);
+    --bs-body-color-rgb: 0, 15, 31;
+    --bs-body-bg: var(--background);
+    --bs-body-bg-rgb: 38, 89, 115;
+    --bs-tertiary-bg: var(--muted);
+    --bs-tertiary-bg-rgb: 38, 89, 115;
+
+    .navbar {
+        --bs-navbar-color: rgba(38, 89, 115, 1);
+    }
+
+    .navbar-brand,
+    .navbar-brand:focus {
+        --bs-navbar-brand-color: var(--foreground);
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:focus {
+        --bs-navbar-brand-hover-color: var(--foreground);
+    }
+
+    .nav-link {
+        --bs-nav-link-color: var(--foreground);
+    }
+
+    .nav-link:hover {
+        --bs-nav-link-hover-color: rgba(38, 89, 115, 1);
+    }
+
+    .nav-link.active {
+        --bs-navbar-active-color: var(--accent);
+    }
+
+    .dropdown-menu {
+        --bs-dropdown-bg: var(--background);
+        --bs-dropdown-link-active-bg: var(--primary);
+    }
+
+    .dropdown-item:hover {
+        --bs-dropdown-link-hover-bg: var(--primary-foreground);
+    }
+
+    .btn-primary {
+        --bs-btn-color: #fff;
+        --bs-btn-bg: #005f8f;
+        --bs-btn-border-color: #005f8f;
+        --bs-btn-hover-color: #fff;
+        --bs-btn-hover-bg: #00517a;
+        --bs-btn-hover-border-color: #004c72;
+        --bs-btn-focus-shadow-rgb: 38, 119, 160;
+        --bs-btn-active-color: #fff;
+        --bs-btn-active-bg: #004c72;
+        --bs-btn-active-border-color: #00476b;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #fff;
+        --bs-btn-disabled-bg: #005f8f;
+        --bs-btn-disabled-border-color: #005f8f;
+    }
+
+    .btn-secondary {
+        --bs-btn-color: #fff;
+        --bs-btn-bg: #3b515e;
+        --bs-btn-border-color: #3b515e;
+        --bs-btn-hover-color: #fff;
+        --bs-btn-hover-bg: #324550;
+        --bs-btn-hover-border-color: #2f414b;
+        --bs-btn-focus-shadow-rgb: 88, 107, 118;
+        --bs-btn-active-color: #fff;
+        --bs-btn-active-bg: #2f414b;
+        --bs-btn-active-border-color: #2c3d47;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #fff;
+        --bs-btn-disabled-bg: #3b515e;
+        --bs-btn-disabled-border-color: #3b515e;
+    }
+}
