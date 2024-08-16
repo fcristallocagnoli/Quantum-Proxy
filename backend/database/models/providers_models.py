@@ -66,6 +66,7 @@ class BaseProviderModel(BaseModel):
     pid: Optional[str] = Field(default=None)
     description: Optional[Any] = Field(default=None)
     website: Optional[str] = Field(default=None)
+    links: Optional[dict] = Field(default=None)
     wiki_name: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------

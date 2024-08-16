@@ -20,6 +20,23 @@ Fomato de extra_data:
 extra_data = {
     "IonQ": {
         "website": "https://ionq.com/",
+        "links": {
+            "desc": "<p>IonQ does not provide direct access to their quantum processors (except for the simulator). Only through cloud platforms like AWS, Azure, and Google Cloud.</p>",
+            "links": [
+                {
+                    "alt": "IonQ Website",
+                    "link": ""
+                },
+                {
+                    "alt": "IonQ Quantum Cloud Resource Estimator",
+                    "link": "https://ionq.com/programs/research-credits/resource-estimator"
+                },
+                {
+                    "alt": "Get Access to IonQ Systems",
+                    "link": "https://ionq.com/get-access?intent=direct-access"
+                }
+            ]
+        },
         "description": {
             "short_description": "IonQ specializes in quantum computing using trapped ion technology, offering cloud-based access to their quantum processors.",
             "long_description": "IonQ is at the forefront of quantum computing with its unique trapped ion technology. The company's quantum computers leverage individual ions, which are electrically charged atoms, to function as qubits. This approach offers high levels of stability and coherence, leading to longer qubit operation times and more accurate computations. IonQ provides access to its quantum systems through major cloud platforms like Amazon Web Services (AWS), Microsoft Azure, and Google Cloud, enabling researchers, developers, and businesses to experiment and develop applications in quantum computing.",
@@ -28,6 +45,23 @@ extra_data = {
     },
     "IBM Quantum": {
         "website": "https://www.ibm.com/quantum",
+        "links": {
+            "desc": "<p>IBM Quantum offers a variety of plans, including free access to quantum systems and premium plans for advanced users.</p><p>Their free plan, 'Open Plan', provides access to a limited number of QPUs, offers 10 minutes of quantum computing per month, and limites the job execution to 3 at a time.</p>",
+            "links": [
+                {
+                    "alt": "IBM Quantum Website",
+                    "link": "https://www.ibm.com/quantum"
+                },
+                {
+                    "alt": "IBM Quantum Platform",
+                    "link": "https://quantum.ibm.com/services/resources"
+                },
+                {
+                    "alt": "Pricing | IBM Quantum Computing",
+                    "link": "https://www.ibm.com/quantum/pricing"
+                }
+            ]
+        },
         "description": {
             "short_description": "IBM Quantum offers quantum computing services through cloud access, featuring a suite of quantum computers and development tools for researchers and businesses.",
             "long_description": "IBM Quantum is a division of IBM focused on developing and commercializing quantum computing technology. They provide access to a fleet of quantum processors via the IBM Cloud, alongside a comprehensive software development kit called Qiskit. IBM's quantum systems utilize superconducting qubits and are integrated into a robust quantum ecosystem that includes educational resources, research collaborations, and enterprise solutions. IBM Quantum's platform supports a wide range of quantum algorithms and applications, facilitating advancements in fields such as chemistry, optimization, and machine learning.",
@@ -37,6 +71,23 @@ extra_data = {
     },
     "Rigetti": {
         "website": "https://www.rigetti.com/",
+        "links": {
+            "desc": "<p>Rigetti does not provide direct access to their quantum processors. Only through cloud platforms like AWS and Azure, among others.</p>",
+            "links": [
+                {
+                    "alt": "Rigetti Website",
+                    "link": "https://www.rigetti.com/"
+                },
+                {
+                    "alt": "Rigetti Systems",
+                    "link": "https://qcs.rigetti.com/qpus"
+                },
+                {
+                    "alt": "Bring quantum computing to your organization",
+                    "link": "https://www.rigetti.com/get-quantum"
+                }
+            ]
+        },
         "description": {
             "short_description": "Rigetti Computing develops and deploys superconducting quantum computers, offering quantum cloud services for various industries and research institutions.",
             "long_description": "Rigetti Computing is a pioneering company in the field of quantum computing, focusing on building and operating superconducting qubit-based quantum processors. The company provides access to its quantum computers through its Quantum Cloud Services (QCS) platform, which integrates classical and quantum computing resources to enable hybrid quantum-classical workflows. Rigetti's approach allows users to develop and run quantum algorithms that can solve complex problems in areas like optimization, materials science, and machine learning.",
@@ -44,7 +95,24 @@ extra_data = {
         },
     },
     "Amazon Braket": {
-        "website": "https://aws.amazon.com/es/braket/",
+        "website": "https://aws.amazon.com/braket/",
+        "links": {
+            "desc": "<p>Amazon Braket is a fully managed quantum computing service that provides access to quantum hardware from multiple providers.</p><p>Braket provides a total of 1 hour of free access. Once the free hour is used, the user will be charged for the time used. They also offer 3 simulators with 1 free hour per month.</p>",
+            "links": [
+                {
+                    "alt": "AWS Braket Website",
+                    "link": "https://aws.amazon.com/braket/"
+                },
+                {
+                    "alt": "AWS Braket Pricing",
+                    "link": "https://aws.amazon.com/braket/pricing/"
+                },
+                {
+                    "alt": "Braket Pricing Calculator",
+                    "link": "https://calculator.aws/#/createCalculator/Braket"
+                }
+            ]
+        },
         "description": {
             "short_description": "Amazon Braket is a fully managed quantum computing service that provides access to quantum hardware from multiple providers, along with development tools and simulators.",
             "long_description": "Amazon Braket is a quantum computing service offered by Amazon Web Services (AWS). It aims to democratize access to quantum computing by providing a unified platform where users can experiment with quantum computers from different hardware vendors, including Rigetti, IonQ, and D-Wave. Amazon Braket offers a range of tools for developing, testing, and running quantum algorithms, including fully managed Jupyter notebooks, high-performance classical simulators, and integration with other AWS services. This platform enables researchers and developers to explore quantum computing's potential without needing to manage underlying infrastructure.",
@@ -53,6 +121,19 @@ extra_data = {
     },
     "QuEra": {
         "website": "https://www.quera.com/",
+        "links": {
+            "desc": "<p>QuEra Computing does not provide direct access to their quantum processors. Only through Amazon Braket.</p>",
+            "links": [
+                {
+                    "alt": "QuEra Website",
+                    "link": "https://www.quera.com/"
+                },
+                {
+                    "alt": "QuEra System, Aquila",
+                    "link": "https://www.quera.com/aquila"
+                }
+            ]
+        },
         "description": {
             "short_description": "QuEra Computing is a quantum computing company focused on developing scalable quantum processors using neutral atom technology.",
             "long_description": "QuEra Computing is a cutting-edge quantum computing startup that employs neutral atom technology to build scalable quantum processors. This approach uses arrays of neutral atoms as qubits, manipulated with highly focused laser beams to perform quantum operations. QuEra's technology aims to overcome some of the scaling challenges faced by other qubit technologies, offering the potential for large, highly connected qubit arrays. The company provides access to its quantum processors for research and commercial applications, aiming to drive innovation in various fields through powerful quantum computations.",

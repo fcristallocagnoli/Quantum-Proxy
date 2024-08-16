@@ -15,6 +15,7 @@ export class Provider {
     name?: string;
     description?: string | Description;
     website?: string;
+    links?: { desc: string, links: { alt: string, link: string }[]};
     from_third_party?: boolean;
     fetchMethod?: string;
     third_party?: ThirdParty;
