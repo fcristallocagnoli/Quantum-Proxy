@@ -192,8 +192,9 @@ export class QueueComponent {
                         @for (system of systems; track $index) {
                         @if (system.characterization) {
                         <td>
-                            <button class="btn btn-primary btn-sm" (click)="openModal(system)">View
-                                Characterization</button>
+                            <button class="btn btn-primary btn-sm" (click)="openModal(system)">
+                                View Characterization
+                            </button>
                         </td>
                         }@else {
                         <td>N/A</td>
@@ -406,20 +407,29 @@ export class SystemPropsComponent {
         <h4 class="modal-title">
             Characterization
             <a style="cursor: pointer;" (click)="openModal()">
-                <i class="fa-regular fa-circle-question fs-5"
-                placement="bottom" ngbTooltip="Click for info about characterization"></i>
+                <i class="fa-regular fa-circle-question explaination"
+                placement="left" ngbTooltip="Click for info about characterization"></i>
             </a>
         </h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <pre>{{ characterization | json }}</pre>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-secondary" ngbAutofocus
+            (click)="activeModal.close('Close click')">Close</button>
     </div>
     `,
-    imports: [JsonPipe, NgbTooltipModule]
+    imports: [JsonPipe, NgbTooltipModule],
+    styles: [`
+        .explaination {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+            padding: 1.25rem 1rem;
+        }
+    `]
 })
 export class NgbdModalContent {
     activeModal = inject(NgbActiveModal);
@@ -449,7 +459,8 @@ export class NgbdModalContent {
         <p><strong>timing:</strong> Time, in seconds, of various system properties: 't1' time, 't2' time, '1q' gate time, '2q' gate time, 'readout' time, and qubit 'reset' time.</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-secondary" ngbAutofocus
+            (click)="activeModal.close('Close click')">Close</button>
     </div>
     `,
     imports: []
