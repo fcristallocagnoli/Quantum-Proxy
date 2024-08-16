@@ -62,18 +62,17 @@
                 </div>
             </div>
             <div class="mb-3">
-                <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+                <button type="submit" [disabled]="submitting" class="btn btn-primary me-3">
                     <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                     Update
                 </button>
-                <button type="button" (click)="onDelete()" [disabled]="deleting" class="btn btn-danger">
+                <button type="button" (click)="onDelete()" [disabled]="deleting" class="btn btn-danger me-1">
                     <span *ngIf="deleting" class="spinner-border spinner-border-sm me-1"></span>
                     Delete
                 </button>
-                <a routerLink="../" href="" class="btn btn-link
-        link-offset-2 link-offset-3-hover
-        link-underline link-underline-opacity-0
-        link-underline-opacity-75-hover">Cancel</a>
+                <a routerLink="../" href="" class="btn btn-link link-offset-3">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>
