@@ -1,6 +1,8 @@
 from typing import Any
 
 import requests
+
+from utils.email_utils import send_error_mail
 from modules.api_module import APIRequest, get_auth_if_needed
 
 
@@ -13,19 +15,23 @@ def get_backends(request: APIRequest) -> list[dict[str, Any]]:
         return []
     # Obtenemos los backends
     try:
-        backends = requests.get(
+        backend_request = requests.get(
             f"{base_url}/backends",
             headers={"Authorization": auth},
-        ).json()["devices"]
-    # IBM está teniendo problemas con sus API Keys, 
-    # a veces hay que regenerarlas porque las antiguas no funcionan 
+        )
+    # IBM está teniendo problemas con sus API Keys,
+    # a veces hay que regenerarlas porque las antiguas no funcionan
     except Exception as err:
-        print("Exception:", err)
+        print("Error fetching IBM backends:", err)
+        send_error_mail(err, context="Error fetching IBM backends")
         return []
 
-    output = []
+    backends = backend_request.json()["devices"]
+
     # Los simuladores de IBM serán retirados proximamente, por lo que no se incluirán
     backends = list(filter(lambda back: "simulator" not in back, backends))
+
+    output = []
     for backend in backends:
         # Obtenemos el estado del backend
         status = requests.get(
@@ -68,3 +74,18 @@ def get_backends(request: APIRequest) -> list[dict[str, Any]]:
         output.append(schema)
 
     return output
+
+
+def main():
+    backend_request = {
+        "fetch_method": "API",
+        "base_url": "https://api.quantum-computing.ibm.com/runtime",
+        "auth": {"Authorization": "Bearer TOKEN"},
+        "module": {"func_to_eval": "get_backends", "module_file": "ibm_api_code"},
+    }
+    result = get_backends(backend_request)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()
