@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
 import { UpdateSecretsComponent } from '@app/_components/update-secrets.component';
+import { ConfirmationModal } from '@app/_components/confirmation.component';
 
 @Component({ templateUrl: 'update.component.html' })
 export class UpdateComponent implements OnInit {
@@ -47,15 +48,15 @@ export class UpdateComponent implements OnInit {
         ref.result.then((resultado) => {
             this.form.patchValue({ apiKeys: resultado });
             this.accountService.patch(this.account.id!, { apiKeys: resultado })
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    this.alertService.success('API Keys & Secrets updated successfully');
-                },
-                error: error => {
-                    this.alertService.error(error);
-                }
-            });
+                .pipe(first())
+                .subscribe({
+                    next: () => {
+                        this.alertService.success('API Keys & Secrets updated successfully');
+                    },
+                    error: error => {
+                        this.alertService.error(error);
+                    }
+                });
         }, () => { console.log("Edición cancelada") });
     }
 
@@ -86,13 +87,22 @@ export class UpdateComponent implements OnInit {
     }
 
     onDelete() {
-        if (confirm('Are you sure?')) {
-            this.deleting = true;
-            this.accountService.delete(this.account.id!)
-                .pipe(first())
-                .subscribe(() => {
-                    this.alertService.success('Account deleted successfully', { keepAfterRouteChange: true });
-                });
-        }
+        let ref = this.modalService.open(ConfirmationModal);
+        ref.componentInstance.title = "Delete Confirmation";
+        ref.componentInstance.bodyText = "Are you sure that you want to delete your account?";
+        ref.componentInstance.dismissBtn = "secondary";
+        ref.componentInstance.confirmBtn = "danger";
+        ref.result.then((result) => {
+            if (result === 'ok click') {
+                this.deleting = true;
+                this.accountService.delete(this.account.id!)
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.alertService.success('Account deleted successfully', { keepAfterRouteChange: true });
+                    });
+                this.router.navigate(['/']);
+            }
+        });
+
     }
 }
