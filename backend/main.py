@@ -8,8 +8,20 @@ from database.mongo_client import is_empty
 from fastapi import FastAPI
 from fastapi.logger import logger
 from fastapi.middleware.cors import CORSMiddleware
-from routers import provider_router, user_router, account_router, backend_router, job_router, helper_router
-from utils.scheduler_functions import init_backends, init_providers, job_manager, schedule_providers
+from routers import (
+    provider_router,
+    user_router,
+    account_router,
+    backend_router,
+    job_router,
+    helper_router,
+)
+from utils.scheduler_functions import (
+    init_backends,
+    init_providers,
+    job_manager,
+    schedule_providers,
+)
 
 
 def init_logger():
@@ -28,11 +40,13 @@ def init_database(scheduler: BackgroundScheduler):
         logger.debug("Initializing providers")
         # No lo ejecuto en un hilo diferente para bloquear la ejecucion
         init_providers()
-    # [x] REWORK: Si la coleccion de proveedores NO esta vacia, 
-    # lanzar schedule semanal para actualizar los proveedores 
+    # [x] REWORK: Si la coleccion de proveedores NO esta vacia,
+    # lanzar schedule semanal para actualizar los proveedores
     # ('schedule_providers' se encarga de todo)
     else:
-        logger.debug("Setting 'init_providers' function to run every week on Sunday at 0:00 AM")
+        logger.debug(
+            "Setting 'init_providers' function to run every week on Sunday at 0:00 AM"
+        )
         scheduler.add_job(
             func=schedule_providers,
             args=[scheduler],
@@ -43,7 +57,6 @@ def init_database(scheduler: BackgroundScheduler):
             id="job_init_providers",
             replace_existing=True,
         )
-        
 
     # Si la coleccion de backends esta vacia
     if is_empty("backends"):

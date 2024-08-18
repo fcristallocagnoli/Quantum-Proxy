@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from database.mongo_client import aggregate, count_documents
+from database.mongo_client import aggregate, count_documents, db_delete_backends, db_delete_providers
 from fastapi import APIRouter, Body, Path, status
 from pydantic import BaseModel
 
@@ -63,3 +63,22 @@ def count_collection(
         "message": f"Document count from {collection}",
         "count": count_documents(collection),
     }
+
+
+@router.delete(
+    "/delete-all-data",
+    description="Delete all data from the database",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "No content"},
+        status.HTTP_400_BAD_REQUEST: {"model": HTTPCodeModel},
+        status.HTTP_404_NOT_FOUND: {"model": HTTPCodeModel},
+    },
+)
+def delete_all_data():
+    """
+    Delete all data from the database.
+
+    - That includes providers and backends, not users.
+    """
+    db_delete_backends(filter={}) and db_delete_providers(filter={})

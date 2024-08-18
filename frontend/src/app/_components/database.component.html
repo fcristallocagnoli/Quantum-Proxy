@@ -1,20 +1,51 @@
 <h1>Database</h1>
 <p>Database tools from secure (admin only) api end point:</p>
 <div class="list-group">
-    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="fetching"
+    <!-- TODO: Falta configurar la inicialización en el backend -->
+    <!-- <a (click)="initData()" class="list-group-item list-group-item-action" [class.disabled]="!isDatabaseEmpty"
+        style="cursor: pointer;">
+        <div class="ms-2 me-auto">
+            <div class="fw-bold">Initialize Database Data</div>
+            @if (deleting) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+            }
+            Initialize database with provider data and system data, database must be empty
+        </div>
+    </a> -->
+    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="updatingDB"
         style="cursor: pointer;">
         <div class="ms-2 me-auto">
             <div class="fw-bold">Update all systems</div>
             @if (fetching) {
             <span class="spinner-border spinner-border-sm me-1"></span>
             }
-            Refresh all system data by fetching from each provider 'backend_request' field
+            Refresh all system data by fetching from each provider
         </div>
     </a>
+    <!-- TODO: Sin inicialización, no tiene sentido que permita eliminar todo -->
+    <!-- <a (click)="deleteData()" class="list-group-item list-group-item-action" [class.disabled]="updatingDB || isDatabaseEmpty"
+        style="cursor: pointer;">
+        <div class="ms-2 me-auto">
+            <div class="fw-bold">Delete All Database Data</div>
+            @if (deleting) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+            }
+            Delete all data from database. This includes all systems, providers, but not users
+        </div>
+    </a> -->
     <a class="list-group-item list-group-item-action disabled" style="cursor: pointer;">
         <div class="ms-2 me-auto">
-            <div class="fw-bold">Manage Database</div>
+            <div class="fw-bold">
+                <i class="fa-solid fa-triangle-exclamation me-1"></i>WIP<i class="fa-solid fa-triangle-exclamation ms-1"></i>
+                <i class="fa-solid fa-minus align-middle mx-1"></i>Manage Database
+            </div>
             CRUD operations for database
         </div>
     </a>
 </div>
+
+<style>
+    .fa-triangle-exclamation {
+        color: var(--bs-warning);
+    }
+</style>
