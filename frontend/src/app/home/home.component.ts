@@ -9,15 +9,20 @@ export class HomeComponent implements OnInit {
     nProviders? = 0;
     nSystems? = 0;
 
+    lastChecked: Date;
+
     constructor(private helperService: HelperService) { }
 
     ngOnInit() {
+        // Get the highest number of qubits
         this.helperService.getAggregattion('backends', [
             { $match: { status: { $in: ["online", "running", "available"] } } },
             { $group: { _id: "null", maxQubits: { $max: "$qubits" } } }
         ]).subscribe((response) => {
             this.highestQubits = response[0]['maxQubits'];
         });
+
+        // Get the lowest queue time
         this.helperService.getAggregattion('backends', [
             {
                 $match:
@@ -31,11 +36,23 @@ export class HomeComponent implements OnInit {
             this.lowestQueue = this.convertFromMs(response[0]['minQueue']);
         });
 
+        // Count the number of providers
         this.helperService.countDocuments('providers').subscribe((response) => {
             this.nProviders = response['count'];
         });
+        // Count the number of systems
         this.helperService.countDocuments('backends').subscribe((response) => {
             this.nSystems = response['count'];
+        });
+
+        // Get the last time the systems were checked
+        this.helperService.getAggregattion('providers', [
+            { $match: { last_checked: { $exists: true } } },
+            { $sort: { last_checked: 1 } },
+            { $limit: 1 },
+            { $project: { _id: 0, last_checked: 1 } }
+        ]).subscribe((response) => {
+            this.lastChecked = new Date(response[0]['last_checked']);
         });
     }
 

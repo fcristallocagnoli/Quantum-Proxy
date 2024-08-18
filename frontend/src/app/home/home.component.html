@@ -62,7 +62,7 @@
             <div class="card h-100">
               <div class="card-body text-center">
                 <h3 class="display-4">
-                  {{ lowestQueue }}
+                  {{ lowestQueue ? lowestQueue + '*' : 'N/A' }}
                 </h3>
                 <p>Lowest Queue Time</p>
               </div>
@@ -91,6 +91,11 @@
         </div>
       </div>
     </div>
+    @if (lastChecked) {
+    <div class="d-flex justify-content-end">
+      *Last checked {{ lastChecked | date: "'on' dd/MM/yy, 'at' HH:mm" }}
+    </div>
+    }
   </section>
 </main>
 <footer class="container d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
