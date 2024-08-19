@@ -242,9 +242,11 @@
                                         }
                                     </p>
                                     <p>Price: {{ system["price"]?.full_price ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-12">
                                     @if (form.controls['supportedGates'].value) {
                                     @if (system["gates_supported"] && system["gates_supported"].length > 0) {
-                                    <p>Gates aws: {{ system["gates_supported"].join(", ") }}</p>
+                                    <p>Gates: {{ system["gates_supported"].join(", ") }}</p>
                                     }
                                     @if (system["basis_gates"] && system["basis_gates"].length > 0) {
                                     <p>Gates: {{ system["basis_gates"].join(", ") }}</p>

@@ -125,7 +125,7 @@ export class WizardComponent implements OnInit {
           }
           if (queueTime !== '') {
             if (system.queue && system.queue?.type === "avg_time") {
-              passes = passes && this.toMilliseconds(system.queue.value) <= this.toMilliseconds(queueTime);
+              passes = passes && Number(system.queue.value) <= this.toMilliseconds(queueTime);
             } else {
               passes = false;
             }
