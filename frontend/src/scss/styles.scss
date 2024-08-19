@@ -1,7 +1,7 @@
 // styles.scss
 
-@import "../node_modules/bootstrap/scss/_functions";
-@import "../node_modules/bootstrap/scss/_variables";
+@import "../../node_modules/bootstrap/scss/_functions";
+@import "../../node_modules/bootstrap/scss/_variables";
 
 $custom-colors: (
     "background": #000f1f,
@@ -28,7 +28,7 @@ $custom-colors: (
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 // Importar Bootstrap después de sobrescribir las variables
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 :root {
     --background: hsl(210, 100%, 6%);
