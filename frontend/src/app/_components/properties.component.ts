@@ -203,12 +203,14 @@ export class QueueComponent {
                     </tr>
                     }
                     <!-- extra fields (braket) -->
-                    @if (anyIsDefined(systems, 'gates_supported')) {
+                    @if (anyIsDefined(systems, 'gates_supported') || anyIsDefined(systems, 'basis_gates')) {
                     <tr>
                         <td>Gates Supported</td>
                         @for (system of systems; track $index) {
                         @if (system.gates_supported) {
                         <td>{{ system.gates_supported.join(', ') }}</td>
+                        }@else if (system.basis_gates) {
+                        <td>{{ system.basis_gates.join(', ') }}</td>
                         }@else {
                         <td>N/A</td>
                         }
@@ -269,18 +271,6 @@ export class QueueComponent {
                     </tr>
                     }
                     <!-- extra fields (ibm) -->
-                    @if (anyIsDefined(systems, 'basis_gates')) {
-                    <tr>
-                        <td>Basis Gates</td>
-                        @for (system of systems; track $index) {
-                        @if (system.basis_gates) {
-                        <td>{{ system.basis_gates.join(', ') }}</td>
-                        }@else {
-                        <td>N/A</td>
-                        }
-                        }
-                    </tr>
-                    }
                     @if (anyIsDefined(systems, 'clops_h')) {
                     <tr>
                         <td>Clops H</td>

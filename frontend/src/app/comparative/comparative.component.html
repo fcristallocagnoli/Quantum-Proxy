@@ -39,7 +39,7 @@
             </div>
             <div class="d-grid col-4 mx-auto mt-3">
                 <button class="btn btn-primary" (click)="compareProviders(selectedProvider1, selectedProvider2)"
-                    [disabled]="providers.length === 0">
+                    [disabled]="providers.length === 0 || !(selectedProvider1 && selectedProvider2)">
                     Compare
                 </button>
             </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="d-grid col-4 mx-auto mt-3">
                 <button class="btn btn-primary" (click)="compareSystems(selectedSystem1, selectedSystem2)"
-                    [disabled]="systems.length === 0">
+                    [disabled]="systems.length === 0 || !(selectedSystem1 && selectedSystem2)">
                     Compare
                 </button>
             </div>

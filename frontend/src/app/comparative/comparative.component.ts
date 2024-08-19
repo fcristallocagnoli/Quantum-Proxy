@@ -20,8 +20,8 @@ export class ComparativeComponent {
     selectedProvider1: string = 'native.ionq';
     selectedProvider2: string = 'native.ibm_quantum';
 
-    selectedSystem1: string = 'forte-1';
-    selectedSystem2: string = 'forte-1-aws';
+    selectedSystem1: string = 'kyoto';
+    selectedSystem2: string = 'aria-2-aws';
 
     constructor(
         private router: Router,
