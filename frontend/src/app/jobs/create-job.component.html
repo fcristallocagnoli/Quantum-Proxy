@@ -10,18 +10,34 @@
                     href="https://docs.ionq.com/api-reference/v0.3/writing-quantum-programs" target="_blank">
                     Writing Quatum Programs</a>
             </ng-template>
-            <i class="fa-regular fa-circle-question" style="font-size: 16px;" placement="right" triggers="click"
+            <i class="fa-regular fa-circle-question howtojobs" placement="right" triggers="click"
                 [autoClose]="'outside'" [ngbTooltip]="tipContent"></i>
         </a>
     </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-        (click)="modal.dismiss('Cierre usuario')"></button>
 </div>
 <div class="modal-body">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-            <label for="job-name" class="col-form-label">Job Name:</label>
-            <input type="text" class="form-control" id="job-name" formControlName="name">
+        <div class="row">
+            <div class="col-6">
+                <label for="job-name" class="col-form-label">Job Name:</label>
+                <input type="text" class="form-control" id="job-name" formControlName="name">
+            </div>
+            <div class="col-6">
+                <ng-template #tipContent2>
+                    Selects a noise model to apply to a simulation job.
+                    The default, <code>ideal</code>, provides perfect simulation without noise,
+                    while other noise models like <code>harmony</code> are based on noise data collected from actual
+                    quantum computers
+                </ng-template>
+                <label for="job-name" class="col-form-label">Select Noise Model:
+                    <i class="fa-regular fa-circle-question" placement="right" [ngbTooltip]="tipContent2"></i>
+                </label>
+                <select formControlName="noiseModel" class="form-select">
+                    <option value="harmony">Harmony</option>
+                    <option value="aria-1">Aria-1</option>
+                    <option selected value="">Ideal (default)</option>
+                </select>
+            </div>
         </div>
         <div class="row">
             <div class="col-6">
@@ -60,13 +76,51 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="circuit" class="col-form-label">Circuit:</label>
-            <textarea class="form-control" id="circuit" formControlName="circuit" rows=5></textarea>
+            <div class="d-flex justify-content-between">
+                <label for="circuit" class="col-form-label">Circuit:</label>
+                <div id="sortBy" class="dropdown">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Fill With Example Values
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" role="button" (click)="fillWithExample('clear')">Clear Form</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" role="button" (click)="fillWithExample('bell')">Bell State</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" role="button" (click)="fillWithExample('ghz')">GHZ State</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" role="button" (click)="fillWithExample('toffoli')">Toffoli Gate</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" role="button" (click)="fillWithExample('qft3')">QFT 3 qubits</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <textarea class="form-control" id="circuit" formControlName="circuit" rows=4></textarea>
         </div>
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ngbAutofocus
         (click)="modal.dismiss('Cierre usuario')">Close</button>
-    <button type="button" class="btn btn-primary" (click)="onSubmit()">Save changes</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit Job</button>
 </div>
+
+<style>
+    .howtojobs {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        padding: 1.25rem 1rem;
+    }
+</style>
