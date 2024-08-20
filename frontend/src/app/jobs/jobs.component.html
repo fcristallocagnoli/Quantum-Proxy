@@ -6,8 +6,8 @@
             At the moment only the IonQ provider is supported. More specifically, the Simulator target.
         </ng-template>
         <a style="cursor: pointer;">
-            <i class="fa-regular fa-circle-question" style="font-size: 24px;"
-            placement="right" [ngbTooltip]="tipContent"></i>
+            <i class="fa-regular fa-circle-question" style="font-size: 24px;" placement="right"
+                [ngbTooltip]="tipContent"></i>
         </a>
     </h2>
     <div class="d-flex justify-content-between mb-4">
@@ -52,10 +52,26 @@
                         </span>
                     </td>
                     <td [routerLink]="job.id" role="button">
+                        @switch (job.status) {
+                        @case ("completed") {
                         <span class="badge bg-success">
                             <i class="fa-regular fa-circle-check"></i>
                             {{ job.status | titlecase }}
                         </span>
+                        }
+                        @case ("failed") {
+                        <span class="badge bg-danger">
+                            <i class="fa-regular fa-circle-xmark"></i>
+                            {{ job.status | titlecase }}
+                        </span>
+                        }
+                        @default {
+                        <span class="badge bg-secondary">
+                            <i class="fa-regular fa-circle-question"></i>
+                            {{ job.status | titlecase }}
+                        </span>
+                        }
+                        }
                     </td>
                     <td [routerLink]="job.id" role="button">
                         {{ job.name }}
@@ -127,7 +143,8 @@
         color: var(--secondary);
     }
 
-    td, th {
+    td,
+    th {
         background-color: var(--bs-tertiary-bg);
     }
 </style>

@@ -1,13 +1,15 @@
 <div class="container p-4">
     @if (job) {
+    @if (job.status === "completed") {
     <div class="card mb-3 m-auto" style="max-width: 800px;">
         <div class="card-header text-center bg-primary text-light">
             {{ job.name }} - Job Details
         </div>
         <div class="card-body">
             <p class="card-text">
-                <span class="ms-2"><strong>Status:</strong> {{ job.status }}</span>
-                <span class="ms-4"><strong>Total Qubits:</strong> {{ job.qubits }}</span>
+                <span class="ms-1"><strong>Status:</strong> {{ job.status }}</span>
+                <span class="ms-3"><strong>Total Qubits:</strong> {{ job.qubits }}</span>
+                <span class="ms-3"><strong>Shots:</strong> {{ job.shots }}</span>
             </p>
             <div class="row">
                 <div class="col-6">
@@ -35,7 +37,15 @@
             </div>
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between">
-                    Execution Results
+                    <span>
+                        Execution Results
+                        <span class="fa-stack" style="font-size: 8px;"
+                            ngbTooltip="The results contains the histogram output of the probabilities of each measured state across all shots"
+                            placement="right">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-info fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </span>
                     <button class="btn btn-sm btn-primary" data-bs-toggle="button" (click)="simplifyResults()">
                         {{ dataSimplified ? 'Show Full Results' : 'Simplify Results' }}
                     </button>
@@ -73,6 +83,110 @@
             </div>
         </div>
     </div>
+    }@else if (job.status === "failed") {
+    <div class="card mb-3 m-auto" style="max-width: 800px;">
+        <div class="card-header text-center bg-primary text-light">
+            {{ job.name }} - Job Details
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <span class="ms-2"><strong>Status:</strong> {{ job.status }}</span>
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">General Information</div>
+                        <div class="card-body">
+                            <p class="card-text" role="button" (click)="copyToClipboard(job.id)">
+                                <strong>ID:</strong> {{ job.id }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Target:</strong> {{ job.target }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">Failure</div>
+                        <div class="card-body">
+                            <p class="card-text"><strong>Code:</strong> {{ job.failure.code }}</p>
+                            <p class="card-text"><strong>Error:</strong> {{ job.failure.error }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Execution Details</div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Request Time:</strong>
+                        {{ job.request * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Start Time:</strong>
+                        {{ job.start ? (job.start * 1000 | date: 'yyy-MM-dd HH:mm:ss z') : 'N/A' }}
+                    </p>
+                    <p class="card-text"><strong>Response Time:</strong>
+                        {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Execution Time:</strong>
+                        {{ job.execution_time ? job.execution_time + 'miliseconds' : 'N/A' }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Predicted Execution Time:</strong>
+                        {{ job.predicted_execution_time ? job.predicted_execution_time + 'mileseconds' : 'N/A' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    }@else {
+    <div class="card mb-3 m-auto" style="max-width: 800px;">
+        <div class="card-header text-center bg-primary text-light">
+            {{ job.name }} - Job Details
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <span class="ms-2"><strong>Status:</strong> {{ job.status }}</span>
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">General Information</div>
+                        <div class="card-body">
+                            <p class="card-text" role="button" (click)="copyToClipboard(job.id)">
+                                <strong>ID:</strong> {{ job.id }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Target:</strong> {{ job.target }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Execution Details</div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Request Time:</strong>
+                        {{ job.request * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Start Time:</strong>
+                        {{ job.start ? (job.start * 1000 | date: 'yyy-MM-dd HH:mm:ss z') : 'N/A' }}
+                    </p>
+                    <p class="card-text"><strong>Response Time:</strong>
+                        {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
+                    </p>
+                    <p class="card-text"><strong>Execution Time:</strong>
+                        {{ job.execution_time ? job.execution_time + 'miliseconds' : 'N/A' }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Predicted Execution Time:</strong>
+                        {{ job.predicted_execution_time ? job.predicted_execution_time + 'mileseconds' : 'N/A' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
     }@else {
     <div class="col-12 text-center">
         <span class="spinner-border spinner-border-lg"></span>
