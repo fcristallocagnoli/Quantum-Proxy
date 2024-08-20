@@ -86,6 +86,9 @@ def create_job_on_ionq(job: dict, api_keys: dict):
             "gateset": "qis",
             "qubits": job.get("qubits"),
             "circuit": job.get("circuit"),
+        },
+        "noise": {
+            "model": job.get("noiseModel", "ideal"),
         }
     }
     job_status = requests.post(
