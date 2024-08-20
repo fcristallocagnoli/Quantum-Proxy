@@ -39,6 +39,8 @@ def generate_refresh_token(response: Response):
     response.set_cookie(
         key="refreshToken",
         value=token,
+        samesite="None",
+        secure=True,
         expires=utc_string,
         path="/",
     )
