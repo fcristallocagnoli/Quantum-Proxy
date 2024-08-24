@@ -12,7 +12,7 @@
             Initialize database with provider data and system data, database must be empty
         </div>
     </a> -->
-    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="updatingDB"
+    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="fetching"
         style="cursor: pointer;">
         <div class="ms-2 me-auto">
             <div class="fw-bold">Update all systems</div>

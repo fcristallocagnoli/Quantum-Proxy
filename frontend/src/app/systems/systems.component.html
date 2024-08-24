@@ -37,9 +37,9 @@
                             Status: <status [status]="system.status"></status>
                             <queue [queue]="system.queue"></queue>
                             @if (system.queue?.type === "avg_time") {
-                                {{ convertFromMs(system.queue?.value) }}
+                            {{ convertFromMs(system.queue?.value) }}
                             }@else {
-                                {{ system.queue?.value ?? 'N/A' }}
+                            {{ system.queue?.value ?? 'N/A' }}
                             }
                         </p>
                         <div class="d-grid gap-2">
@@ -52,6 +52,14 @@
                             Last updated: {{ system.last_checked | date: 'dd/MM/yy, HH:mm' }}
                         </small>
                     </div>
+                </div>
+            </div>
+            }
+            @if (systems && systems.length === 0) {
+            <div class="card my-3 text-center bg-body-tertiary">
+                <div class="card-body">
+                    <h5 class="card-title">No systems found</h5>
+                    <p class="card-text">System may not be initialized, or there are no systems available</p>
                 </div>
             </div>
             }

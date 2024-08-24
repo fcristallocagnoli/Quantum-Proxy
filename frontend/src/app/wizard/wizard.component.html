@@ -3,7 +3,7 @@
     <p class="lead">
         This wizard will help you find the best quantum computing provider for your needs.
     </p>
-    @if (systems) {
+    @if (systems && systems.length > 0) {
     <div class="container">
         <p-carousel [value]="systems" [numVisible]="3" [numScroll]="3" [circular]="true"
             [responsiveOptions]="responsiveOptions" autoplayInterval="5000">
@@ -70,6 +70,13 @@
                 </div>
             </ng-template>
         </p-carousel>
+    </div>
+    }@else if (systems) { <!-- Systems varriable exists, but its empty -->
+    <div class="card my-3 text-center bg-body-tertiary">
+        <div class="card-body">
+            <h5 class="card-title">No systems found</h5>
+            <p class="card-text">System may not be initialized, or there are no systems available</p>
+        </div>
     </div>
     }@else {
     <!-- Placeholder for carousel -->
