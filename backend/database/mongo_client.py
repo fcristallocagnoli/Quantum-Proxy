@@ -13,9 +13,7 @@ from security.aes_cipher import decrypt_data, encrypt_data
 
 config = {**dotenv_values(), **os.environ}
 
-if not (DB_URI := config.get("DB_URI")):
-    raise ValueError("DB_URI can't be empty")
-
+DB_URI = config.get("DB_URI", "localhost")
 DB_PORT = config.get("DB_PORT", 27017)
 
 # Client for the database
