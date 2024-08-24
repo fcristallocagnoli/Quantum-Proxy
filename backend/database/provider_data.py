@@ -122,13 +122,13 @@ if env_vars_set := all(
     [
         AWS_ACCESS_KEY_ID := config.get("AWS_ACCESS_KEY_ID"),
         AWS_SECRET_ACCESS_KEY := config.get("AWS_SECRET_ACCESS_KEY"),
-        AWS_DEFAULT_REGION := config.get("AWS_DEFAULT_REGION"),
+        AWS_REGION := config.get("AWS_REGION"),
     ]
 ):
     # ... las guardamos en el entorno del SO
     os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
     os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
-    os.environ["AWS_DEFAULT_REGION"] = AWS_DEFAULT_REGION
+    os.environ["AWS_REGION"] = AWS_REGION
 
 
 # Requires AWS env vars present in OS environment
