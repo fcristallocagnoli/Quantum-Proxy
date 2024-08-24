@@ -76,21 +76,21 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 // Changes to light theme --------------------------------------------
 
 [data-bs-theme=light] {
-    --bs-body-color: var(--background);
-    --bs-body-color-rgb: 0, 15, 31;
-    --bs-body-bg: #b6e5e5;
-    --bs-body-bg-rgb: 182, 229, 229;
-    --bs-tertiary-bg: var(--foreground);
-    --bs-tertiary-bg-rgb: 204, 255, 255;
+    --bs-body-color: #2C2C2C;
+    --bs-body-color-rgb: 44, 44, 44;
+    --bs-body-bg: #F0F0F0;
+    --bs-body-bg-rgb: 240, 240, 240;
+    --bs-tertiary-bg: #fff;
+    --bs-tertiary-bg-rgb: 255, 255, 255;
 
-    --bs-secondary-bg: #a3cccc;
-    --bs-secondary-bg-rgb: 163, 204, 204;
+    --bs-secondary-bg: #E6E6E6;
+    --bs-secondary-bg-rgb: 230, 230, 230;
 
-    --bs-border-color: #91b6b7;
+    --bs-border-color: #CCCCCC;
 
     .list-group-item {
-        --bs-list-group-bg: var(--foreground);
-        --bs-list-group-action-hover-bg: #a3cccc;
+        --bs-list-group-bg: #fff;
+        --bs-list-group-action-hover-bg: #E6E6E6;
     }
 
     .dropdown-menu {
@@ -98,7 +98,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
     }
 
     .dropdown-item:hover {
-        --bs-dropdown-link-hover-bg: #a3cccc;
+        --bs-dropdown-link-hover-bg: #E6E6E6;
     }
 
     footer {
