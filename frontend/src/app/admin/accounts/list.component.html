@@ -1,17 +1,18 @@
-﻿<h1>Accounts</h1>
-<p>All accounts from secure (admin only) api end point:</p>
-<a routerLink="add" class="btn btn-sm btn-success mb-2">Create Account</a>
-<table class="table table-reponsive table-striped">
-    <thead>
-        <tr>
-            <th style="width:30%">Name</th>
-            <th style="width:30%">Email</th>
-            <th style="width:15%">Role</th>
-            <th style="width:25%"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (account of accounts; track account.id) {
+﻿<div class="container" style="max-width: 800px; margin: auto;">
+    <h1>Accounts</h1>
+    <p>All accounts from secure (admin only) api end point:</p>
+    <a routerLink="add" class="btn btn-sm btn-success mb-2">Create Account</a>
+    <table class="table table-reponsive table-striped">
+        <thead>
+            <tr>
+                <th style="width:30%">Name</th>
+                <th style="width:30%">Email</th>
+                <th style="width:15%">Role</th>
+                <th style="width:25%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (account of accounts; track account.id) {
             <tr>
                 @if (account.firstName !== '' && account.lastName !== '') {
                 <td class="align-middle">{{account.firstName}} {{account.lastName}}</td>
@@ -26,23 +27,25 @@
                 <td class="align-middle">{{account.role}}</td>
                 <td style="white-space: nowrap" class="d-flex justify-content-evenly">
                     <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary">Edit</a>
-                    <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger" [disabled]="account.isDeleting">
+                    <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger"
+                        [disabled]="account.isDeleting">
                         @if (account.isDeleting) {
-                            <span class="spinner-border spinner-border-sm"></span>
+                        <span class="spinner-border spinner-border-sm"></span>
                         }
                         @if (!account.isDeleting) {
-                            <span>Delete</span>
+                        <span>Delete</span>
                         }
                     </button>
                 </td>
             </tr>
-        }
-        @if (!accounts) {
+            }
+            @if (!accounts) {
             <tr>
                 <td colspan="4" class="text-center">
                     <span class="spinner-border spinner-border-lg align-center"></span>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+</div>
