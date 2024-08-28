@@ -1,47 +1,51 @@
-<h1>Database</h1>
-<p>Database tools from secure (admin only) api end point:</p>
-<div class="list-group">
-    <!-- TODO: Falta configurar la inicialización en el backend -->
-    <!-- <a (click)="initData()" class="list-group-item list-group-item-action" [class.disabled]="!isDatabaseEmpty"
-        style="cursor: pointer;">
-        <div class="ms-2 me-auto">
-            <div class="fw-bold">Initialize Database Data</div>
-            @if (deleting) {
-            <span class="spinner-border spinner-border-sm me-1"></span>
-            }
-            Initialize database with provider data and system data, database must be empty
-        </div>
-    </a> -->
-    <a (click)="updateSystems()" class="list-group-item list-group-item-action" [class.disabled]="fetching"
-        style="cursor: pointer;">
-        <div class="ms-2 me-auto">
-            <div class="fw-bold">Update all systems</div>
-            @if (fetching) {
-            <span class="spinner-border spinner-border-sm me-1"></span>
-            }
-            Refresh all system data by fetching from each provider
-        </div>
-    </a>
-    <!-- TODO: Sin inicialización, no tiene sentido que permita eliminar todo -->
-    <!-- <a (click)="deleteData()" class="list-group-item list-group-item-action" [class.disabled]="updatingDB || isDatabaseEmpty"
-        style="cursor: pointer;">
-        <div class="ms-2 me-auto">
-            <div class="fw-bold">Delete All Database Data</div>
-            @if (deleting) {
-            <span class="spinner-border spinner-border-sm me-1"></span>
-            }
-            Delete all data from database. This includes all systems, providers, but not users
-        </div>
-    </a> -->
-    <a class="list-group-item list-group-item-action disabled" style="cursor: pointer;">
-        <div class="ms-2 me-auto">
-            <div class="fw-bold">
-                <i class="fa-solid fa-triangle-exclamation me-1"></i>WIP<i class="fa-solid fa-triangle-exclamation ms-1"></i>
-                <i class="fa-solid fa-minus align-middle mx-1"></i>Manage Database
+<div class="container" style="max-width: 800px; margin: auto;">
+    <h1>Database</h1>
+    <p>Database tools from secure (admin only) api end point:</p>
+    <div class="list-group">
+        <!-- TODO: Falta configurar la inicialización en el backend -->
+        <!-- <a (click)="initData()" class="list-group-item list-group-item-action" [class.disabled]="!isDatabaseEmpty"
+            style="cursor: pointer;">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">Initialize Database Data</div>
+                @if (deleting) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                }
+                Initialize database with provider data and system data, database must be empty
             </div>
-            CRUD operations for database
-        </div>
-    </a>
+        </a> -->
+        <a (click)="updateSystems()" class="list-group-item list-group-item-action d-flex align-items-center"
+            [class.disabled]="true" role="button">
+            <i class="fa-solid fa-arrows-rotate me-2"></i>
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">Update all systems</div>
+                @if (fetching) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                }
+                Refresh all system data by fetching from each provider
+            </div>
+        </a>
+        <!-- TODO: Sin inicialización, no tiene sentido que permita eliminar todo -->
+        <!-- <a (click)="deleteData()" class="list-group-item list-group-item-action" [class.disabled]="updatingDB || isDatabaseEmpty"
+            style="cursor: pointer;">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">Delete All Database Data</div>
+                @if (deleting) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                }
+                Delete all data from database. This includes all systems, providers, but not users
+            </div>
+        </a> -->
+        <a routerLink="providers" class="list-group-item list-group-item-action d-flex align-items-center"
+            role="button">
+            <i class="fa-solid fa-gear me-2"></i>
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">
+                    CRUD operations for providers
+                </div>
+                Manage provider data. Add, edit, delete providers
+            </div>
+        </a>
+    </div>
 </div>
 
 <style>
