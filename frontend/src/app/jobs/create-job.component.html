@@ -109,7 +109,8 @@
                     </ul>
                 </div>
             </div>
-            <textarea class="form-control" id="circuit" formControlName="circuit" rows=4></textarea>
+            <textarea class="form-control" id="circuit"
+                (keydown.tab)="handleTab($event)" formControlName="circuit" rows=4></textarea>
         </div>
     </form>
 </div>

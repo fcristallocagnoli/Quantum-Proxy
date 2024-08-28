@@ -72,7 +72,6 @@ export class CreateJobComponent {
 
     onSubmit() {
         if (this.form.invalid) {
-            console.log(this.form);
             this.alertService.error("Form is invalid");
             return;
         }
@@ -81,7 +80,7 @@ export class CreateJobComponent {
     }
 
     fillWithExample(example: string) {
-        let cirquit = [];
+        let circuit = [];
         switch (example) {
             case 'bell':
                 this.f["name"].setValue("Bell State Example");
@@ -90,11 +89,11 @@ export class CreateJobComponent {
                 this.f["target"].setValue("simulator");
                 this.f["shots"].setValue(1000);
                 this.f["qubits"].setValue(2);
-                cirquit = [
+                circuit = [
                     { "gate": "h", "target": 0 },
                     { "gate": "cnot", "target": 1, "control": 0 }
                 ]
-                this.f["circuit"].setValue(JSON.stringify(cirquit, null, "  "));
+                this.f["circuit"].setValue(JSON.stringify(circuit, null, "\t"));
                 break;
             case 'ghz':
                 this.f["name"].setValue("GHZ State Example");
@@ -103,13 +102,13 @@ export class CreateJobComponent {
                 this.f["target"].setValue("simulator");
                 this.f["shots"].setValue(1000);
                 this.f["qubits"].setValue(4);
-                cirquit = [
+                circuit = [
                     { "gate": "h", "target": 0 },
                     { "gate": "cnot", "control": 0, "target": 1 },
                     { "gate": "cnot", "control": 0, "target": 2 },
                     { "gate": "cnot", "control": 0, "target": 3 }
                 ]
-                this.f["circuit"].setValue(JSON.stringify(cirquit, null, "  "));
+                this.f["circuit"].setValue(JSON.stringify(circuit, null, "\t"));
                 break;
             case 'toffoli':
                 this.f["name"].setValue("Toffoli gate Example");
@@ -118,10 +117,10 @@ export class CreateJobComponent {
                 this.f["target"].setValue("simulator");
                 this.f["shots"].setValue(1000);
                 this.f["qubits"].setValue(3);
-                cirquit = [
+                circuit = [
                     { "gate": "cnot", "target": 0, "controls": [1, 2] }
                 ]
-                this.f["circuit"].setValue(JSON.stringify(cirquit, null, "  "));
+                this.f["circuit"].setValue(JSON.stringify(circuit, null, "\t"));
                 break;
             case 'qft3':
                 this.f["name"].setValue("Quantum Fourier Transform Example");
@@ -130,7 +129,7 @@ export class CreateJobComponent {
                 this.f["target"].setValue("simulator");
                 this.f["shots"].setValue(1000);
                 this.f["qubits"].setValue(3);
-                cirquit = [
+                circuit = [
                     { "gate": "h", "target": 2 },
                     { "gate": "s", "target": 1, "control": 2 },
                     { "gate": "t", "target": 0, "control": 2 },
@@ -139,7 +138,7 @@ export class CreateJobComponent {
                     { "gate": "h", "target": 0 },
                     { "gate": "swap", "targets": [0, 2] }
                 ]
-                this.f["circuit"].setValue(JSON.stringify(cirquit, null, "  "));
+                this.f["circuit"].setValue(JSON.stringify(circuit, null, "\t"));
                 break;
             case 'clear':
                 this.f["name"].setValue("");
@@ -151,6 +150,14 @@ export class CreateJobComponent {
                 this.f["circuit"].setValue('');
                 break;
         }
+    }
+
+    handleTab(event: any) {
+        event.preventDefault();
+        var start = event.target.selectionStart;
+        var end = event.target.selectionEnd;
+        event.target.value = event.target.value.substring(0, start) + '\t' + event.target.value.substring(end);
+        event.target.selectionStart = event.target.selectionEnd = start + 1;
     }
 
 }
