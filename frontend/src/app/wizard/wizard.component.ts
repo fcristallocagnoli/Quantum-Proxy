@@ -15,9 +15,6 @@ export class WizardComponent implements OnInit {
   sort: string = 'Qubits';
   statusFilter: string = 'All';
 
-  currentPage = 1;
-  pageSize = 3;
-
   form: FormGroup;
 
   responsiveOptions: any[] = [
@@ -63,7 +60,6 @@ export class WizardComponent implements OnInit {
       .pipe(first())
       .subscribe(systems => {
         this.systems = systems;
-        this.updateSystems(this.currentPage);
 
         this.providerService.getAll()
           .pipe(first())
@@ -88,12 +84,6 @@ export class WizardComponent implements OnInit {
             this.filterSystems();
           });
       });
-  }
-
-  updateSystems(currentPage: number) {
-    this.subSystems = this.systems.slice(
-      (currentPage - 1) * this.pageSize, currentPage * this.pageSize
-    );
   }
 
   setSort(sort: string) {
