@@ -3,26 +3,26 @@
     <h5 class="card-subtitle mb-2 text-body-secondary text-center">Log into your account</h5>
 </div>
 <div class="card-body bg-body-tertiary">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="text" formControlName="email" class="form-control"
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
+        <div class="form-floating my-3">
+            <input type="text" formControlName="email" class="form-control" placeholder="name@example.com"
                 [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+            <label class="form-label">Email</label>
             <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                 <div *ngIf="f['email'].errors['required']">Email is required</div>
                 <div *ngIf="f['email'].errors['email']">Email is invalid</div>
             </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" formControlName="password" class="form-control"
+        <div class="form-floating my-3">
+            <input type="password" formControlName="password" class="form-control" placeholder="Password"
                 [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+            <label class="form-label">Password</label>
             <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
                 <div *ngIf="f['password'].errors['required']">Password is required</div>
             </div>
         </div>
-        <div class="row">
-            <div class="mb-3 col">
+        <div class="row mb-3">
+            <div class="col">
                 <button [disabled]="submitting" class="btn btn-primary">
                     <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                     Login
@@ -34,7 +34,7 @@
                     Register
                 </a>
             </div>
-            <div class="mb-3 col text-end">
+            <div class="col text-end">
                 <a routerLink="../forgot-password" class="btn btn-link
                 link-offset-2 link-offset-3-hover
                 link-underline link-underline-opacity-0
