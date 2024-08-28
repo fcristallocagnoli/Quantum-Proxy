@@ -1,5 +1,7 @@
 import requests
 
+from utils.email_utils import send_error_mail
+
 
 def get_jobs(platform: str, keys: dict):
     match platform:
@@ -91,12 +93,19 @@ def create_job_on_ionq(job: dict, api_keys: dict):
             "model": job.get("noiseModel", "ideal"),
         }
     }
-    job_status = requests.post(
+    job_response = requests.post(
         f"{base_url}/jobs",
         json=ionq_job,
         headers={"Authorization": f"apiKey {keys["TOKEN"]}"},
-    ).status_code
-    return job_status
+    )
+    if job_response.status_code // 100 == 4:
+        send_error_mail(
+            Exception(
+                f"Error {job_response.status_code} creating job on IonQ: {job_response.json()}"
+            ),
+            "On create_job_on_ionq function",
+        )
+    return job_response.status_code
 
 
 def delete_job_from_ionq(uuid: str, keys: dict):
