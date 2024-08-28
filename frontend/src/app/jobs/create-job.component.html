@@ -33,9 +33,13 @@
                     <i class="fa-regular fa-circle-question" placement="right" [ngbTooltip]="tipContent2"></i>
                 </label>
                 <select formControlName="noiseModel" class="form-select">
+                    <option selected value="ideal">Ideal (default)</option>
                     <option value="harmony">Harmony</option>
+                    <option value="harmony-1">Harmony-1</option>
+                    <option value="harmony-2">Harmony-2</option>
                     <option value="aria-1">Aria-1</option>
-                    <option selected value="">Ideal (default)</option>
+                    <option value="aria-2">Aria-2</option>
+                    <option value="forte-1">Forte-1</option>
                 </select>
             </div>
         </div>

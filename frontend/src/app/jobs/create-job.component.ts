@@ -15,8 +15,6 @@ export class CreateJobComponent {
     providers?: Provider[];
     systems?: System[];
 
-    circuitInput?: string = '{"a":"hello","b":123}';
-
     constructor(
         public modal: NgbActiveModal,
         private providerService: ProviderService,
@@ -33,7 +31,7 @@ export class CreateJobComponent {
             shots: ['', Validators.required],
             qubits: ['', Validators.required],
             circuit: ['', Validators.required],
-            noiseModel: [''],
+            noiseModel: ['ideal'],
         });
         this.providerService.getAll().subscribe(providers => {
             this.providers = providers;
