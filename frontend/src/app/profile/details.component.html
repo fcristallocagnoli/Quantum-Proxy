@@ -1,10 +1,11 @@
 ﻿@if (account) {
-<div class="card shadow-sm">
-    <div class="card-header d-flex bg-primary justify-content-between">
-        <h3 class="text-light">My Profile</h3>
-        <a routerLink="update" class="btn bg-body-tertiary">Update Profile</a>
-    </div>
-    <div class="card-body px-4">
+<div class="card shadow-sm bg-body-tertiary">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>My Profile</h1>
+            <a routerLink="update" class="btn btn-primary">Update Profile</a>
+        </div>
+        <hr>
         <div class="row mb-3">
             <div class="col-6">
                 <label for="first_name" class="col-form-label"><strong>First Name:</strong></label>
