@@ -5,20 +5,18 @@
         <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="mb-3 col-6">
-                    <label class="form-label">First Name</label>
+                    <label class="form-label">
+                        First Name <span class="fw-light" [hidden]="id">(Optional)</span>
+                    </label>
                     <input type="text" formControlName="firstName" class="form-control"
                         [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
-                    <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-                        <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
-                    </div>
                 </div>
                 <div class="mb-3 col-6">
-                    <label class="form-label">Last Name</label>
+                    <label class="form-label">
+                        Last Name <span class="fw-light" [hidden]="id">(Optional)</span>
+                    </label>
                     <input type="text" formControlName="lastName" class="form-control"
                         [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
-                    <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-                        <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
-                    </div>
                 </div>
             </div>
             <div class="row">

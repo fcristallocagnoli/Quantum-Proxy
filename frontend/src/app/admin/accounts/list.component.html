@@ -13,7 +13,15 @@
     <tbody>
         @for (account of accounts; track account.id) {
             <tr>
+                @if (account.firstName !== '' && account.lastName !== '') {
                 <td class="align-middle">{{account.firstName}} {{account.lastName}}</td>
+                } @else if (account.firstName !== '') {
+                <td class="align-middle">{{account.firstName}}</td>
+                } @else if (account.lastName !== '') {
+                <td class="align-middle">{{account.lastName}}</td>
+                } @else {
+                <td class="align-middle">N/A</td>
+                }
                 <td class="align-middle">{{account.email}}</td>
                 <td class="align-middle">{{account.role}}</td>
                 <td style="white-space: nowrap" class="d-flex justify-content-evenly">
