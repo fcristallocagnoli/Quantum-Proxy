@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (job of jobs; track job.id) {
+                @for (job of jobs | slice: (page-1) * pageSize : page * pageSize; track job.id) {
                 <tr>
                     <td class="ps-3" [routerLink]="job.id" role="button">
                         <span placement="bottom" [ngbTooltip]="timeSince(job.response * 1000)">
@@ -131,8 +131,31 @@
                     </td>
                 </tr>
                 }
+                @if (jobs.length > 0) {
+                @for (space of remainingSpace(); track $index) {
+                <tr>
+                    <td colspan="8" style="height: 54.4px;"></td>
+                </tr>
+                }
+                }
             </tbody>
         </table>
+    </div>
+    <div class="mt-auto d-flex justify-content-between py-2">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+            [hidden]="collectionSize === 0">
+        </ngb-pagination>
+        <span [hidden]="collectionSize === 0">
+            Showing {{ (page - 1) * pageSize + 1 }}
+            to {{ min(page * pageSize, collectionSize) }}
+            of {{ collectionSize }} jobs
+        </span>
+        <select class="form-select bg-body-tertiary w-auto" [(ngModel)]="pageSize"
+            [hidden]="collectionSize === 0" role="button">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+        </select>
     </div>
     }@else {
     <div class="col-12 text-center">

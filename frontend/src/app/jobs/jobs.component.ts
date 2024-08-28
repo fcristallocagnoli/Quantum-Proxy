@@ -12,6 +12,10 @@ export class JobsComponent implements OnInit {
     account?: any;
     jobs?: any[];
 
+    page: number = 1;
+    pageSize: number = 4;
+    collectionSize: number = 0;
+
     isDeleting: boolean = false;
     deletingId?: string;
 
@@ -27,6 +31,7 @@ export class JobsComponent implements OnInit {
         this.jobService.getAllJobs()
             .subscribe(jobs => {
                 this.jobs = jobs;
+                this.collectionSize = this.jobs.length;
             });
     }
 
@@ -100,6 +105,16 @@ export class JobsComponent implements OnInit {
                 this.jobs = jobs;
                 this.isRefreshingJobs = false;
             });
+    }
+
+    min(a: number, b: number): number {
+        return Math.min(a, b);
+    }
+
+    remainingSpace() {
+        const spaceOccupied = this.min(this.pageSize, this.collectionSize - (this.page - 1) * this.pageSize);
+        const remainingSpace = this.pageSize - spaceOccupied;
+        return Array(remainingSpace).fill(null);
     }
 
 }

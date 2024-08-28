@@ -70,6 +70,15 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
         --bs-list-group-action-hover-bg: var(--bs-secondary-bg);
     }
 
+    .pagination {
+        --bs-pagination-active-bg: var(--primary);
+        --bs-pagination-active-border-color: var(--primary);
+    }
+
+    .page-link {
+        --bs-pagination-color: #ccc;
+    }
+
     --bs-table-bg: var(--bs-tertiary-bg);
 }
 
@@ -111,6 +120,15 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 
     .modal-footer {
         --bs-modal-footer-border-color: var(--bs-dark-border-subtle);
+    }
+
+    .pagination {
+        --bs-pagination-active-bg: var(--primary);
+        --bs-pagination-active-border-color: var(--primary);
+    }
+
+    .page-link {
+        --bs-pagination-color: #2C2C2C;
     }
 }
 
