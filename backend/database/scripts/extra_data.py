@@ -25,7 +25,7 @@ extra_data = {
             "links": [
                 {
                     "alt": "IonQ Website",
-                    "link": ""
+                    "link": "https://ionq.com/"
                 },
                 {
                     "alt": "IonQ Quantum Cloud Resource Estimator",
