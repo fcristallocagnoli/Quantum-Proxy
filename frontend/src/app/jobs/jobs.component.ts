@@ -74,12 +74,18 @@ export class JobsComponent implements OnInit {
     createJob() {
         let ref = this.modalService.open(CreateJobComponent, { centered: true });
         ref.result.then((resultado) => {
-            this.jobService.createJob(resultado).subscribe(() => {
-                setTimeout(() => {
-                    this.ngOnInit();
-                }, 1000);
+            this.jobService.createJob(resultado).subscribe({
+                next: () => {
+                    setTimeout(() => {
+                        this.ngOnInit();
+                    }, 1000);
+                    this.alertService.success(`Job '${resultado["name"]}' created`);
+                },
+                error: error => {
+                    this.alertService.error(error.detail || error.statusText);
+                }
             });
-            this.alertService.info(`Job '${resultado["name"]}' created`);
+            this.alertService.info(`Job '${resultado["name"]}' submitted`);
         }, () => { console.log("Edición cancelada") });
     }
 
@@ -89,7 +95,8 @@ export class JobsComponent implements OnInit {
         this.jobService.deleteJob(id)
             .pipe(first())
             .subscribe(() => {
-                this.jobs = this.jobs!.filter(x => x.id !== id)
+                this.jobs = this.jobs!.filter(x => x.id !== id);
+                this.collectionSize = this.jobs.length;
             });
     }
 

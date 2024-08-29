@@ -124,7 +124,6 @@ async def get_single_job_ouput(
 @router.post(
     "/create",
     description="Add new job",
-    response_model=dict,
     status_code=status.HTTP_201_CREATED,
     response_model_by_alias=False,
     responses={
@@ -133,10 +132,7 @@ async def get_single_job_ouput(
         status.HTTP_409_CONFLICT: {"model": HTTPCodeModel},
     },
 )
-async def post_job(
-    job: dict = Body(...),
-    api_keys: dict = Body(...),
-) -> dict:
+async def post_job(job: dict = Body(...), api_keys: dict = Body(...)):
     """
     Create a new job.
 
@@ -145,14 +141,14 @@ async def post_job(
     - **raises**: HTTPException 409: If the job already exists.
     """
 
-    status_code = create_job(job, api_keys)
+    response = create_job(job, api_keys)
 
-    if status_code == 200:
-        return Response(status_code=status.HTTP_201_CREATED)
+    if response.status_code // 100 == 2:
+        return response
 
     raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail=f"Job failed to create with status code {status_code}",
+        status_code=response.status_code,
+        detail=response.detail,
     )
 
 

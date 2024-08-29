@@ -1,3 +1,5 @@
+from fastapi import HTTPException, Response
+from fastapi import status
 import requests
 
 from utils.email_utils import send_error_mail
@@ -35,7 +37,10 @@ def create_job(job: dict, api_keys: dict):
         case "native.ionq":
             return create_job_on_ionq(job, api_keys)
         case _:
-            return None
+            return HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Provider not supported"
+            )
 
 
 
@@ -77,7 +82,13 @@ def get_job_output_from_ionq(uuid: str, keys: dict):
 
 
 def create_job_on_ionq(job: dict, api_keys: dict):
-    keys = api_keys["ionq"]
+    try:
+        keys = api_keys["ionq"]
+    except KeyError:
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User does not have IonQ API keys",
+        )
     base_url = "https://api.ionq.co/v0.3"
     ionq_job = {
         "name": job.get("name"),
@@ -105,7 +116,8 @@ def create_job_on_ionq(job: dict, api_keys: dict):
             ),
             "On create_job_on_ionq function",
         )
-    return job_response.status_code
+    # return job_response.status_code
+    return Response(status_code=job_response.status_code, content=job_response.text)
 
 
 def delete_job_from_ionq(uuid: str, keys: dict):
