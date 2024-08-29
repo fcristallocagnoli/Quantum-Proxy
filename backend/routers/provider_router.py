@@ -43,7 +43,7 @@ async def get_providers() -> list[BaseProviderModel]:
 
 
 @router.post(
-    "",
+    "/custom-query",
     description="List providers (filtered and/or projected)",
     response_model=list[BaseProviderModel],
     response_model_by_alias=False,

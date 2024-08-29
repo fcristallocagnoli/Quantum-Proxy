@@ -77,7 +77,7 @@ class BaseProviderModel(BaseModel):
         discriminator="fetch_method",
     )
 
-    backends_ids: Optional[list[PyObjectId]] = Field(default=None)
+    backends_ids: Optional[list[PyObjectId]] = Field(default=[])
     # --------------------------------------------------------------
     last_checked: Optional[Date] = Field(default=None)
     model_config = ConfigDict(
