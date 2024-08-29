@@ -73,8 +73,13 @@ def get_accounts(request: Request) -> list[dict]:
             detail="Unauthorized",
         )
 
+    # Obtenemos todos los usuarios y mapeamos al modelo UserInDBModel
     users = list(map(lambda udb: UserInDBModel(**udb), db_find_users()))
 
+    # Filtramos los usuarios deshabilitados
+    users = list(filter(lambda u: u.disabled == False, users))
+
+    # Obtenemos los detalles básicos de cada usuario
     accounts = list(map(lambda u: basic_details(u), users))
 
     return accounts
