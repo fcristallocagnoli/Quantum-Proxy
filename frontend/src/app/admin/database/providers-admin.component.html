@@ -1,0 +1,101 @@
+<div class="container">
+    <div class="d-flex mb-4 gap-2">
+        <a routerLink="add" class="btn btn-success me-auto">Create Provider</a>
+        <div class="">
+            <input class="form-control me-2" [(ngModel)]="searchValue" type="search" placeholder="Search by name"
+                (keyup.enter)="filterProviders()">
+        </div>
+        <button class="btn btn-secondary" (click)="filterProviders()">Search</button>
+    </div>
+    <div class="row">
+        @for (provider of providers; track provider.id) {
+        <div class="col-lg-4 mb-3">
+            <div class="card mb-3 shadow-sm bg-body-tertiary rounded" style="height: 500px;">
+                <div class="card-header">
+                    Provider with ID {{ provider.id }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ provider.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                        Has {{ provider.backends_ids.length }} systems
+                    </h6>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted align-self-center">
+                            Last updated:
+                            @if (provider.last_checked) {
+                            {{ provider.last_checked | date: 'dd/MM/yy, HH:mm' }}
+                            }@else {
+                            Not initialized yet
+                            }
+                        </small>
+                    </div>
+                    <hr>
+                    <div class="card" style="height: 250px;">
+                        <div class="card-body overflow-auto">
+                            <pre>{{ provider | json }}</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-3">
+                    <a class="btn btn-primary" routerLink="edit/{{provider.pid}}">
+                        Edit Provider
+                    </a>
+                    <button class="btn btn-danger" (click)="deleteProvider(provider.pid)"
+                        [disabled]="provider.isDeleting">
+                        @if (provider.isDeleting) {
+                        <span class="spinner-border spinner-border-sm"></span>
+                        }
+                        @if (!provider.isDeleting) {
+                        <span>Delete Provider</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+        @if (providers && providers.length == 0) {
+        <div class="card mt-3 text-center">
+            <div class="card-body">
+                <h5 class="card-title">No providers found</h5>
+                <p class="card-text">Try searching for a different provider</p>
+            </div>
+        </div>
+        }
+        @if (!providers) {
+        @for (p of [1,2,3]; track p) {
+        <div class="col-lg-4 mb-3">
+            <div class="card mb-3 shadow-sm bg-body-tertiary rounded" aria-hidden="true" style="height: 486.2px;">
+                <div class="card-header placeholder-glow">
+                    <span class="placeholder col-10"></span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary placeholder-glow">
+                        <span class="placeholder col-4"></span>
+                    </h6>
+                    <div class="d-flex justify-content-between">
+                        <small class="placeholder col-6">
+                        </small>
+                    </div>
+                    <hr>
+                    <div class="card" style="height: 250px;">
+                        <div class="card-body overflow-auto">
+                            <pre>{{ {"id":"...", "name": "...", "pid": "...", "description": "..."} | json }}</pre>
+                            <pre class="placeholder col-12"></pre>
+                            <pre class="placeholder col-12"></pre>
+                            <pre class="placeholder col-12"></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-3">
+                    <a class="btn btn-primary disabled placeholder col-4" aria-disabled="true"></a>
+                    <a class="btn btn-danger disabled placeholder col-4" aria-disabled="true"></a>
+                </div>
+            </div>
+        </div>
+        }
+        }
+    </div>
+</div>

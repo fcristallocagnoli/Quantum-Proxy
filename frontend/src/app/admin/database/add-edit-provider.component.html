@@ -1,0 +1,29 @@
+﻿<div class="container" style="max-width: 800px; margin: auto;">
+    <div class="card bg-body-tertiary">
+        <div class="card-body">
+            <h1>{{title}}</h1>
+            <hr>
+            <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-12">
+                        <textarea class="form-control" id="provider" (keydown.tab)="handleTab($event)"
+                            formControlName="provider" rows=12></textarea>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button [disabled]="submitting" class="btn btn-primary">
+                        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                        Save
+                    </button>
+                    <a routerLink="/admin/database/providers" class="btn btn-link link-offset-2 link-offset-3-hover
+        link-underline link-underline-opacity-0 link-underline-opacity-75-hover">Cancel</a>
+                </div>
+            </form>
+            <div *ngIf="loading" class="text-center m-5">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </div>
+        </div>
+    </div>
+</div>
