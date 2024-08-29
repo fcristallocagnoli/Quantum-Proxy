@@ -14,7 +14,7 @@
             </div>
         </a> -->
         <a (click)="updateSystems()" class="list-group-item list-group-item-action d-flex align-items-center"
-            [class.disabled]="true" role="button">
+            [class.disabled]="fetching" role="button">
             <i class="fa-solid fa-arrows-rotate me-2"></i>
             <div class="ms-2 me-auto">
                 <div class="fw-bold">Update all systems</div>
