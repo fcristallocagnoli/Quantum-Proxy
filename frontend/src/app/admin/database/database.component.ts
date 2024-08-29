@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService, SystemService } from '@app/_services';
 import { HelperService } from '@app/_services/helper.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationModal } from './confirmation.component';
+import { ConfirmationModal } from '../../_components';
 
 @Component({ templateUrl: 'database.component.html' })
 export class DatabaseComponent implements OnInit {
