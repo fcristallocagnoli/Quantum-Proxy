@@ -1,0 +1,63 @@
+services:
+  database:
+    image: mongo:6.0.13-jammy
+    restart: always
+    environment:
+      # User can change them
+      DB_DATABASE: quantum-proxy-db
+      DB_ADMIN_USER: ${DB_ADMIN_USER:-admin}
+      DB_ADMIN_PASSWORD: ${DB_ADMIN_PASSWORD:-admin}
+      DB_DUMMY_ACCOUNT: tfg.quantum.proxy@gmail.com
+    # Puertos abiertos para testing
+    ports:
+      - "27017:27017"
+    expose:
+      - 27017
+    volumes:
+      - db-data:/data/db
+      - ./backend/database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  backend:
+    build: ./backend
+    environment:
+      FRONTEND_URL: "http://frontend"
+      # DB_URI Format: mongodb://USER:PASSWORD@server
+      # Where USER and PASSWORD must match DB_ADMIN_USER and DB_ADMIN_PASSWORD
+      # from database service
+      DB_URI: "mongodb://admin:admin@database"
+      DB_PORT: 27017
+
+      DUMMY_ACCOUNT: tfg.quantum.proxy@gmail.com
+
+      EMAIL_SENDER: tfg.quantum.proxy@gmail.com
+      EMAIL_APP_PASSWORD: "tfbr yanj aiwj mvnv"
+      # Cuenta para recibir correos de error
+      EMAIL_ACCOUNT: ${EMAIL_ACCOUNT:-fcristallocagnoli@uma.es}
+    # AWS env vars to get providers at startup
+    env_file:
+      - path: ./aws-secrets.env
+        required: false
+    ports:
+      - "8000:80"
+    expose:
+      - 8000
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+      # develop target
+      target: develop
+      # docker build mode
+      args:
+        - BUILD_MODE=docker
+    expose:
+      - 80
+    ports:
+      - "80:4200"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
