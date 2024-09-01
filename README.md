@@ -10,11 +10,11 @@
 Este repositorio contiene la aplicación desarrollada como TFG, una plataforma para elegir y gestionar proveedores de computación cuántica heterogéneos.
 
 > [!NOTE] 
-> Este proyecto se encuentra desplegado en la nube, accesible por todo el mundo a través del siguiente [enlace web](https://quantum-proxy.vercel.app). Aun así, si se desea ejecutar la aplicación de forma local, se puede hacer siguiendo las instrucciones del [manual de instalación](manual-instalación.pdf).
+> Este proyecto se encuentra desplegado en la nube, accesible a través del siguiente [enlace web](https://quantum-proxy.vercel.app). Aun así, si se desea ejecutar la aplicación de forma local, se puede hacer siguiendo las instrucciones del [manual de instalación](manual-instalación.pdf).
 
 ## Información del repositorio
 
-Junto con el código fuente de la aplicación, este repositorio contiene toda la documentación referente al proyecto, incluyendo la [memoria](memoria.pdf) del TFG y el [manual de usuario](manual-usuario.pdf).
+Junto con el código fuente de la aplicación, este repositorio contiene toda la documentación referente al proyecto, incluyendo la [memoria](memoria.pdf) del TFG y el [manual de uso](manual-uso.pdf).
 
 ### Estructura del repositorio
 
@@ -34,8 +34,8 @@ Junto con el código fuente de la aplicación, este repositorio contiene toda la
 **`manual-instalación.pdf`**
 - Manual de instalación para un despliegue local.
 
-**`manual-usuario.pdf`**
-- Manual de usuario de la plataforma.
+**`manual-uso.pdf`**
+- Manual de uso de la plataforma.
 
 **`memoria.pdf`**
 - Memoria del proyecto TFG.
