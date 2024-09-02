@@ -10,7 +10,7 @@
 Este repositorio contiene la aplicación desarrollada como TFG, una plataforma para elegir y gestionar proveedores de computación cuántica heterogéneos.
 
 > [!NOTE] 
-> Este proyecto se encuentra desplegado en la nube, accesible a través del siguiente [enlace web](https://quantum-proxy.vercel.app). Aun así, si se desea ejecutar la aplicación de forma local, se puede hacer siguiendo las instrucciones del [manual de instalación](manual-instalación.pdf).
+> Este proyecto se encuentra desplegado en la nube, accesible a través del siguiente [enlace web](https://quantum-proxy.vercel.app). Aun así, si se desea ejecutar la aplicación de forma local, se puede hacer siguiendo las instrucciones del [manual de instalación](manual-instalacion.pdf).
 
 ## Información del repositorio
 
@@ -25,7 +25,7 @@ Junto con el código fuente de la aplicación, este repositorio contiene toda la
 
 **`frontend/`**  
 - Código fuente de la aplicación web desarrollada en Angular.
-- Componentes, servicios, y módulos que conforman la aplicación.
+- Componentes y servicios que conforman la interfaz de usuario.
 - Estilos y configuración de la aplicación.
 
 **`docker-compose.yml`**  
