@@ -67,7 +67,6 @@ class BaseProviderModel(BaseModel):
     description: Optional[Any] = Field(default=None)
     website: Optional[str] = Field(default=None)
     links: Optional[dict] = Field(default=None)
-    wiki_name: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------
     third_party: Optional[ThirdPartyKey] = Field(default=None)

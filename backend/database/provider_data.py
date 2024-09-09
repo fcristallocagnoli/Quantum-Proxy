@@ -13,7 +13,6 @@ providers_api_data = [
         "pid": "native.ionq",
         "description": "",
         "website": "https://ionq.com/",
-        "wiki_name": "IonQ",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -38,7 +37,6 @@ providers_api_data = [
             """
         ),
         "website": "https://www.ibm.com/quantum",
-        "wiki_name": "IBM Quantum Platform",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -61,7 +59,6 @@ providers_ws_data = [
         "pid": "native.rigetti",
         "description": "",
         "website": "https://www.rigetti.com/",
-        "wiki_name": "Rigetti Computing",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "WEB-SCRAPING",
@@ -88,7 +85,6 @@ providers_sdk_data = [
             """
         ),
         "website": "https://aws.amazon.com/braket/",
-        "wiki_name": "",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "SDK",
@@ -145,7 +141,6 @@ def get_braket_providers():
             "pid": f"{norm_str(ThirdPartyEnum.AWS)}.{norm_str(device.provider_name)}",
             "description": "",
             "website": None,
-            "wiki_name": "",
             "from_third_party": True,
             "third_party": {
                 "third_party_id": None,
