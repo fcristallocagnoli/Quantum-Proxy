@@ -115,7 +115,7 @@ def rigetti_normalizer(backend: dict):
 
 def braket_normalizer(backend: dict):
     """Normalize Braket backend data"""
-    return {
+    norm_back = {
         "class_type": ClassType.BRAKET,
         "provider": backend["provider"],
         "backend_name": backend["device_name"],
@@ -128,11 +128,25 @@ def braket_normalizer(backend: dict):
         },
         "gates_supported": backend["gates_supported"],
         "shots_range": backend["shots_range"],
-        "device_cost": backend["device_cost"],
+        "device_cost": (device_cost := backend["device_cost"]),
+        "price": {
+            "full_price": f"${str(device_cost['price'])}/{device_cost['unit']}",
+        },
         "extra": [
-            "status", "qubits", "queue", "gates_supported", "shots_range", "device_cost"
+            "status", "qubits", "queue", "gates_supported", "shots_range", "device_cost", "price"
         ]
     }
+    match device_cost["unit"]:
+        case "shot":
+            norm_back["price"].update({
+                "per_task_price": 0.3,
+                "per_shot_price": device_cost["price"]
+            })
+        case "minute":
+            norm_back["price"].update({
+                "per_minute_price": device_cost["price"]
+            })
+    return norm_back
 
 
 def norm_error(name: str):
