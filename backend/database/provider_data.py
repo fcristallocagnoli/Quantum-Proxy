@@ -6,6 +6,7 @@ from database.models.providers_models import ThirdPartyEnum
 from dotenv import dotenv_values
 from utils.utils import norm_str
 
+from fastapi.logger import logger
 
 providers_api_data = [
     {
@@ -125,7 +126,8 @@ if env_vars_set := all(
     os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
     os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
     os.environ["AWS_REGION"] = AWS_REGION
-
+else:
+    logger.warning("AWS credentials not set. Skipping Braket providers.")
 
 # Requires AWS env vars present in OS environment
 def get_braket_providers():
