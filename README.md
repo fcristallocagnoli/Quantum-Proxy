@@ -1,7 +1,9 @@
 <div align="center">
-    <br/>
-    <img src=".github/readme/etsii-claro.png#gh-light-mode-only" height=100 alt="ETSII logo (claro)"/>
-    <img src=".github/readme/etsii-oscuro.png#gh-dark-mode-only" height=100 alt="ETSII logo (oscuro)"/>
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset=".github/readme/etsii-oscuro.png">
+        <source media="(prefers-color-scheme: light)" srcset=".github/readme/etsii-claro.png">
+        <img alt="ETSII logo" src=".github/readme/etsii-claro.png" height=100>
+    </picture>
     <br/>
 </div>
 
@@ -16,6 +18,10 @@ Este repositorio contiene la aplicación desarrollada como TFG, una plataforma p
 > Debido al uso del plan gratuito de Render[^1], la aplicación puede entrar en modo de suspensión cuando no está en uso, lo que provoca un tiempo de inicio más largo al acceder por primera vez.
 
 [^1]: Herramienta para el despliegue de aplicaciones: https://render.com/
+
+| ![Página Principal de la Plataforma](.github/readme/mainpage.png) |
+|:--:|
+| *Página Principal de la Plataforma* |
 
 ## Información del repositorio
 
@@ -36,11 +42,12 @@ Junto con el código fuente de la aplicación, este repositorio contiene toda la
 **`docker-compose.yml`**  
 - Archivo de configuración de Docker Compose para desplegar la aplicación en local.
 
-**`manual-instalación.pdf`**
-- Manual de instalación para un despliegue local.
+## Diagrama de Infraestructura
 
-**`manual-uso.pdf`**
-- Manual de uso de la plataforma.
+<div align="center">
+    <img src=".github/readme/infraestructura.png" width=85%
+    alt="Diagrama de Infraestructura del Sistema">
+</div>
 
-**`memoria.pdf`**
-- Memoria del proyecto TFG.
+> [!NOTE]
+> En el mismo esquema se incluyen dos enfoques distintos de despliegue: en un entorno local con Docker Compose, y en la nube con plataformas de despliegue (Vercel, Render y MongoDB Atlas).
