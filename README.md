@@ -12,6 +12,11 @@ Este repositorio contiene la aplicación desarrollada como TFG, una plataforma p
 > [!NOTE] 
 > Este proyecto se encuentra desplegado en la nube, accesible a través del siguiente [enlace web](https://quantum-proxy.vercel.app). Aun así, si se desea ejecutar la aplicación de forma local, se puede hacer siguiendo las instrucciones del [manual de instalación](manual-instalacion.pdf).
 
+> [!CAUTION]
+> Debido al uso del plan gratuito de Render[^1], la aplicación puede entrar en modo de suspensión cuando no está en uso, lo que provoca un tiempo de inicio más largo al acceder por primera vez.
+
+[^1]: Herramienta para el despliegue de aplicaciones: https://render.com/
+
 ## Información del repositorio
 
 Junto con el código fuente de la aplicación, este repositorio contiene toda la documentación referente al proyecto, incluyendo la [memoria](memoria.pdf) del TFG y el [manual de uso](manual-uso.pdf).
