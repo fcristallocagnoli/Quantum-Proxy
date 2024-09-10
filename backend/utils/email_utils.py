@@ -236,28 +236,3 @@ def send_reset_email(receiver: str, resetUrl: str):
         ),
     )
     send_email(email_msg)
-
-
-# [ ]: Limpiar el código, eliminar pruebas # [ ]
-# Pruebas varias
-def main():
-    # Crear un mensaje de correo electrónico personalizado
-    # msg = create_email(
-    #     receivers=PROFESSIONAL_EMAIL,
-    #     subject="Test Email",
-    #     body="This is a test email from QuantumProxy App.",
-    # )
-
-    # # Enviar el correo electrónico
-    # send_email(msg)
-    # # Mostrar el mensaje de correo electrónico
-    # print(msg)
-    send_verification_email(
-        receiver="fcristallocagnoli@uma.es",
-        verifyUrl="https://quantumproxy.com/verify",
-    )
-    send_error_mail("esto es un error (test)")
-
-
-if __name__ == "__main__":
-    main()

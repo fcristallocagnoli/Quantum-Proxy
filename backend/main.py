@@ -125,32 +125,26 @@ app.add_middleware(
 
 app.include_router(
     user_router.router,
-    # prefix="/api/v1",
 )
 
 app.include_router(
     account_router.router,
-    # prefix="/api/v1",
 )
 
 app.include_router(
     provider_router.router,
-    # prefix="/api/v1",
 )
 
 app.include_router(
     backend_router.router,
-    # prefix="/api/v1",
 )
 
 app.include_router(
     job_router.router,
-    # prefix="/api/v1",
 )
 
 app.include_router(
     helper_router.router,
-    # prefix="/api/v1",
 )
 
 

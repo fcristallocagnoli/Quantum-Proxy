@@ -53,7 +53,6 @@ def get_backends(request: APIRequest) -> list[dict[str, Any]]:
         charact.pop("id", None)
         # No me interesa otro nombre del backend
         charact.pop("backend", None)
-        # TODO: Formatear la fecha a un formato generico
         charact["date"] = charact["date"]
         # Insertamos la caracterización
         backends[idx]["extra"] = {

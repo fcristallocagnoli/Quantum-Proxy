@@ -1,15 +1,12 @@
 import os
+
 from bson import ObjectId
 from dotenv import dotenv_values
 from pymongo import MongoClient, ReturnDocument
 from pymongo.collection import Collection
 from pymongo.cursor import Cursor
-
 from security.aes_cipher import decrypt_data, encrypt_data
 
-# Cuidado con variables de entorno.
-# Avisar al usuario de que debe tener un archivo .env
-# O proporcionar valores por defecto en caso de que no exista
 
 config = {**dotenv_values(), **os.environ}
 
@@ -19,16 +16,12 @@ DB_PORT = config.get("DB_PORT", 27017)
 # Client for the database
 db_client = MongoClient(DB_URI, int(DB_PORT))
 
-# Available databases
-db_test = db_client["test-database"]
+# Main database
 db_prod = db_client["quantum-proxy-db"]
 
 # Collections
-varios_coll = db_test.varios
-
 providers_coll = db_prod.providers
 backends_coll = db_prod.backends
-characts_coll = db_prod.characts
 users_coll = db_prod.users
 
 # region Misc ----------------------------

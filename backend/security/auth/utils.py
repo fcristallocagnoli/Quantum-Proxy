@@ -48,7 +48,7 @@ def generate_refresh_token(response: Response):
     return token
 
 
-# FIXME: Parece que no está funcionando correctamente
+# [x]: Comprobar que funcione correctamente
 def generate_jwt_token(account: UserInDBModel):
     future_time = generate_expire_date(timedelta(minutes=15))
     expires = round(future_time.timestamp())

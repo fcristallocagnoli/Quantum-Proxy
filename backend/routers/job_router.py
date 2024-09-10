@@ -188,20 +188,3 @@ async def delete_single_job(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail=f"Job with {uuid} not found"
     )
-
-
-# # region Utils ----------------------------
-
-
-# def sf_parse_object_id(id: str) -> ObjectId:
-#     """
-#     Safe parse from str to ObjectId.
-#     :raises HTTPException 400: if the id is not valid
-#     """
-#     try:
-#         object_id = ObjectId(id)
-#         return object_id
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST, detail=f"The id {e}"
-#         )

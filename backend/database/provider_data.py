@@ -6,6 +6,7 @@ from database.models.providers_models import ThirdPartyEnum
 from dotenv import dotenv_values
 from utils.utils import norm_str
 
+from fastapi.logger import logger
 
 providers_api_data = [
     {
@@ -13,7 +14,6 @@ providers_api_data = [
         "pid": "native.ionq",
         "description": "",
         "website": "https://ionq.com/",
-        "wiki_name": "IonQ",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -38,7 +38,6 @@ providers_api_data = [
             """
         ),
         "website": "https://www.ibm.com/quantum",
-        "wiki_name": "IBM Quantum Platform",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "API",
@@ -61,7 +60,6 @@ providers_ws_data = [
         "pid": "native.rigetti",
         "description": "",
         "website": "https://www.rigetti.com/",
-        "wiki_name": "Rigetti Computing",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "WEB-SCRAPING",
@@ -88,7 +86,6 @@ providers_sdk_data = [
             """
         ),
         "website": "https://aws.amazon.com/braket/",
-        "wiki_name": "",
         "from_third_party": False,
         "backend_request": {
             "fetch_method": "SDK",
@@ -129,7 +126,8 @@ if env_vars_set := all(
     os.environ["AWS_ACCESS_KEY_ID"] = AWS_ACCESS_KEY_ID
     os.environ["AWS_SECRET_ACCESS_KEY"] = AWS_SECRET_ACCESS_KEY
     os.environ["AWS_REGION"] = AWS_REGION
-
+else:
+    logger.warning("AWS credentials not set. Skipping Braket providers.")
 
 # Requires AWS env vars present in OS environment
 def get_braket_providers():
@@ -145,7 +143,6 @@ def get_braket_providers():
             "pid": f"{norm_str(ThirdPartyEnum.AWS)}.{norm_str(device.provider_name)}",
             "description": "",
             "website": None,
-            "wiki_name": "",
             "from_third_party": True,
             "third_party": {
                 "third_party_id": None,

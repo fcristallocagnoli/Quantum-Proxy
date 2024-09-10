@@ -67,7 +67,6 @@ class BaseProviderModel(BaseModel):
     description: Optional[Any] = Field(default=None)
     website: Optional[str] = Field(default=None)
     links: Optional[dict] = Field(default=None)
-    wiki_name: Optional[str] = Field(default=None)
     from_third_party: Optional[bool] = Field(default=None)
     # --------------------------------------------------------------
     third_party: Optional[ThirdPartyKey] = Field(default=None)
@@ -89,8 +88,6 @@ class BaseProviderModel(BaseModel):
     )
 
 
-# XXX: Concepto de pruebas TODO - Implementar si es conveniente
-# XXX: Borar si no se llega a implementar o usar
 class NativeProviderModel(BaseProviderModel):
     """
     Modelo para los proveedores de servicios cuánticos nativos.
@@ -133,50 +130,3 @@ class Provider(BaseModel):
 
 def crear_proveedor(provider: Provider):
     return provider.provider
-
-
-# XXX: Concept
-class IonQProvider(BaseProviderModel):
-
-    def build_backends(self) -> dict[str, Any]: ...
-
-
-class IBMProvider(BaseProviderModel):
-
-    def build_backends(self) -> dict[str, Any]: ...
-
-
-class RigettiProvider(BaseProviderModel):
-
-    def build_backends(self) -> dict[str, Any]: ...
-
-
-# [ ]: Limpiar el código, eliminar pruebas # [ ]
-# Pruebas varias
-def main():
-    ...
-    provider = Provider(
-        provider=NativeProviderModel(
-            name="IonQ",
-            pid="ionq",
-            description="IonQ is a quantum computing company that builds quantum computers for commercial applications.",
-            website="https://ionq.com/",
-            backend_request=APIRequest(
-                base_url="https://ionq.com/",
-                auth={"Authorization": "apiKey TOKEN"},
-                module=Module(
-                    description="Module to fetch the backends from IonQ",
-                    module_file="ionq_api_code",
-                    func_to_eval="get_backends",
-                ),
-            ),
-            backends_ids=[],
-        )
-    )
-    print("Provider tal cual:", provider)
-    print("Provider creado:", crear_proveedor(provider))
-    print("Provider creado:", type("ProviderReal", (), provider.provider.model_dump()))
-
-
-if __name__ == "__main__":
-    main()

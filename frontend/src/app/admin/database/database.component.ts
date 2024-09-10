@@ -51,7 +51,7 @@ export class DatabaseComponent implements OnInit {
                             this.alertService.success(`
                                 <h4>Systems updated</h4>
                                 <p>Reload where necessary to get the new updated data</p>
-                            `);
+                            `, { autoClose: false });
                         },
                         error: error => {
                             this.alertService.error(`
@@ -98,7 +98,7 @@ export class DatabaseComponent implements OnInit {
         });
     }
 
-    // TODO: Falta configurar la inicialización en el backend
+    // [ ]: Configurar la inicialización en el backend
     initData() {
     }
 
