@@ -18,12 +18,11 @@ export class HelperService {
         return this.http.get<any>(`${baseUrl}/count-documents/${collection}`);
     }
 
-    // TODO: Inicializar proveedores y backends
+    // [ ]: Inicializar proveedores y backends. Puede ser útil
     initDatabase() {
         // return this.http.post<any>(`${baseUrl}/init-database`, {});
     }
 
-    // TODO: Cuando se implemente el método anterior, descomentar este otro
     deleteAllData() {
         return this.http.delete<any>(`${baseUrl}/delete-all-data`);
     }
