@@ -176,11 +176,11 @@
                         {{ job.response * 1000 | date: 'yyy-MM-dd HH:mm:ss z' }}
                     </p>
                     <p class="card-text"><strong>Execution Time:</strong>
-                        {{ job.execution_time ? job.execution_time + 'miliseconds' : 'N/A' }}
+                        {{ job.execution_time ? job.execution_time + ' miliseconds' : 'N/A' }}
                     </p>
                     <p class="card-text">
                         <strong>Predicted Execution Time:</strong>
-                        {{ job.predicted_execution_time ? job.predicted_execution_time + 'mileseconds' : 'N/A' }}
+                        {{ job.predicted_execution_time ? job.predicted_execution_time + ' mileseconds' : 'N/A' }}
                     </p>
                 </div>
             </div>
